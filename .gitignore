@@ -1,0 +1,27 @@
+# Environment - nunca subir claves
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules
+
+# Logs
+*.log
+npm-debug.log*
+
+# Auth / credentials
+auth_info/
+*.json.bak
+wallet-keypair.json
+playground-wallet.json
+
+# Build / cache
+dist
+build
+.cache
+
+# OS
+.DS_Store
+Thumbs.db
+*.Zone.Identifier

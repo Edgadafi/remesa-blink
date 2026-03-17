@@ -1,0 +1,7 @@
+{
+  "name": "remesa-blink",
+  "private": true,
+  "scripts": {
+    "db:schema": "cd backend && npm run db:schema"
+  }
+}

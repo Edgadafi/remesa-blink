@@ -1,0 +1,9 @@
+{
+  "actions": [
+    {
+      "url": "https://tu-dominio.com/api/actions/enviar-remesa",
+      "label": "Enviar Remesa",
+      "description": "Transferir SOL a una wallet de destino"
+    }
+  ]
+}
