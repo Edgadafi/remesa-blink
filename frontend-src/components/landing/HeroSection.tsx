@@ -29,7 +29,7 @@ const HeroSection = () => {
           {/* Logo/Name */}
           <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold tracking-[-0.04em] leading-[0.95] mb-4">
             <span className="text-gradient-brand">REMESA</span>
-            <span className="text-foreground">BLINK</span>
+            <span className="text-accent">BLINK</span>
           </h1>
 
           {/* Subtitle */}

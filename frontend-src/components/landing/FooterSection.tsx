@@ -13,7 +13,7 @@ const FooterSection = () => {
             <img src={logo} alt="RemesaBlink Logo" className="w-32 h-32 sm:w-40 sm:h-40 object-contain mx-auto mb-4 rounded-2xl" />
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
               <span className="text-gradient-brand">REMESA</span>
-              <span className="text-foreground">BLINK</span>
+              <span className="text-accent">BLINK</span>
             </h2>
           </div>
 
