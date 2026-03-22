@@ -102,6 +102,7 @@ node src/index.js
 ## 👨‍💻 Equipo
 
 - **Alan** ([@Alanbk101](https://github.com/Alanbk101)) — Developer, WayLearn Solana Certified
+- **Edgadafi** ([@Edgadafi](https://github.com/Edgadafi)) — Developer & Collaborator
 
 ## 📄 Licencia
 
