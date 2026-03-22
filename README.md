@@ -33,6 +33,8 @@ RemesaBlink es un bot de WhatsApp que permite enviar USDC (stablecoins) a travé
 
 ## 🏗️ Arquitectura
 
+![Architecture](docs/architecture-diagram.svg)
+
 ```
 WhatsApp (Baileys) → Bot Node.js → Solana Actions API
                                          ↓
