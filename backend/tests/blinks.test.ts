@@ -92,6 +92,26 @@ describe("Blinks - POST remesa", () => {
     expect(res.status).toBe(400);
   });
 
+  it("POST con monto menor al mínimo retorna 400", async () => {
+    const res = await request(app).post("/api/actions/remesa").send({
+      account: validWallet,
+      amount: 0.0001,
+      destination: validDest,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain("Monto mínimo");
+  });
+
+  it("POST con monto mayor al máximo retorna 400", async () => {
+    const res = await request(app).post("/api/actions/remesa").send({
+      account: validWallet,
+      amount: 200,
+      destination: validDest,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain("Monto máximo");
+  });
+
   it("POST con datos válidos devuelve transaction base64", async () => {
     const res = await request(app).post("/api/actions/remesa").send({
       account: validWallet,
@@ -170,6 +190,26 @@ describe("Blinks - POST enviar-remesa-usdc", () => {
     });
     expect(res.status).toBe(400);
   });
+
+  it("POST con monto menor al mínimo USDC retorna 400", async () => {
+    const res = await request(app).post("/api/actions/enviar-remesa-usdc").send({
+      account: validWallet,
+      amount: 0.5,
+      destination: validDest,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain("Monto mínimo");
+  });
+
+  it("POST con monto mayor al máximo USDC retorna 400", async () => {
+    const res = await request(app).post("/api/actions/enviar-remesa-usdc").send({
+      account: validWallet,
+      amount: 100000,
+      destination: validDest,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain("Monto máximo");
+  });
 });
 
 describe("Blinks - POST onboarding-mxn", () => {
@@ -193,5 +233,14 @@ describe("Blinks - POST convertir-mxn", () => {
       account: "So11111111111111111111111111111111111111112",
     });
     expect(res.status).toBe(400);
+  });
+
+  it("POST con monto menor al mínimo USDC retorna 400", async () => {
+    const res = await request(app).post("/api/actions/convertir-mxn").send({
+      account: "So11111111111111111111111111111111111111112",
+      amount: 0.5,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain("Monto mínimo");
   });
 });

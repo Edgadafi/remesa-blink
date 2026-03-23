@@ -1,7 +1,12 @@
 /**
  * Rutas Blinks - montadas en el mismo servidor que el backend
+ * Usa @solana/actions SDK para conformidad con la spec
  */
 import express, { Router } from "express";
+import {
+  createPostResponse,
+  type ActionGetResponse,
+} from "@solana/actions";
 import pool from "../db/pool.js";
 import { createQuote, createOrder } from "../services/etherfuse.js";
 import { getOnboardingPresignedUrl, AlreadyOnboardedError } from "./etherfuse.js";
@@ -18,6 +23,7 @@ import {
   TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountIdempotentInstruction,
 } from "@solana/spl-token";
+import { validateAmountSol, validateAmountUsdc } from "../constants.js";
 
 const router = Router();
 const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
@@ -45,7 +51,7 @@ router.get("/actions.json", (_req, res) => {
   });
 });
 
-function remesaMetadata(hrefPath: string) {
+function remesaMetadata(hrefPath: string): ActionGetResponse {
   const base = getBaseUrl();
   return {
     type: "action",
@@ -67,12 +73,16 @@ function remesaMetadata(hrefPath: string) {
   };
 }
 
-router.get("/api/actions/enviar-remesa", (_req, res) => res.json(remesaMetadata("/api/actions/enviar-remesa")));
-router.get("/api/actions/remesa", (_req, res) => res.json(remesaMetadata("/api/actions/remesa")));
+router.get("/api/actions/enviar-remesa", (_req, res) =>
+  res.json(remesaMetadata("/api/actions/enviar-remesa"))
+);
+router.get("/api/actions/remesa", (_req, res) =>
+  res.json(remesaMetadata("/api/actions/remesa"))
+);
 
 router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
   const base = getBaseUrl();
-  res.json({
+  const payload: ActionGetResponse = {
     type: "action",
     title: "Remesa Blink USDC",
     icon: "https://solana.com/favicon.ico",
@@ -89,7 +99,8 @@ router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
         ],
       }],
     },
-  });
+  };
+  res.json(payload);
 });
 
 const enviarRemesaPost = async (req: express.Request, res: express.Response) => {
@@ -100,8 +111,15 @@ const enviarRemesaPost = async (req: express.Request, res: express.Response) => 
     }
     const fromPubkey = new PublicKey(account);
     const toPubkey = new PublicKey(destination);
-    const lamports = Math.round(parseFloat(amount) * LAMPORTS_PER_SOL);
-    if (lamports <= 0) return res.status(400).json({ message: "Monto debe ser positivo" });
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return res.status(400).json({ message: "Monto debe ser positivo" });
+    }
+    const validSol = validateAmountSol(amountNum);
+    if (!validSol.ok) {
+      return res.status(400).json({ message: validSol.message });
+    }
+    const lamports = Math.round(amountNum * LAMPORTS_PER_SOL);
 
     const connection = new Connection(RPC_URL);
     const tx = new Transaction().add(SystemProgram.transfer({ fromPubkey, toPubkey, lamports }));
@@ -109,8 +127,13 @@ const enviarRemesaPost = async (req: express.Request, res: express.Response) => 
     tx.recentBlockhash = blockhash;
     tx.feePayer = fromPubkey;
 
-    const base64 = tx.serialize({ requireAllSignatures: false, verifySignatures: false }).toString("base64");
-    res.json({ transaction: base64, message: `Transferir ${amount} SOL a ${destination}` });
+    const payload = await createPostResponse({
+      fields: {
+        transaction: tx,
+        message: `Transferir ${amount} SOL a ${destination}`,
+      },
+    });
+    res.json(payload);
   } catch (err) {
     console.error("Error enviar-remesa:", err);
     res.status(500).json({ message: err instanceof Error ? err.message : "Error al crear transacción" });
@@ -128,8 +151,15 @@ router.post("/api/actions/enviar-remesa-usdc", async (req, res) => {
     }
     const fromPubkey = new PublicKey(account);
     const toPubkey = new PublicKey(destination);
-    const amountRaw = BigInt(Math.round(parseFloat(amount) * 1e6));
-    if (amountRaw <= 0n) return res.status(400).json({ message: "Monto debe ser positivo" });
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      return res.status(400).json({ message: "Monto debe ser positivo" });
+    }
+    const validUsdc = validateAmountUsdc(amountNum);
+    if (!validUsdc.ok) {
+      return res.status(400).json({ message: validUsdc.message });
+    }
+    const amountRaw = BigInt(Math.round(amountNum * 1e6));
 
     const connection = new Connection(RPC_URL);
     const fromAta = getAssociatedTokenAddressSync(USDC_MINT, fromPubkey);
@@ -142,8 +172,13 @@ router.post("/api/actions/enviar-remesa-usdc", async (req, res) => {
     tx.recentBlockhash = blockhash;
     tx.feePayer = fromPubkey;
 
-    const base64 = tx.serialize({ requireAllSignatures: false, verifySignatures: false }).toString("base64");
-    res.json({ transaction: base64, message: `Transferir ${amount} USDC a ${destination}` });
+    const payload = await createPostResponse({
+      fields: {
+        transaction: tx,
+        message: `Transferir ${amount} USDC a ${destination}`,
+      },
+    });
+    res.json(payload);
   } catch (err) {
     console.error("Error enviar-remesa-usdc:", err);
     res.status(500).json({ message: err instanceof Error ? err.message : "Error al crear transacción" });
@@ -228,10 +263,15 @@ router.post("/api/actions/convertir-mxn", async (req, res) => {
     if (!account || !amt) {
       return res.status(400).json({ message: "account y amount son requeridos" });
     }
-    const sourceAmount = String(Math.round(parseFloat(amt) * 1e6) / 1e6);
-    if (parseFloat(sourceAmount) <= 0) {
+    const amountNum = parseFloat(amt);
+    if (isNaN(amountNum) || amountNum <= 0) {
       return res.status(400).json({ message: "Monto debe ser positivo" });
     }
+    const validUsdc = validateAmountUsdc(amountNum);
+    if (!validUsdc.ok) {
+      return res.status(400).json({ message: validUsdc.message });
+    }
+    const sourceAmount = String(Math.round(amountNum * 1e6) / 1e6);
 
     const row = await pool.query(
       `SELECT etherfuse_customer_id, etherfuse_bank_account_id, kyc_status

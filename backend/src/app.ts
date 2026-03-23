@@ -4,6 +4,7 @@
  */
 import "dotenv/config";
 import express from "express";
+import { actionCorsMiddleware } from "@solana/actions";
 import suscripcionesRouter from "./routes/suscripciones.js";
 import cashbackRouter from "./routes/cashback.js";
 import etherfuseRouter from "./routes/etherfuse.js";
@@ -13,13 +14,7 @@ import blinksRouter from "./routes/blinks.js";
 const app = express();
 app.use(express.json());
 
-app.use((_req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Encoding, Accept-Encoding");
-  res.setHeader("X-Action-Version", "1");
-  next();
-});
+app.use(actionCorsMiddleware({ actionVersion: 1 }));
 app.options("*", (_req, res) => res.sendStatus(204));
 
 app.get("/health", (_req, res) => {
