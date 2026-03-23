@@ -1,0 +1,17 @@
+# PostgreSQL para desarrollo local
+# Uso: docker compose up -d
+# Luego: cd backend && npm run db:schema
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: remesa_blink
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
