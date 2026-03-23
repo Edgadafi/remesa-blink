@@ -1,7 +1,7 @@
 /**
  * Rutas Blinks - montadas en el mismo servidor que el backend
  */
-import { Router } from "express";
+import express, { Router } from "express";
 import pool from "../db/pool.js";
 import { createQuote, createOrder } from "../services/etherfuse.js";
 import { getOnboardingPresignedUrl, AlreadyOnboardedError } from "./etherfuse.js";
@@ -36,6 +36,7 @@ router.get("/actions.json", (_req, res) => {
   const base = getBaseUrl();
   res.json({
     actions: [
+      { url: `${base}/api/actions/remesa`, label: "Remesa", description: "Transferir SOL a una wallet de destino (alias de enviar-remesa)" },
       { url: `${base}/api/actions/enviar-remesa`, label: "Enviar Remesa SOL", description: "Transferir SOL a una wallet de destino" },
       { url: `${base}/api/actions/enviar-remesa-usdc`, label: "Enviar Remesa USDC", description: "Transferir USDC a una wallet de destino" },
       { url: `${base}/api/actions/convertir-mxn`, label: "Convertir USDC a MXN", description: "Off-ramp USDC a pesos via Etherfuse (SPEI)" },
@@ -44,9 +45,9 @@ router.get("/actions.json", (_req, res) => {
   });
 });
 
-router.get("/api/actions/enviar-remesa", (_req, res) => {
+function remesaMetadata(hrefPath: string) {
   const base = getBaseUrl();
-  res.json({
+  return {
     type: "action",
     title: "Remesa Blink",
     icon: "https://solana.com/favicon.ico",
@@ -55,7 +56,7 @@ router.get("/api/actions/enviar-remesa", (_req, res) => {
     links: {
       actions: [{
         label: "Enviar",
-        href: `${base}/api/actions/enviar-remesa`,
+        href: `${base}${hrefPath}`,
         parameters: [
           { name: "account", label: "Tu wallet", required: true, type: "text" },
           { name: "amount", label: "Monto (SOL)", required: true, type: "number" },
@@ -63,8 +64,11 @@ router.get("/api/actions/enviar-remesa", (_req, res) => {
         ],
       }],
     },
-  });
-});
+  };
+}
+
+router.get("/api/actions/enviar-remesa", (_req, res) => res.json(remesaMetadata("/api/actions/enviar-remesa")));
+router.get("/api/actions/remesa", (_req, res) => res.json(remesaMetadata("/api/actions/remesa")));
 
 router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
   const base = getBaseUrl();
@@ -88,7 +92,7 @@ router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
   });
 });
 
-router.post("/api/actions/enviar-remesa", async (req, res) => {
+const enviarRemesaPost = async (req: express.Request, res: express.Response) => {
   try {
     const { account, amount, destination } = req.body;
     if (!account || !amount || !destination) {
@@ -111,7 +115,10 @@ router.post("/api/actions/enviar-remesa", async (req, res) => {
     console.error("Error enviar-remesa:", err);
     res.status(500).json({ message: err instanceof Error ? err.message : "Error al crear transacción" });
   }
-});
+};
+
+router.post("/api/actions/enviar-remesa", enviarRemesaPost);
+router.post("/api/actions/remesa", enviarRemesaPost);
 
 router.post("/api/actions/enviar-remesa-usdc", async (req, res) => {
   try {

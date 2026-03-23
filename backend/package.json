@@ -11,6 +11,8 @@
     "keeper:usdc-ata": "node run-keeper-usdc-ata.mjs",
     "keeper:run-once": "tsx run-keeper-once.ts",
     "e2e:usdc": "tsx run-e2e-usdc.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "mcp": "npx tsx mcp-solana-minimal.ts",
     "mcp:agent": "npx tsx mcp-solana-agent.ts"
   },
@@ -29,6 +31,8 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.3"
+    "supertest": "^7.0.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.0.0"
   }
 }

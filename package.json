@@ -9,6 +9,7 @@
     "keeper:airdrop": "cd backend && npm run keeper:airdrop",
     "keeper:usdc-ata": "cd backend && npm run keeper:usdc-ata",
     "keeper:run-once": "cd backend && npm run keeper:run-once",
-    "e2e:usdc": "cd backend && npm run e2e:usdc"
+    "e2e:usdc": "cd backend && npm run e2e:usdc",
+    "test": "cd backend && npm test"
   }
 }

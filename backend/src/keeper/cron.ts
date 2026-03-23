@@ -30,6 +30,10 @@ function addSeconds(date: Date, seconds: number): Date {
 export async function ejecutarPagos() {
   console.log("[Keeper] Ejecutando pagos pendientes...");
   const pendientes = await listarSuscripcionesPendientesPago();
+  if (!Array.isArray(pendientes)) {
+    console.warn("[Keeper] listarSuscripcionesPendientesPago no devolvió un array");
+    return;
+  }
 
   for (const susc of pendientes) {
     try {
