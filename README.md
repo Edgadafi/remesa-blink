@@ -96,7 +96,7 @@ node src/index.js
 
 | | Western Union | Felix Pago | **RemesaBlink** |
 |---|---|---|---|
-| Comisión | 5-7% | 1-2% | **0.5%** |
+| Comisión | 5-7% | 1-2% | **2.5%** |
 | Tiempo | 1-3 días | Minutos | **Segundos** |
 | Interfaz | Sucursal/App | App propia | **WhatsApp** |
 | Tecnología | Legacy | Parcial crypto | **Solana + Blinks** |
