@@ -1,18 +1,26 @@
-# Render - https://render.com
-# Crear Web Service, conectar repo, añadir env vars
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Conectar repo GitHub → New Blueprint → seleccionar remesa-blink
+# Secrets en Dashboard: DATABASE_URL, KEEPER_PRIVATE_KEY (sync: false abajo)
 services:
   - type: web
     name: remesa-blink
+    runtime: docker
     dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: virginia
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 3000
+        value: "3000"
       - key: BASE_URL
-        sync: false  # https://remesa-blink.onrender.com
+        sync: false
       - key: BLINKS_BASE_URL
-        sync: false  # mismo que BASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://frontend-bay-phi-92.vercel.app,http://localhost:3003
       - key: DATABASE_URL
         sync: false
       - key: SOLANA_RPC_URL
@@ -23,3 +31,5 @@ services:
         value: B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2
       - key: RUN_KEEPER
         value: "true"
+      - key: BOT_INTERNAL_URL
+        sync: false
