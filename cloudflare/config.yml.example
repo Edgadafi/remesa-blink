@@ -1,0 +1,16 @@
+# Cloudflare Named Tunnel — RemesaBlink API
+# Copiar a config.yml y ajustar hostname + credentials-file
+#
+#   cp cloudflare/config.yml.example cloudflare/config.yml
+#
+# Requisito: dominio en Cloudflare (ej. remesablink.com)
+
+tunnel: remesa-blink-api
+credentials-file: cloudflare/credentials/remesa-blink-api.json
+
+ingress:
+  # API Express + Blinks + keeper (backend :3000)
+  - hostname: api.remesablink.com
+    service: http://127.0.0.1:3000
+  # Catch-all
+  - service: http_status:404

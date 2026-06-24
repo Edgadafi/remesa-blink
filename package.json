@@ -8,8 +8,22 @@
     "keeper": "cd backend && npm run keeper",
     "keeper:airdrop": "cd backend && npm run keeper:airdrop",
     "keeper:usdc-ata": "cd backend && npm run keeper:usdc-ata",
+    "keeper:usdc-balance": "cd backend && npm run keeper:usdc-balance",
+    "preflight": "cd backend && npm run keeper:smoke && npm run keeper:usdc-balance",
+    "anchor:test": "cd anchor/remesas_recurrentes && anchor test",
     "keeper:run-once": "cd backend && npm run keeper:run-once",
+    "keeper:smoke": "cd backend && npm run keeper:smoke",
     "e2e:usdc": "cd backend && npm run e2e:usdc",
-    "test": "cd backend && npm test"
+    "e2e:sol": "cd backend && npm run e2e:sol",
+    "test": "cd backend && npm test",
+    "dev:web": "cd frontend && npm run dev",
+    "build:web": "cd frontend && npm run build",
+    "start:web": "cd frontend && npm run start",
+    "tunnel:setup": "bash scripts/cloudflare-tunnel-setup.sh",
+    "tunnel:run": "cloudflared tunnel --config cloudflare/config.yml run",
+    "tunnel:quick": "bash scripts/cloudflare-tunnel-quick.sh",
+    "dev:tunnel": "bash scripts/dev-with-tunnel.sh",
+    "skills:install": "npx --yes skills add https://github.com/solana-foundation/solana-dev-skill -y",
+    "mcp:keeper": "cd backend && npm run mcp"
   }
 }
