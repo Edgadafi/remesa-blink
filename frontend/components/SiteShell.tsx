@@ -16,7 +16,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <Nav />
       {children}
       <footer className="site-footer">
-        Remesa Blink — del norte al nopal.{" "}
+        Remesa Blink — Send dollars, recibe pesos más cerca de tu familia.{" "}
         <a href="mailto:remesatia@gmail.com">remesatia@gmail.com</a>
         {" · "}
         Envía a tu familia con claridad; la wallet es opcional.
