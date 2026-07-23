@@ -16,7 +16,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <Nav />
       {children}
       <footer className="site-footer">
-        MVP — wallet vía Wallet Standard (devnet). Remesas enlazadas por WhatsApp.
+        Remesa Blink — del norte al nopal.{" "}
+        <a href="mailto:remesatia@gmail.com">remesatia@gmail.com</a>
+        {" · "}
+        Envía a tu familia con claridad; la wallet es opcional.
       </footer>
     </div>
   );

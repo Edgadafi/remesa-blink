@@ -3,7 +3,7 @@ import { WalletConnect } from "@/components/WalletConnect";
 
 const links = [
   { href: "/", label: "Inicio" },
-  { href: "/nueva-remesa", label: "Nueva remesa" },
+  { href: "/nueva-remesa", label: "Enviar a mi familia", primary: true },
   { href: "/mis-remesas", label: "Mis remesas" },
   { href: "/cashback", label: "Cashback" },
 ];
@@ -15,8 +15,12 @@ export function Nav() {
         Remesa Blink
       </Link>
       <nav className="site-nav" aria-label="Principal">
-        {links.map(({ href, label }) => (
-          <Link key={href} href={href} className="site-nav-link">
+        {links.map(({ href, label, primary }) => (
+          <Link
+            key={href}
+            href={href}
+            className={primary ? "site-nav-link site-nav-link-primary" : "site-nav-link"}
+          >
             {label}
           </Link>
         ))}

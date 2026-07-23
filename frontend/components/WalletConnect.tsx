@@ -36,7 +36,7 @@ export function WalletConnect() {
   if (connectors.length === 0) {
     return (
       <p className="wallet-hint">
-        Instala Phantom, Solflare o Backpack (devnet).
+        Wallet opcional — Phantom / Solflare si la usas.
       </p>
     );
   }
