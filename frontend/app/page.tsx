@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <main className="site-main wide">
       <section className="hub-hero" aria-labelledby="hub-title">
-        <p className="hub-kicker">Del norte al nopal</p>
+        <p className="hub-kicker">Send dollars, recibe pesos más cerca de tu familia.</p>
         <h1 id="hub-title" className="page-title">
           Tu familia más cerca, cada mes
         </h1>

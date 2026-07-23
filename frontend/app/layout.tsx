@@ -7,6 +7,7 @@ import { Providers } from "@/app/providers";
 
 const body = EB_Garamond({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   style: ["normal", "italic"],
 });
@@ -24,7 +25,7 @@ const displayFontStyle = {
 export const metadata: Metadata = {
   title: "Remesa Blink — Envía a tu familia",
   description:
-    "Programa remesas a México. Tu familia recibe el aviso por WhatsApp. Del norte al nopal — en segundos.",
+    "Programa remesas a México. Tu familia recibe el aviso por WhatsApp. Send dollars, recibe pesos más cerca de tu familia.",
 };
 
 export default function RootLayout({

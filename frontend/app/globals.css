@@ -1,4 +1,5 @@
-/* RemesaBlink brand kit v1.1 — hub público (no /piloto) */
+/* RemesaBlink brand kit v1.1 — hub público (no /piloto)
+   Type + touch targets aligned with Apple HIG (legibility, ≥44pt hit targets). */
 :root {
   --color-papel: #f5f0e8;
   --color-verde-nopal: #2d5016;
@@ -19,6 +20,14 @@
   --error: #b33a2b;
   --ok: var(--color-verde-cenote);
   --shadow: 0 12px 40px rgba(44, 36, 22, 0.08);
+
+  /* Type scale — serif optically large; caption floor ≥ 0.9375rem */
+  --text-caption: 0.9375rem;
+  --text-body: 1.125rem;
+  --text-body-lg: 1.25rem;
+  --text-title: clamp(2rem, 5.5vw, 2.75rem);
+  --text-nav: 1.05rem;
+  --hit-min: 44px;
 }
 
 html,
@@ -34,6 +43,8 @@ body {
     radial-gradient(ellipse 70% 40% at 100% 0%, rgba(45, 80, 22, 0.08), transparent 50%),
     var(--bg);
   font-family: var(--font-body), "EB Garamond", Georgia, serif;
+  font-size: var(--text-body);
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
@@ -77,11 +88,14 @@ a:hover {
 
 .site-logo {
   font-family: var(--font-display), Palatino, "Palatino Linotype", Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--color-verde-nopal);
   text-transform: none;
+  min-height: var(--hit-min);
+  display: inline-flex;
+  align-items: center;
 }
 
 .site-logo:hover {
@@ -92,15 +106,21 @@ a:hover {
 .site-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem 1.1rem;
+  gap: 0.5rem 0.85rem;
+  align-items: center;
 }
 
 .site-nav-link {
   color: var(--fg);
   font-family: var(--font-body), Georgia, serif;
-  font-size: 0.95rem;
+  font-size: var(--text-nav);
+  font-weight: 500;
   letter-spacing: 0.01em;
   text-transform: none;
+  min-height: var(--hit-min);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.4rem;
 }
 
 .site-nav-link:hover {
@@ -111,9 +131,10 @@ a:hover {
 .site-nav-link-primary {
   color: var(--color-papel);
   background: var(--color-verde-nopal);
-  padding: 0.4rem 0.85rem;
+  padding: 0.55rem 1rem;
   border-radius: 2px;
   font-weight: 600;
+  min-height: var(--hit-min);
 }
 
 .site-nav-link-primary:hover {
@@ -145,13 +166,13 @@ a:hover {
 
 .wallet-meta {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-size: var(--text-caption);
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
 
 .wallet-hint {
-  font-size: 0.75rem;
+  font-size: var(--text-caption);
   color: var(--muted);
   max-width: 14rem;
   text-align: right;
@@ -160,8 +181,10 @@ a:hover {
 .btn-wallet {
   cursor: pointer;
   font-family: var(--font-body), Georgia, serif;
-  font-size: 0.8rem;
-  padding: 0.45rem 0.85rem;
+  font-size: var(--text-nav);
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  min-height: var(--hit-min);
   border: 1.5px solid var(--border);
   background: var(--card);
   color: var(--fg);
@@ -186,7 +209,7 @@ a:hover {
 }
 
 .field-hint {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--muted);
 }
 
@@ -204,46 +227,49 @@ main.site-main.wide {
 
 h1.page-title {
   font-family: var(--font-display), Palatino, Georgia, serif;
-  font-size: clamp(1.85rem, 5vw, 2.6rem);
+  font-size: var(--text-title);
   color: var(--color-terracotta);
   text-transform: none;
   margin-bottom: 0.65rem;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: 0.01em;
 }
 
 p.lede {
   color: var(--muted);
   margin-bottom: 1.75rem;
-  font-size: 1.15rem;
+  font-size: var(--text-body-lg);
   font-style: italic;
 }
 
 .h-small {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
   margin-bottom: 0.75rem;
   color: var(--muted);
+  font-weight: 500;
 }
 
 /* —— Hub home —— */
 .hub-hero {
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
 }
 
 .hub-kicker {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--color-verde-cenote);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  line-height: 1.4;
+  max-width: 36rem;
 }
 
 .hub-story {
-  font-size: 1.2rem;
+  font-size: var(--text-body-lg);
   color: var(--fg);
   margin-bottom: 1.5rem;
   max-width: 36rem;
@@ -253,12 +279,25 @@ p.lede {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 0.75rem;
+  align-items: stretch;
+  margin-bottom: 0.85rem;
+}
+
+@media (max-width: 639px) {
+  .hub-cta-row {
+    flex-direction: column;
+  }
+
+  .hub-cta-row .btn-primary,
+  .hub-cta-row .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .hub-reassure {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--muted);
   max-width: 32rem;
 }
@@ -266,9 +305,9 @@ p.lede {
 .hub-steps {
   list-style: none;
   display: grid;
-  gap: 0.85rem;
+  gap: 1.1rem;
   margin: 2rem 0 2.25rem;
-  padding: 1.25rem 1.35rem;
+  padding: 1.4rem 1.45rem;
   background: var(--card);
   border: 1.5px solid var(--gold);
   border-radius: 4px;
@@ -277,14 +316,14 @@ p.lede {
 
 .hub-steps li {
   display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 0.65rem;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 0.75rem;
   align-items: start;
 }
 
 .hub-step-num {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   color: var(--gold);
   font-weight: 600;
 }
@@ -293,18 +332,18 @@ p.lede {
   display: block;
   font-family: var(--font-display), Palatino, Georgia, serif;
   color: var(--color-terracotta);
-  font-size: 1.05rem;
-  margin-bottom: 0.15rem;
+  font-size: 1.15rem;
+  margin-bottom: 0.2rem;
 }
 
 .hub-steps span {
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
 }
 
 .hub-secondary {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.85rem;
   margin-top: 1rem;
 }
 
@@ -316,7 +355,8 @@ p.lede {
 
 .hub-secondary-card {
   display: block;
-  padding: 1.1rem 1.2rem;
+  padding: 1.2rem 1.25rem;
+  min-height: var(--hit-min);
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: 4px;
@@ -332,12 +372,13 @@ p.lede {
   display: block;
   font-family: var(--font-display), Palatino, Georgia, serif;
   color: var(--color-verde-nopal);
-  margin-bottom: 0.25rem;
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
 }
 
 .hub-secondary-card span {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
 }
 
 .hub-advanced {
@@ -349,11 +390,13 @@ p.lede {
 .hub-advanced summary {
   cursor: pointer;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
   color: var(--muted);
   list-style: none;
+  min-height: var(--hit-min);
+  display: flex;
+  align-items: center;
 }
 
 .hub-advanced summary::-webkit-details-marker {
@@ -374,12 +417,13 @@ p.lede {
 
 .hub-blinks a {
   display: block;
-  padding: 0.75rem 0.9rem;
+  padding: 0.85rem 1rem;
+  min-height: var(--hit-min);
   border: 1px solid var(--border);
   border-radius: 3px;
   background: rgba(255, 253, 248, 0.7);
   color: var(--fg);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
 }
 
 .hub-blinks a:hover {
@@ -389,22 +433,22 @@ p.lede {
 
 .hub-blinks strong {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
+  font-size: var(--text-caption);
+  letter-spacing: 0.03em;
   color: var(--color-verde-nopal);
 }
 
 .hub-blinks span {
   display: block;
   color: var(--muted);
-  font-size: 0.85rem;
-  margin-top: 0.15rem;
+  font-size: 1rem;
+  margin-top: 0.2rem;
 }
 
 .stack-form {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1.25rem;
 }
 
 .form-card {
@@ -424,13 +468,16 @@ p.lede {
 
 .form-progress-step {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.55rem;
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
+  padding: 0.5rem 0.7rem;
+  min-height: var(--hit-min);
+  display: inline-flex;
+  align-items: center;
   border-radius: 2px;
   border: 1px solid var(--border);
   color: var(--muted);
+  font-weight: 500;
 }
 
 .form-progress-step.is-active {
@@ -442,12 +489,12 @@ p.lede {
 .form-section-title {
   font-family: var(--font-display), Palatino, Georgia, serif;
   color: var(--color-terracotta);
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   margin-bottom: 0.35rem;
 }
 
 .form-section-note {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--muted);
   font-style: italic;
   margin-bottom: 1rem;
@@ -456,12 +503,12 @@ p.lede {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .field span {
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
   color: var(--color-verde-cenote);
   text-transform: none;
   font-weight: 600;
@@ -473,9 +520,11 @@ p.lede {
   background: #fff;
   border: 1.5px solid var(--border);
   color: var(--fg);
-  padding: 0.7rem 0.8rem;
-  font-size: 1.05rem;
+  padding: 0.75rem 0.85rem;
+  min-height: var(--hit-min);
+  font-size: 1.1rem;
   font-family: var(--font-body), Georgia, serif;
+  font-weight: 500;
   border-radius: 3px;
 }
 
@@ -484,12 +533,12 @@ p.lede {
 .input-inline:focus {
   outline: none;
   border-color: var(--color-verde-nopal);
-  box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.12);
+  box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.15);
 }
 
 .amount-input {
   font-family: var(--font-mono), ui-monospace, monospace !important;
-  font-size: 1.35rem !important;
+  font-size: 1.45rem !important;
   font-weight: 600;
   color: var(--color-tierra) !important;
 }
@@ -510,9 +559,13 @@ p.lede {
 .btn-secondary {
   cursor: pointer;
   font-family: var(--font-body), Georgia, serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   letter-spacing: 0.01em;
-  padding: 0.8rem 1.25rem;
+  padding: 0.85rem 1.35rem;
+  min-height: var(--hit-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid transparent;
   font-weight: 600;
   border-radius: 3px;
@@ -559,7 +612,8 @@ p.lede {
 
 .link-card {
   display: block;
-  padding: 1rem 1.1rem;
+  padding: 1.1rem 1.15rem;
+  min-height: var(--hit-min);
   border: 1.5px solid var(--border);
   background: var(--card);
   color: var(--fg);
@@ -577,22 +631,23 @@ p.lede {
   color: var(--color-verde-nopal);
   text-transform: none;
   margin-bottom: 0.25rem;
+  font-size: 1.15rem;
 }
 
 .link-card span {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
 }
 
 .list-cards {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .card {
-  padding: 1rem;
+  padding: 1.1rem;
   border: 1.5px solid var(--border);
   background: var(--card);
   border-radius: 4px;
@@ -608,17 +663,17 @@ p.lede {
 
 .muted {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
 }
 
 .msg-error {
   color: var(--error);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
 }
 
 .msg-ok {
   color: var(--ok);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   white-space: pre-wrap;
   background: rgba(74, 124, 89, 0.08);
   border: 1.5px solid var(--color-verde-cenote);
@@ -630,20 +685,20 @@ p.lede {
 .msg-ok-title {
   font-family: var(--font-display), Palatino, Georgia, serif;
   color: var(--color-verde-nopal);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-bottom: 0.35rem;
 }
 
 .msg-ok-detail {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.78rem;
+  font-size: var(--text-caption);
   color: var(--muted);
   margin-top: 0.75rem;
 }
 
 code {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.85em;
+  font-size: 0.9em;
   background: rgba(44, 36, 22, 0.05);
   border: 1px solid var(--border);
   padding: 0.1em 0.35em;
@@ -651,11 +706,11 @@ code {
 }
 
 .site-footer {
-  padding: 1.15rem 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-top: 2px solid var(--gold);
   background: var(--color-verde-nopal);
-  color: rgba(245, 240, 232, 0.85);
-  font-size: 0.82rem;
+  color: rgba(245, 240, 232, 0.9);
+  font-size: 1rem;
   text-align: center;
 }
 

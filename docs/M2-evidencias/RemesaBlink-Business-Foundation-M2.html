@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>RemesaBlink — Business Foundation M2</title>
+  <style>/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <section class="cover-page">
+    <div class="cover-bar">
+      <p class="program">Solana Latam Labs · WayLearn</p>
+      <h1>RemesaBlink</h1>
+      <p class="doc-type">Business Foundation · Milestone 2</p>
+    </div>
+    <div class="cover-body">
+      <div class="cover-escudo"><svg viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Escudo RemesaBlink">
+  <path d="M60 6c-8 4-14 12-14 20 0 2 1 4 2 5l12-8 12 8c1-1 2-3 2-5 0-8-6-16-14-20z" fill="#C9A227" opacity="0.9"/>
+  <path d="M48 28c4 6 8 10 12 12 4-2 8-6 12-12-3 2-6 3-12 3s-9-1-12-3z" fill="#2D5016"/>
+  <ellipse cx="52" cy="34" rx="2.5" ry="3" fill="#C45C3E"/>
+  <ellipse cx="60" cy="36" rx="2.5" ry="3" fill="#C45C3E"/>
+  <ellipse cx="68" cy="34" rx="2.5" ry="3" fill="#C45C3E"/>
+  <path d="M38 24h44M32 24h2M86 24h2" stroke="#C9A227" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+      <p class="cover-tagline">Send dollars, recibe pesos más cerca de tu familia.</p>
+      <table class="cover-meta">
+        <tr><th>Proyecto</th><td>Remesa Blink</td></tr><tr><th>Documento</th><td>Business Foundation — M2</td></tr><tr><th>Founder</th><td>Edgadafi</td></tr><tr><th>Contacto</th><td>quierochiachida@gmail.com</td></tr><tr><th>Fecha entrega M2</th><td>3 de julio de 2026</td></tr><tr><th>Demo Day</th><td>31 de agosto de 2026</td></tr><tr><th>Programa</th><td>Solana Latam Labs — WayLearn</td></tr><tr><th>Mentor WayLearn</th><td>Diana Torres e Isaac Klassen</td></tr><tr><th>Repositorio</th><td>https://github.com/Edgadafi/remesa-blink</td></tr><tr><th>Clasificación</th><td>Confidencial</td></tr>
+      </table>
+    </div>
+    <div class="cover-footer">
+      BRINGING - IT - CLOSER
+      <div class="cover-confidential">Confidencial · Julio 2026</div>
+    </div>
+  </section>
+  <div class="content-wrap">
+    <div class="page-header">
+      <span class="brand">RemesaBlink</span>
+      <span class="meta">Business Foundation M2 · WayLearn · Confidencial</span>
+    </div>
+    <div class="toc">
+    <h2>Índice</h2>
+    <ol><li><span class="num">2.1</span><span>Propuesta de Valor</span></li><li><span class="num">2.2</span><span>Modelo de Negocio Inicial / Ruta de Sostenibilidad</span></li><li><span class="num">2.3</span><span>Competidores o Alternativas Existentes</span></li><li><span class="num">2.4</span><span>Primeras Hipótesis de Mercado y Adopción</span></li><li><span class="num">2.5</span><span>Señal de Validación Inicial</span></li><li><span class="num">2.6</span><span>Evidencia Adjunta</span></li><li><span class="num">—</span><span>Resumen ejecutivo</span></li></ol>
+  </div>
+    <h2>2.1 Propuesta de Valor</h2>
+<h3>¿Qué problema resuelven?</h3>
+<p>El corredor de remesas <strong>Canadá–Estados Unidos–México</strong> es el segundo más grande del mundo. En 2024, los migrantes mexicanos en EE.UU. enviaron <strong>$64.7 mil millones de dólares</strong> a sus familias en México — un récord histórico. Sin embargo, cada vez que alguien envía dinero:</p>
+<ul>
+<li>Paga entre <strong>5% y 7%</strong> de comisión en servicios tradicionales como Western Union.</li>
+<li>Tiene que <strong>acordarse de enviar cada quincena</strong>. Si se olvida, la familia no come, no paga la renta, no compra medicamentos.</li>
+<li>Hace el proceso <strong>manualmente cada vez</strong>.</li>
+</ul>
+<h3>¿Para quién?</h3>
+<table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Perfil</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Usuario primario</strong></td>
+<td>Migrante mexicano en EE.UU., 25–45 años, que envía entre $200 y $500 cada 15 días a su familia en México. Usa WhatsApp diariamente.</td>
+</tr>
+<tr>
+<td><strong>Usuario secundario</strong></td>
+<td>La familia receptora en México, frecuentemente en zonas semi-urbanas o rurales.</td>
+</tr>
+</tbody></table>
+<h3>¿Por qué su solución es relevante?</h3>
+<p>RemesaBlink es un <strong>agente de inteligencia artificial en WhatsApp</strong> que permite enviar remesas de EE.UU. a México usando <strong>USDC en Solana</strong>, con tres diferencias clave:</p>
+<ol>
+<li><strong>Sin app nueva.</strong> El usuario escribe en el WhatsApp que ya tiene. El agente inteligente entiende español coloquial mexicano.</li>
+<li><strong>Comisión competitiva de 1.5%</strong> (frente a 5–7% de tradicionales).</li>
+<li><strong>Remesas recurrentes programadas on-chain.</strong> El usuario configura una vez y el programa Anchor en Solana ejecuta automáticamente cada ciclo.</li>
+</ol>
+<p><strong>La propuesta en una frase:</strong> RemesaBlink es el agente de IA en WhatsApp que programa remesas automáticas en Solana — configuras una vez y tu familia recibe puntual, siempre, con costos significativamente más bajos que los servicios tradicionales.</p>
+<hr>
+<h2 class="section-break">2.2 Modelo de Negocio Inicial / Ruta de Sostenibilidad</h2>
+<h3>Fuente 1 — Comisión por transacción (activa desde mainnet)</h3>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Comisión por envío</td>
+<td>1.5% del monto</td>
+</tr>
+<tr>
+<td>Envío promedio estimado</td>
+<td>$300 USD</td>
+</tr>
+<tr>
+<td>Ingreso por transacción</td>
+<td>$4.50 USD</td>
+</tr>
+<tr>
+<td>Target mes 6</td>
+<td>1,000 transacciones/mes → <strong>$4,500 USD/mes</strong></td>
+</tr>
+<tr>
+<td>Target mes 12</td>
+<td>10,000 transacciones/mes → <strong>$45,000 USD/mes</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Unit Economics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAC (costo de adquisición vía referido)</td>
+<td>$5 USD</td>
+</tr>
+<tr>
+<td>LTV (24 meses, 2 envíos/mes × $4.50)</td>
+<td>$216 USD</td>
+</tr>
+<tr>
+<td>LTV/CAC ratio</td>
+<td><strong>43.2x</strong> ✅</td>
+</tr>
+</tbody></table>
+<h3>Fuente 2 — Rendimiento flotante sobre USDC en escrow (mes 3+)</h3>
+<p>Mientras el USDC está en custodia en el escrow de Solana esperando confirmación SPEI (minutos a horas), ese capital puede generar rendimiento en instrumentos de money market tokenizados de bajo riesgo a una tasa estimada del <strong>4.5% anual</strong> en 2026.</p>
+<p>Para remesas recurrentes programadas, el capital acumulado entre ciclos de pago es mayor, incrementando el yield disponible sin costo adicional para el usuario.</p>
+<h3>Fuente 3 — Programa de referidos comunitarios (mes 2+)</h3>
+<p>Distribución vía <strong>conectores comunitarios</strong>: líderes de barrio, pastores, dueños de tienditas que ya tienen la confianza de las comunidades migrantes. Por cada usuario activo que refieren, el conector gana <strong>$10 USD</strong>. RemesaBlink recupera ese costo en las primeras 7 transacciones del usuario referido.</p>
+<h3>Ruta de sostenibilidad post-programa</h3>
+<table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Meses 1–3</strong></td>
+<td>Validación en mainnet, 0.5–0.75% para early adopters</td>
+</tr>
+<tr>
+<td><strong>Meses 3–6</strong></td>
+<td>Activar comisión 1.5%, 100–1,000 usuarios activos</td>
+</tr>
+<tr>
+<td><strong>Meses 6–12</strong></td>
+<td>Programa referidos, float yield, 1,000–10,000 usuarios</td>
+</tr>
+<tr>
+<td><strong>Mes 12+</strong></td>
+<td>Crédito on-chain + expansión regional</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">2.3 Competidores o Alternativas Existentes</h2>
+<h3>Cómo resuelven hoy el problema los usuarios</h3>
+<table>
+<thead>
+<tr>
+<th>Solución actual</th>
+<th>Cómo funciona</th>
+<th>Costo</th>
+<th>Problema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Western Union / OXXO</td>
+<td>Físico o app, corresponsales bancarios</td>
+<td>5–7%</td>
+<td>Caro, lento, manual</td>
+</tr>
+<tr>
+<td>Zelle / Venmo</td>
+<td>Banco a banco directo</td>
+<td>0% pero…</td>
+<td>Solo si ambos tienen banco en EE.UU.</td>
+</tr>
+<tr>
+<td>Félix Pago</td>
+<td>WhatsApp → USDC/Circle → SPEI</td>
+<td>~$2.99 fija</td>
+<td>Manual, sin recurrencia, sin Solana</td>
+</tr>
+<tr>
+<td>Remitly</td>
+<td>App nativa, transferencia bancaria</td>
+<td>1–3%</td>
+<td>Requiere descargar app nueva</td>
+</tr>
+<tr>
+<td>Bitso</td>
+<td>API B2B, cripto</td>
+<td>&lt;1%</td>
+<td>Solo institucional, no B2C</td>
+</tr>
+</tbody></table>
+<h3>Cuál sería la diferencia de RemesaBlink</h3>
+<p><strong>Félix Pago</strong> es el competidor más cercano (mismo canal WhatsApp, mismo corredor, misma stablecoin).</p>
+<p><strong>Diferencia clave:</strong></p>
+<ul>
+<li><strong>Félix:</strong> usuario envía manualmente cada 15 días (~$2.99).</li>
+<li><strong>RemesaBlink:</strong> usuario programa una vez → Agente Inteligente recuerda y Solana ejecuta automáticamente. Comisión 1.5% ($4.50 en envío promedio de $300).</li>
+</ul>
+<p>Esa diferencia (automatización real + conveniencia) es el producto. Aunque Félix es ligeramente más barato en fee fijo, RemesaBlink entrega mayor valor al eliminar el riesgo de olvido y fricción recurrente, lo que se traduce en paz mental y consistencia para la familia.</p>
+<p>Western Union está migrando a Solana pero sin canal WhatsApp ni inteligencia artificial conversacional.</p>
+<hr>
+<h2 class="section-break">2.4 Primeras Hipótesis de Mercado y Adopción</h2>
+<h3>H1 — Hipótesis del canal</h3>
+<p><strong>Afirmación:</strong> Un migrante mexicano en EE.UU. prefiere gestionar sus remesas por WhatsApp antes que por cualquier otra interfaz, incluyendo apps nativas y sucursales físicas.</p>
+<p><strong>Cómo validar:</strong> 10 entrevistas de descubrimiento. Pregunta: <em>&quot;¿En qué app gestionas hoy tus finanzas más importantes?&quot;</em> Si más de 7 de 10 mencionan WhatsApp como canal principal de comunicación, la hipótesis se sostiene.</p>
+<h3>H2 — Hipótesis de la automatización</h3>
+<p><strong>Afirmación:</strong> La capacidad de programar remesas automáticas es un diferenciador lo suficientemente valioso como para cambiar el comportamiento de alguien que ya usa Félix Pago.</p>
+<p><strong>Cómo validar:</strong> Pregunta directa en entrevistas: <em>&quot;¿Alguna vez enviaste tarde y tu familia tuvo un problema?&quot;</em> Si más de 6 de 10 dicen sí, el dolor de la recurrencia manual está confirmado.</p>
+<h3>H3 — Hipótesis del precio</h3>
+<p><strong>Afirmación:</strong> La comisión de 1.5% combinada con automatización genera switching.</p>
+<p><strong>Validación:</strong> Comparativa y willingness to switch.</p>
+<h3>H4 — Hipótesis del conector comunitario</h3>
+<p><strong>Afirmación:</strong> Un solo líder de comunidad puede activar 20+ usuarios en menos de 30 días con el incentivo correcto.</p>
+<p><strong>Cómo validar:</strong> Activar 1 conector comunitario en una comunidad migrante en Chicago, Houston o Los Ángeles. Ofrecer $10 por usuario referido activo. Medir en 30 días.</p>
+<h3>H5 — Hipótesis regulatoria ⚠️</h3>
+<p><strong>Afirmación:</strong> RemesaBlink puede operar en el corredor CAN-US-MX durante la validación inicial sin licencia NMLS, dado que el usuario firma las transacciones directamente desde su propia wallet (RemesaBlink no custodia dinero fiat).</p>
+<blockquote class="note">
+<p><strong>Nota MVP (devnet):</strong> validar con asesoría legal antes de mainnet. El modelo técnico actual en incubación usa keeper custodial en devnet; la hipótesis H5 aplica al modelo objetivo no-custodial (ver <a href="./FASE-E-NO-CUSTODIAL.md">FASE-E-NO-CUSTODIAL.md</a>).</p>
+</blockquote>
+<hr>
+<h2 class="section-break">2.5 Señal de Validación Inicial</h2>
+<h3>La señal elegida: El segundo envío espontáneo</h3>
+<p><strong>¿Un usuario, sin que nadie se lo pida, realiza una segunda remesa usando RemesaBlink?</strong></p>
+<h3>Por qué esta señal</h3>
+<p>El primer envío puede ser curiosidad o incentivo de precio. <strong>El segundo envío es convicción.</strong> Nadie hace una segunda remesa con un servicio que no funciona o en el que no confía. Es la métrica más honesta y la más difícil de falsear.</p>
+<p>RemesaBlink es una App de pagos. Según la tabla de métricas por tipo de proyecto, la señal relevante es: usuarios que completan una transacción de prueba o pagos procesados.</p>
+<p>Elevamos esa métrica un nivel: no buscamos solo que completen una transacción — buscamos que <strong>vuelvan a hacer una segunda sin que se les pida</strong>.</p>
+<h3>Protocolo de medición — 4 semanas</h3>
+<table>
+<thead>
+<tr>
+<th>Semana</th>
+<th>Actividad</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Semana 1 — Preparación</strong></td>
+<td>Desplegar en Solana devnet con USDC faucet · Seleccionar 5 usuarios del perfil definido · Registrar baseline: servicio actual, frecuencia de envío, monto promedio</td>
+</tr>
+<tr>
+<td><strong>Semana 2 — Primer envío acompañado</strong></td>
+<td>Acompañar a cada usuario (videollamada o presencial) · Documentar fricción paso a paso · Confirmar que el receptor en México recibió la transacción</td>
+</tr>
+<tr>
+<td><strong>Semana 3 — Observación silenciosa</strong></td>
+<td>Sin contacto con los usuarios · Monitorear Solana Explorer para detectar transacciones espontáneas · Registrar si alguno escribe al bot por iniciativa propia</td>
+</tr>
+<tr>
+<td><strong>Semana 4 — Medición y entrevista</strong></td>
+<td>Contactar a los 5 usuarios · Pregunta central: <em>&quot;¿Enviaste dinero esta quincena? ¿Por dónde?&quot;</em> · Documentar respuestas y referidos generados</td>
+</tr>
+</tbody></table>
+<h3>Tabla de criterios de éxito</h3>
+<table>
+<thead>
+<tr>
+<th>Resultado</th>
+<th>Interpretación</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0 de 5 vuelven</td>
+<td>Hipótesis falsificadas</td>
+<td>Entrevistar y pivotar canal o precio</td>
+</tr>
+<tr>
+<td>1–2 de 5 vuelven</td>
+<td>Señal débil</td>
+<td>Entrevistar a los que no volvieron, identificar fricción</td>
+</tr>
+<tr>
+<td>3 de 5 vuelven</td>
+<td>PMF mínimo viable</td>
+<td>Activar conector comunitario, buscar siguientes 95 usuarios</td>
+</tr>
+<tr>
+<td>4–5 de 5 vuelven</td>
+<td>PMF sólido</td>
+<td>Iniciar fundraising pre-seed formal</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">2.6 Evidencia Adjunta</h2>
+<h3>URL de landing page / waitlist / formulario</h3>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Landing page (producción)</td>
+<td><a href="https://frontend-bay-phi-92.vercel.app/piloto">https://frontend-bay-phi-92.vercel.app/piloto</a></td>
+</tr>
+<tr>
+<td>Landing page (acortada)</td>
+<td><a href="https://bit.ly/p%C3%ADloto_remesas">https://bit.ly/píloto_remesas</a></td>
+</tr>
+<tr>
+<td>Waitlist / formulario</td>
+<td><code>POST /api/pilotos</code> conectado a Supabase (<code>usuarios_piloto</code>)</td>
+</tr>
+<tr>
+<td>Repositorio GitHub</td>
+<td><a href="https://github.com/Edgadafi/remesa-blink">https://github.com/Edgadafi/remesa-blink</a></td>
+</tr>
+<tr>
+<td>Program ID (Solana devnet)</td>
+<td><code>B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2</code></td>
+</tr>
+<tr>
+<td>TX de deploy</td>
+<td>Ver en <a href="https://explorer.solana.com/?cluster=devnet">Solana Explorer</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Guión de entrevista con usuarios potenciales</h3>
+<p><strong>Perfil objetivo:</strong> Migrante mexicano en EE.UU. que envía remesas regularmente.<br><strong>Duración:</strong> 20–30 minutos.<br><strong>Canal:</strong> WhatsApp videollamada o presencial.</p>
+<h4>Bloque 1 — Contexto (5 min)</h4>
+<ul>
+<li>¿Cuánto tiempo llevas viviendo en EE.UU.?</li>
+<li>¿A quién le envías dinero a México y con qué frecuencia?</li>
+<li>¿Cuánto envías en promedio cada vez?</li>
+</ul>
+<h4>Bloque 2 — Comportamiento actual (8 min)</h4>
+<ul>
+<li>¿Qué servicio usas hoy para enviar? ¿Por qué ese y no otro?</li>
+<li>¿Cuánto pagas de comisión? ¿Lo sabías antes de esta conversación?</li>
+<li>¿Alguna vez enviaste tarde? ¿Qué pasó?</li>
+<li>¿Cuánto tiempo te toma el proceso completo de enviar?</li>
+</ul>
+<h4>Bloque 3 — Descubrimiento del dolor (7 min)</h4>
+<ul>
+<li>¿Qué es lo más frustrante de enviar dinero a México?</li>
+<li>Si pudieras cambiar UNA cosa del proceso, ¿cuál sería?</li>
+<li>¿Usas WhatsApp todos los días? ¿Para qué cosas importantes?</li>
+</ul>
+<h4>Bloque 4 — Reacción a la solución (5 min)</h4>
+<ul>
+<li>(Mostrar demo de TIA en WhatsApp) ¿Qué piensas de esto?</li>
+<li>Si esto funcionara exactamente como te lo mostré, ¿lo usarías? ¿Por qué sí o no?</li>
+<li>¿Qué tendría que pasar para que lo probaras esta semana?</li>
+<li>¿Conoces a alguien más que envíe remesas a México?</li>
+</ul>
+<hr>
+<h3>Lista de usuarios, aliados y comunidades para validar</h3>
+<h4>Comunidades migrantes (canal primario)</h4>
+<table>
+<thead>
+<tr>
+<th>Comunidad / Organización</th>
+<th>Ciudad</th>
+<th>Tamaño estimado</th>
+<th>Canal de contacto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Amigos y familiares</td>
+<td>CDMX</td>
+<td>10</td>
+<td>Personal</td>
+</tr>
+<tr>
+<td>Comunidades Discord / Telegram / x.com Solana LATAM</td>
+<td>Virtual</td>
+<td>1,000+ miembros</td>
+<td>Canales personales</td>
+</tr>
+<tr>
+<td>Clubes de Oriundos de Michoacán</td>
+<td>Chicago, IL</td>
+<td>200–500 familias</td>
+<td>Videoconferencia / Facebook</td>
+</tr>
+<tr>
+<td>OCEMO (Oaxacalifornia)</td>
+<td>Los Ángeles, CA</td>
+<td>1,000+ familias</td>
+<td>x.com</td>
+</tr>
+<tr>
+<td>Asociaciones de migrantes guanajuatenses</td>
+<td>Houston, TX</td>
+<td>300–800 familias</td>
+<td>WhatsApp grupos</td>
+</tr>
+<tr>
+<td>WayLearn alumni y comunidad</td>
+<td>LATAM</td>
+<td>500+ builders</td>
+<td>Discord WayLearn</td>
+</tr>
+</tbody></table>
+<h4>Aliados potenciales (canal de distribución)</h4>
+<table>
+<thead>
+<tr>
+<th>Aliado</th>
+<th>Rol potencial</th>
+<th>Por qué</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Etherfuse</td>
+<td>Off-ramp SPEI</td>
+<td>Ya integrados en arquitectura</td>
+<td>Contactar vía X</td>
+</tr>
+<tr>
+<td>Helius</td>
+<td>RPC de Solana premium</td>
+<td>Infraestructura mainnet</td>
+<td>Aplicar a programa de startups</td>
+</tr>
+<tr>
+<td>Solana Foundation</td>
+<td>Grant + visibilidad</td>
+<td>Program ID verificable en devnet</td>
+<td>Aplicar a grants.solana.com</td>
+</tr>
+<tr>
+<td>WayLearn mentores</td>
+<td>Introducción a usuarios</td>
+<td>Red de confianza en LATAM</td>
+<td>Solicitar</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Métricas de adopción inicial a reportar durante el programa</h3>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Línea base hoy</th>
+<th>Target semana 4</th>
+<th>Target semana 8</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Entrevistas de descubrimiento realizadas</td>
+<td>0</td>
+<td>10</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Usuarios que completan flujo completo en demo</td>
+<td>0</td>
+<td>5</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Transacciones en devnet ejecutadas</td>
+<td>1 (TX deploy)</td>
+<td>10</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Segundos envíos espontáneos</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Referidos generados por usuarios</td>
+<td>0</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Connectors comunitarios activados</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Demos solicitadas por aliados</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Respuestas al waitlist/landing</td>
+<td>0</td>
+<td>20</td>
+<td>100</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Resumen ejecutivo</h2>
+<p><strong>Oportunidad de negocio identificada:</strong> El corredor de remesas CAN-MX-US procesa <strong>$64.7 mil millones anuales</strong> con comisiones de 5–7%. Las monedas estables ya comprimen esas comisiones por debajo del 1%. Ningún actor en el corredor tiene remesas recurrentes on-chain con Agente Inteligente conversacional en español; esa es la oportunidad.</p>
+<p><strong>Señal concreta para validar durante el programa:</strong> <strong>3 de 5 usuarios</strong> realizan un segundo envío espontáneo con RemesaBlink en las primeras 4 semanas desde el primer uso, sin ser contactados para hacerlo.</p>
+<p>Si esa señal se confirma, existe interés real y el modelo de distribución es replicable.</p>
+<hr>
+<p><em>Documento generado para WayLearn · RemesaBlink · Business Foundation M2 · Julio 2026</em></p>
+
+    <div class="doc-footer">WayLearn Solana Latam Labs · RemesaBlink · Business Foundation M2 · Julio 2026</div>
+  </div>
+</body>
+</html>
