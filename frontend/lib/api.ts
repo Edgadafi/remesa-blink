@@ -76,3 +76,53 @@ export async function apiFetch<T>(
   }
   return data as T;
 }
+
+/** Llamadas al route handler de Next (mismo origen — /piloto en Vercel). */
+export async function apiFetchSameOrigin<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
+  const url = path.startsWith("/") ? path : `/${path}`;
+  const headers = new Headers(init?.headers);
+  if (init?.body != null && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      ...init,
+      method: init?.method ?? "GET",
+      headers,
+      signal: init?.signal ?? controller.signal,
+    });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new ApiError(
+        `Tiempo agotado (${DEFAULT_TIMEOUT_MS / 1000}s) al llamar ${url}.`,
+        0
+      );
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeout);
+  }
+  const text = await res.text();
+  let data: unknown = null;
+  if (text) {
+    try {
+      data = JSON.parse(text) as unknown;
+    } catch {
+      data = text;
+    }
+  }
+  if (!res.ok) {
+    const msg =
+      data && typeof data === "object" && data !== null && "error" in data
+        ? flattenError(data as Record<string, unknown>)
+        : `HTTP ${res.status}`;
+    throw new ApiError(msg, res.status, data);
+  }
+  return data as T;
+}

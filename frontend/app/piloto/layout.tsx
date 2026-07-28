@@ -18,12 +18,13 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Remesa + Solana Blink + WhatsApp + IA — Programa piloto",
-  description: `${PILOTO_META_GOAL} familias piloto. Corredor CAN-EU-MX. Remesas por WhatsApp.`,
+  description: `${PILOTO_META_GOAL} familias piloto · CAN-EU-MX corridor. Remesas por WhatsApp. | ${PILOTO_META_GOAL} pilot families · Recurring remittances via WhatsApp.`,
   openGraph: {
     title: "Remesa + Solana Blink + WhatsApp + IA",
-    description: `${PILOTO_META_GOAL} familias piloto. Corredor CAN-EU-MX.`,
+    description: `${PILOTO_META_GOAL} familias piloto · CAN-EU-MX. | ${PILOTO_META_GOAL} pilot families.`,
     url: "https://frontend-bay-phi-92.vercel.app/piloto",
     locale: "es_MX",
+    alternateLocale: "en_US",
     type: "website",
     images: [{ url: "/piloto/hero-banner.png", width: 1200, height: 630, alt: "Remesa Solana Blink WhatsApp IA" }],
   },

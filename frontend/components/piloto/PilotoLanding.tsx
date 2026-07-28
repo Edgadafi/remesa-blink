@@ -4,6 +4,13 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ApiError } from "@/lib/api";
 import { getWaSupportUrl } from "@/lib/config";
 import {
+  getPilotoMessages,
+  parsePilotoLocale,
+  persistLocale,
+  readStoredLocale,
+  type PilotoLocale,
+} from "@/lib/i18n/piloto";
+import {
   fetchPilotosTotal,
   registrarPiloto,
   type BancarizadoPiloto,
@@ -13,6 +20,9 @@ import {
 } from "@/lib/pilotos";
 import { PILOTO_META_GOAL } from "@/lib/piloto-config";
 import { normalizeWa } from "@/lib/wa";
+import { PilotoEscudoDivider } from "./PilotoEscudoDivider";
+import { PilotoLangSwitch } from "./PilotoLangSwitch";
+import { PilotoRieles } from "./PilotoRieles";
 
 const REF_TO_CANAL: Record<string, CanalConfianza> = {
   comerciantes: "comerciantes",
@@ -21,9 +31,17 @@ const REF_TO_CANAL: Record<string, CanalConfianza> = {
   pyme: "pyme",
 };
 
-type Props = { refParam?: string; referidoId?: string };
+type Props = {
+  refParam?: string;
+  referidoId?: string;
+  initialLang?: string | null;
+};
 
-export function PilotoLanding({ refParam, referidoId }: Props) {
+export function PilotoLanding({ refParam, referidoId, initialLang }: Props) {
+  const fromQuery = parsePilotoLocale(initialLang);
+  const [locale, setLocale] = useState<PilotoLocale>(fromQuery ?? "es");
+  const t = getPilotoMessages(locale);
+
   const [total, setTotal] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +57,21 @@ export function PilotoLanding({ refParam, referidoId }: Props) {
     refParam ? REF_TO_CANAL[refParam] ?? "" : ""
   );
   const [notas, setNotas] = useState("");
+
+  const handleLocaleChange = useCallback((next: PilotoLocale) => {
+    setLocale(next);
+    persistLocale(next);
+  }, []);
+
+  useEffect(() => {
+    if (fromQuery) return;
+    const stored = readStoredLocale();
+    if (stored) setLocale(stored);
+  }, [fromQuery]);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "en" ? "en" : "es";
+  }, [locale]);
 
   const refreshTotal = useCallback(async () => {
     try {
@@ -57,7 +90,7 @@ export function PilotoLanding({ refParam, referidoId }: Props) {
     setError(null);
     const waNorm = normalizeWa(whatsapp);
     if (waNorm.length < 10 || !rol) {
-      setError("Revisa tu WhatsApp (incluye lada) y el rol.");
+      setError(t.errorValidation);
       return;
     }
     setLoading(true);
@@ -80,8 +113,8 @@ export function PilotoLanding({ refParam, referidoId }: Props) {
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 400
-          ? "Revisa tu WhatsApp (incluye lada) y el rol."
-          : "No pudimos guardar tu registro. Escríbenos a soporte@remesablink.com."
+          ? t.errorValidation
+          : t.errorSave
       );
     } finally {
       setLoading(false);
@@ -91,139 +124,172 @@ export function PilotoLanding({ refParam, referidoId }: Props) {
   const waUrl = getWaSupportUrl();
   const counter =
     total != null
-      ? `${total}/${PILOTO_META_GOAL} familias piloto`
-      : `Meta ${PILOTO_META_GOAL} familias piloto`;
+      ? t.counterWithTotal(total, PILOTO_META_GOAL)
+      : t.counterGoalOnly(PILOTO_META_GOAL);
 
   return (
     <div className="piloto-page">
       <header className="piloto-header">
         <span className="piloto-wordmark">Remesa + Solana Blink + WhatsApp + IA</span>
-        <span className="piloto-counter">{counter}</span>
+        <div className="piloto-header-actions">
+          <PilotoLangSwitch
+            locale={locale}
+            label={t.langSwitchLabel}
+            onChange={handleLocaleChange}
+          />
+          <span className="piloto-counter">{counter}</span>
+        </div>
       </header>
       <main className="piloto-main">
         <section className="piloto-section piloto-hero">
           <img
             className="piloto-hero-img"
             src="/piloto/hero-banner.png"
-            alt="Remesa con Solana Blink, WhatsApp e IA — envía dólares desde EE.UU. y llega en pesos a México en segundos"
+            alt={t.heroAlt}
             width={1200}
             height={630}
             fetchPriority="high"
           />
-          <p className="piloto-tagline">BRINGING - IT - CLOSER</p>
-          <h1 className="piloto-headline">Tu familia más cerca, cada mes</h1>
-          <p className="piloto-subhead">Programa una vez. Tu familia recibe aviso por WhatsApp.</p>
+          <PilotoEscudoDivider />
+          <p className="piloto-story">{t.story}</p>
+          <h1 className="piloto-headline">{t.headline}</h1>
+          <p className="piloto-subhead">{t.subhead}</p>
+          <PilotoRieles />
           <button
             type="button"
             className="piloto-btn-primary"
             onClick={() => document.getElementById("piloto-form")?.scrollIntoView({ behavior: "smooth" })}
           >
-            Quiero ser piloto
+            {t.ctaPrimary}
           </button>
         </section>
         <section className="piloto-section">
-          <h2>Mes tras mes, la misma fila</h2>
-          <p>Colas en la tiendita, INE a mano, comisiones — y tu familia esperando el aviso cada quincena.</p>
+          <h2>{t.problemTitle}</h2>
+          <p>{t.problemBody}</p>
         </section>
         <section className="piloto-section">
+          <PilotoRieles />
           <ol className="piloto-steps">
-            <li><strong>Tú lo programas</strong><em>Por WhatsApp, en minutos.</em></li>
-            <li><strong>Solana lo confirma</strong><em>Pago verificable en segundos.</em></li>
-            <li><strong>Tu familia lo recibe</strong><em>Aviso directo y link seguro.</em></li>
+            <li>
+              <strong>{t.step1Title}</strong>
+              <em>{t.step1Sub}</em>
+            </li>
+            <li>
+              <strong>{t.step2Title}</strong>
+              <em>{t.step2Sub}</em>
+            </li>
+            <li>
+              <strong>{t.step3Title}</strong>
+              <em>{t.step3Sub}</em>
+            </li>
           </ol>
         </section>
         <section className="piloto-section">
-          <div className="piloto-proof">
-            Buscamos <strong>10 familias piloto</strong> en corredor CAN-EU-MX.
-          </div>
+          <div className="piloto-proof">{t.proof}</div>
         </section>
         <section className="piloto-section" id="piloto-form">
           <div className="piloto-form-card">
             {success ? (
               <div className="piloto-msg-ok">
-                <h3>Gracias — te contactamos en 48 h por WhatsApp.</h3>
+                <h3>{t.successTitle}</h3>
+                <p className="piloto-msg-ok-note">{t.successNote}</p>
                 {waUrl ? (
                   <a href={waUrl} className="piloto-btn-secondary" target="_blank" rel="noopener noreferrer">
-                    Escríbenos por WhatsApp
+                    {t.successWa}
                   </a>
                 ) : (
-                  <a href="mailto:soporte@remesablink.com" className="piloto-btn-secondary">
-                    soporte@remesablink.com
+                  <a href="mailto:remesatia@gmail.com" className="piloto-btn-secondary">
+                    remesatia@gmail.com
                   </a>
                 )}
               </div>
             ) : (
               <form className="piloto-form" onSubmit={handleSubmit}>
                 <div className="piloto-field">
-                  <label htmlFor="whatsapp">WhatsApp *</label>
-                  <input id="whatsapp" type="tel" required value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+1 713… o +52 443…" />
+                  <label htmlFor="whatsapp">{t.formWhatsapp}</label>
+                  <input
+                    id="whatsapp"
+                    type="tel"
+                    required
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    placeholder={t.formWhatsappPlaceholder}
+                  />
                 </div>
                 <div className="piloto-field">
-                  <label htmlFor="rol">Soy… *</label>
+                  <label htmlFor="rol">{t.formRol}</label>
                   <select id="rol" required value={rol} onChange={(e) => setRol(e.target.value as RolPiloto)}>
-                    <option value="">Selecciona</option>
-                    <option value="remitente">Remitente (EE.UU.)</option>
-                    <option value="receptora">Receptora (México)</option>
-                    <option value="promotor">Promotor / aliado</option>
-                    <option value="tiendita">Dueño/a tiendita</option>
+                    <option value="">{t.formSelect}</option>
+                    <option value="remitente">{t.formRolRemitente}</option>
+                    <option value="receptora">{t.formRolReceptora}</option>
+                    <option value="promotor">{t.formRolPromotor}</option>
+                    <option value="tiendita">{t.formRolTiendita}</option>
                   </select>
                 </div>
                 <div className="piloto-field">
-                  <label htmlFor="nombre">Nombre (opcional)</label>
+                  <label htmlFor="nombre">{t.formNombre}</label>
                   <input id="nombre" value={nombreOpcional} onChange={(e) => setNombreOpcional(e.target.value)} />
                 </div>
                 <div className="piloto-field-row">
                   <div className="piloto-field">
-                    <label htmlFor="estado">Estado o ciudad</label>
+                    <label htmlFor="estado">{t.formEstado}</label>
                     <input id="estado" value={estado} onChange={(e) => setEstado(e.target.value)} />
                   </div>
                   <div className="piloto-field">
-                    <label htmlFor="municipio">Municipio</label>
+                    <label htmlFor="municipio">{t.formMunicipio}</label>
                     <input id="municipio" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
                   </div>
                 </div>
                 <div className="piloto-field-row">
                   <div className="piloto-field">
-                    <label htmlFor="zona">Zona</label>
+                    <label htmlFor="zona">{t.formZona}</label>
                     <select id="zona" value={zona} onChange={(e) => setZona(e.target.value as ZonaPiloto | "")}>
-                      <option value="">—</option>
-                      <option value="rural">Rural</option>
-                      <option value="semiurbana">Semiurbana</option>
-                      <option value="urbana">Urbana</option>
+                      <option value="">{t.formZonaEmpty}</option>
+                      <option value="rural">{t.formZonaRural}</option>
+                      <option value="semiurbana">{t.formZonaSemiurbana}</option>
+                      <option value="urbana">{t.formZonaUrbana}</option>
                     </select>
                   </div>
                   <div className="piloto-field">
-                    <label htmlFor="bancarizado">¿Cuenta bancaria?</label>
-                    <select id="bancarizado" value={bancarizado} onChange={(e) => setBancarizado(e.target.value as BancarizadoPiloto | "")}>
-                      <option value="">—</option>
-                      <option value="si">Sí</option>
-                      <option value="no">No</option>
-                      <option value="sub">Sub-bancarizada</option>
+                    <label htmlFor="bancarizado">{t.formBancarizado}</label>
+                    <select
+                      id="bancarizado"
+                      value={bancarizado}
+                      onChange={(e) => setBancarizado(e.target.value as BancarizadoPiloto | "")}
+                    >
+                      <option value="">{t.formZonaEmpty}</option>
+                      <option value="si">{t.formBancarizadoSi}</option>
+                      <option value="no">{t.formBancarizadoNo}</option>
+                      <option value="sub">{t.formBancarizadoSub}</option>
                     </select>
                   </div>
                 </div>
                 <div className="piloto-field">
-                  <label htmlFor="canal">¿Cómo nos conociste?</label>
-                  <select id="canal" value={canalConfianza} onChange={(e) => setCanalConfianza(e.target.value as CanalConfianza | "")}>
-                    <option value="">—</option>
-                    <option value="tiendita">Tiendita</option>
-                    <option value="comerciantes">Red de comerciantes / CANACO</option>
-                    <option value="pyme">Grupo emprendedores / PYME</option>
-                    <option value="asociacion_migrante">Asociación migrante</option>
-                    <option value="asociacion">Asociación comunitaria</option>
-                    <option value="familia">Familia o conocido</option>
-                    <option value="microfinanzas">Cooperativa / microfinanzas</option>
-                    <option value="iglesia">Iglesia / comunidad</option>
-                    <option value="otro">Otro</option>
+                  <label htmlFor="canal">{t.formCanal}</label>
+                  <select
+                    id="canal"
+                    value={canalConfianza}
+                    onChange={(e) => setCanalConfianza(e.target.value as CanalConfianza | "")}
+                  >
+                    <option value="">{t.formZonaEmpty}</option>
+                    <option value="tiendita">{t.formCanalTiendita}</option>
+                    <option value="comerciantes">{t.formCanalComerciantes}</option>
+                    <option value="pyme">{t.formCanalPyme}</option>
+                    <option value="asociacion_migrante">{t.formCanalMigrante}</option>
+                    <option value="asociacion">{t.formCanalAsociacion}</option>
+                    <option value="familia">{t.formCanalFamilia}</option>
+                    <option value="microfinanzas">{t.formCanalMicrofinanzas}</option>
+                    <option value="iglesia">{t.formCanalIglesia}</option>
+                    <option value="otro">{t.formCanalOtro}</option>
                   </select>
                 </div>
                 <div className="piloto-field">
-                  <label htmlFor="notas">Notas</label>
+                  <label htmlFor="notas">{t.formNotas}</label>
                   <textarea id="notas" value={notas} onChange={(e) => setNotas(e.target.value)} />
                 </div>
                 {error ? <p className="piloto-msg-error">{error}</p> : null}
                 <button type="submit" className="piloto-btn-primary" disabled={loading}>
-                  {loading ? "Enviando…" : "Unirme al piloto"}
+                  {loading ? t.formSubmitting : t.formSubmit}
                 </button>
               </form>
             )}
@@ -231,8 +297,10 @@ export function PilotoLanding({ refParam, referidoId }: Props) {
         </section>
       </main>
       <footer className="piloto-footer">
-        <p>Solo usamos tu WhatsApp para contactarte. Piloto en devnet — montos pequeños.</p>
-        <p><a href="mailto:soporte@remesablink.com">soporte@remesablink.com</a></p>
+        <p>{t.footer}</p>
+        <p>
+          <a href="mailto:remesatia@gmail.com">remesatia@gmail.com</a>
+        </p>
       </footer>
     </div>
   );

@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetchSameOrigin } from "./api";
 
 export type RolPiloto = "remitente" | "receptora" | "promotor" | "tiendita";
 export type ZonaPiloto = "rural" | "semiurbana" | "urbana";
@@ -32,12 +32,12 @@ export type RegistroPilotoInput = {
 };
 
 export async function fetchPilotosTotal(): Promise<number> {
-  const data = await apiFetch<{ total: number }>("/api/pilotos");
+  const data = await apiFetchSameOrigin<{ total: number }>("/api/pilotos");
   return data.total;
 }
 
 export async function registrarPiloto(body: RegistroPilotoInput): Promise<unknown> {
-  return apiFetch("/api/pilotos", {
+  return apiFetchSameOrigin("/api/pilotos", {
     method: "POST",
     body: JSON.stringify(body),
   });
