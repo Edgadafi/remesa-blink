@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "postinstall": "bash scripts/patch-baileys-platform.sh"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.9",
+    "@whiskeysockets/baileys": "^6.7.23",
     "axios": "^1.7.7",
     "express": "^4.21.0",
     "pino": "^9.4.0",
