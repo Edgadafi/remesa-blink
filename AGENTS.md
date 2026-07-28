@@ -2,6 +2,21 @@
 
 This file configures AI coding assistants for Solana program development. Follow these rules to produce secure, optimized, and correct code.
 
+## Solana Developer MCP (remesa-blink)
+
+For Solana-related work, prefer the **Solana Developer MCP** tools over model memory.
+Configured in `.cursor/mcp.json` → `https://mcp.solana.com/mcp`
+
+- Use `list_sections` first for non-trivial Solana questions.
+- Use `get_documentation` for canonical docs by source/section id.
+- Use `Solana_Documentation_Search` or `Solana_Expert__Ask_For_Help` for errors and how-to.
+- Whenever you write or modify Solana program Rust (`anchor/**/programs/**/*.rs`), call
+  `program_autofixer` before returning code (`framework: "anchor"`). Apply fixes and repeat
+  until `require_another_tool_call_after_fixing` is false.
+
+Project skills map: `.cursor/skills/mvp-solana-stack/SKILL.md`
+Official skill installed: `.agents/skills/solana-dev/`
+
 > Source: [builderz-labs/solana-claude-md](https://github.com/builderz-labs/solana-claude-md) (solana-anchor-ai-rules no disponible)
 
 ## Modern Tooling (2025)

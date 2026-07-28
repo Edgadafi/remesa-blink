@@ -17,6 +17,7 @@
     "e2e:sol": "cd backend && npm run e2e:sol",
     "test": "cd backend && npm test",
     "dev:web": "cd frontend && npm run dev",
+    "dev:web:up": "bash scripts/dev-web.sh",
     "build:web": "cd frontend && npm run build",
     "start:web": "cd frontend && npm run start",
     "tunnel:setup": "bash scripts/cloudflare-tunnel-setup.sh",
@@ -25,6 +26,13 @@
     "dev:tunnel": "bash scripts/dev-with-tunnel.sh",
     "skills:install": "npx --yes skills add https://github.com/solana-foundation/solana-dev-skill -y",
     "mcp:keeper": "cd backend && npm run mcp",
+    "docs:diagrams:m3": "node scripts/render-mermaid-diagrams.mjs",
+    "docs:pdf:m2": "node scripts/export-business-foundation-pdf.mjs",
+    "docs:pdf:m3": "node scripts/export-architecture-m3-pdf.mjs",
     "demo:preflight": "bash scripts/demo-preflight.sh"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.2",
+    "marked": "^15.0.12"
   }
 }

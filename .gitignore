@@ -16,6 +16,12 @@ auth_info/
 wallet-keypair.json
 playground-wallet.json
 
+# Cloudflare Tunnel (credenciales locales)
+cloudflare/config.yml
+cloudflare/credentials/
+cloudflare/*.json
+!cloudflare/config.yml.example
+
 # Build / cache
 dist
 build
@@ -24,4 +30,10 @@ build
 # OS
 .DS_Store
 Thumbs.db
+*.Zone.Identifier
+
+# WhatsApp session backups / agent noise
+auth_info.bak.*/
+bot/auth_info.bak.*/
+frontend/nul
 *.Zone.Identifier

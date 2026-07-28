@@ -2,6 +2,14 @@
 
 Sistema de remesas recurrentes con programa Anchor en Solana, backend Express, bot WhatsApp (Baileys), Blinks y keeper cron.
 
+**Demo en vivo:** ver [DEMO.md](./DEMO.md) (guión ~3 min + checklist WayLearn).
+
+**Composabilidad on-chain:** eventos `PagoEjecutado`, PDAs `PagoReceipt` y perfiles por wallet. Ver [docs/COMPOSABILITY.md](./docs/COMPOSABILITY.md).
+
+**Usuarios reales (corredor MX ↔ EE.UU.):** persona no bancarizada, receptora rural, confianza vía tiendita/comerciantes/PYMEs/familia. Ver [docs/PERSONA-MX-US.md](./docs/PERSONA-MX-US.md) y registro [docs/VALIDACION-USUARIOS.md](./docs/VALIDACION-USUARIOS.md) · API `POST /api/pilotos` · landing `/piloto`.
+
+**Crecimiento (SGE / IA):** playbook orgánico con hooks + funnel → [docs/GROWTH-SGE.md](./docs/GROWTH-SGE.md).
+
 ## Estructura
 
 ```
@@ -9,7 +17,8 @@ remesa-blink/
 ├── anchor/remesas_recurrentes/   # Programa Anchor
 ├── backend/                      # API Express + Keeper
 ├── bot/                          # Bot WhatsApp (Baileys)
-├── blinks/                       # Servidor Blinks
+├── blinks/                       # Servidor Blinks (legacy / standalone)
+├── frontend/                     # Next.js — interfaz web (suscripciones, cashback, enlaces Blinks)
 ├── db/                           # Schema PostgreSQL
 └── README.md
 ```
@@ -34,11 +43,12 @@ Anota el `PROGRAM_ID` (en Anchor.toml) para el backend.
 
 ## 2. Base de datos
 
-**Opción A - Docker** (si tienes Docker instalado):
+**Opción A - Docker** (recomendado para desarrollo local):
 ```bash
 docker compose up -d
 sleep 5 && npm run db:schema
 ```
+Asegura `DATABASE_URL=postgresql://user:pass@localhost:5432/remesa_blink` en `backend/.env` (ver `docker-compose.yml`).
 
 **Opción B - PostgreSQL local**:
 ```bash
@@ -72,6 +82,11 @@ Copia los `.env.example` en cada módulo y configura:
 - `PORT`: 3001
 - `BLINKS_BASE_URL`: URL pública del servidor Blinks
 
+**frontend/.env** (copia desde `frontend/.env.example`)
+- Abres la app en **`http://localhost:3003`** (`npm run dev:web`).
+- **`NEXT_PUBLIC_API_URL`**: URL del **backend** (normalmente `http://localhost:3000`), no la del frontend. Si la pones en 3003, las peticiones fallan porque Next no es el API.
+- `NEXT_PUBLIC_BLINKS_BASE_URL`: opcional; si los Blinks están en otro origen que el API
+
 ## 4. Faucet (SOL de prueba)
 
 ```bash
@@ -92,14 +107,23 @@ npm run keeper
 
 # Bot WhatsApp
 cd bot && npm install && npm run start
+
+# Frontend web (Next.js en :3003 — evita choque con backend :3000)
+cd frontend && npm install && npm run dev
+# o desde raíz: npm run dev:web
 ```
 
 **Scripts desde raíz:**
 - `npm run dev` — Backend + Blinks
+- `npm run dev:web` — Interfaz web Next.js (`frontend/`)
+- `npm run build:web` / `npm run start:web` — Build y producción del frontend
 - `npm run keeper` — Keeper cron
 - `npm run keeper:airdrop` — Dirección para airdrop
 - `npm run keeper:usdc-ata` — Crear ATA USDC del keeper
+- `npm run e2e:sol` — E2E: suscripción SOL + keeper + cashback
 - `npm run e2e:usdc` — E2E: suscripción USDC + keeper
+- `npm run preflight` — smoke keeper + balance USDC
+- `npm run anchor:test` — tests Anchor (local validator)
 
 ## 6. Flujo de prueba
 
@@ -118,15 +142,18 @@ cd bot && npm install && npm run start
 
 ## Comandos del bot
 
-| Comando | Descripción |
-|---------|-------------|
-| /start, /ayuda | Mensaje de bienvenida |
-| /recurrente [monto] [SOL\|USDC] [frecuencia] [destinatario_wa] [wallet_solana] | Registrar remesa recurrente (SOL por defecto) |
-| /mis-remesas | Listar suscripciones activas |
-| /cashback, /mis-recompensas | Ver saldo cashback |
-| /generar-codigo | Generar código de referido |
-| /canjear [monto] | Canjear cashback |
-| /soporte | Contactar soporte |
+Lenguaje natural (recomendado para piloto / Demo Day):
+
+| Escribes | Qué hace |
+|----------|----------|
+| hola / ayuda | Menú |
+| enviar | Guía paso a paso (monto → frecuencia → WA familia → wallet) |
+| mis envíos | Lista remesas activas |
+| recompensas | Cashback / referidos |
+| soporte | Contacto humano |
+| cancelar | Sale del flujo *enviar* |
+
+Alias técnicos (siguen funcionando): `/recurrente`, `/mis-remesas`, `/cashback`, `/ayuda`, `/generar-codigo`, `/canjear`, `/soporte`.
 
 ## API Endpoints
 

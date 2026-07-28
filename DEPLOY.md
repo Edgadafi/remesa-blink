@@ -1,6 +1,37 @@
 # Deploy Remesa Blink (MVP Hackathon)
 
-## Opción 1: Railway (recomendado - ~2 min)
+## Backend gratis — Cloudflare Named Tunnel (recomendado MVP)
+
+Sin tarjeta. API pública HTTPS → backend local `:3000`.
+
+**Guía completa:** [docs/CLOUDFLARE-TUNNEL.md](./docs/CLOUDFLARE-TUNNEL.md)
+
+```bash
+./scripts/cloudflare-tunnel-setup.sh   # una vez
+npm run dev                            # terminal 1
+npm run tunnel:run                     # terminal 2
+```
+
+URL típica: `https://api.remesablink.com` → configurar en Vercel `NEXT_PUBLIC_API_URL`.
+
+---
+
+## Frontend — Vercel (landing `/piloto`)
+
+1. **Root directory:** `frontend` (Settings → General en Vercel)
+2. **Variables** (Project → Settings → Environment Variables):
+   ```
+   NEXT_PUBLIC_API_URL=https://<tu-backend>.railway.app
+   NEXT_PUBLIC_WA_SUPPORT=5214431234567   # opcional
+   ```
+3. **Backend CORS:** en el API, `CORS_ORIGIN=https://<tu-app>.vercel.app,http://localhost:3003`
+4. Deploy: `cd frontend && npx vercel --prod`
+
+**Producción actual:** https://frontend-bay-phi-92.vercel.app/piloto
+
+---
+
+## Backend — Railway / Render (API + Blinks)
 
 1. **Conectar repo**
    - [railway.app](https://railway.app) → New Project → Deploy from GitHub
