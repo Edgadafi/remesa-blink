@@ -24,10 +24,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 const RPC_URL = process.env.RPC_URL || "https://api.devnet.solana.com";
-const SOLANA_PRIVATE_KEY = process.env.SOLANA_PRIVATE_KEY;
+const SOLANA_PRIVATE_KEY = process.env.KEEPER_PRIVATE_KEY || process.env.SOLANA_PRIVATE_KEY;
 
 if (!SOLANA_PRIVATE_KEY) {
-  console.error("Error: SOLANA_PRIVATE_KEY requerido en .env");
+  console.error("Error: KEEPER_PRIVATE_KEY o SOLANA_PRIVATE_KEY requerido en .env");
   process.exit(1);
 }
 

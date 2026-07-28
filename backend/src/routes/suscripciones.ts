@@ -17,6 +17,7 @@ const crearSchema = z.object({
   monto: z.number().positive(),
   frecuencia: z.enum(["diario", "semanal", "mensual"]),
   tipo_activo: z.enum(["SOL", "USDC"]).optional().default("SOL"),
+  usuario_remitente_solana: z.string().min(32).max(44).optional(),
 });
 
 router.post("/", async (req, res) => {

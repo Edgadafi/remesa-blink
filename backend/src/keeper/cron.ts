@@ -9,6 +9,7 @@ import {
   actualizarSuscripcionDespuesPago,
 } from "../services/suscripciones.js";
 import { registrarCashbackPorRemesa } from "../services/cashback.js";
+import { registrarPagoEnDb } from "../services/pagos.js";
 import {
   ejecutarPagoOnChain,
   ejecutarPagoUsdcOnChain,
@@ -40,10 +41,12 @@ export async function ejecutarPagos() {
       const keeper = getKeeperKeypair();
       const destinatario = new PublicKey(susc.destinatario_solana);
 
-      const txSig =
+      const pagoResult =
         susc.tipo_activo === "USDC"
           ? await ejecutarPagoUsdcOnChain(keeper.publicKey, destinatario)
           : await ejecutarPagoOnChain(keeper.publicKey, destinatario);
+
+      const txSig = pagoResult.txSignature;
 
       const now = new Date();
       const intervalo = FRECUENCIA_SECONDS[susc.frecuencia] || 86400;
@@ -55,6 +58,17 @@ export async function ejecutarPagos() {
           ? Number(susc.monto) / 1e6
           : Number(susc.monto) / 1e9;
       await registrarCashbackPorRemesa(susc.remitente_wa, montoHuman, susc.id);
+
+      await registrarPagoEnDb({
+        suscripcion_id: susc.id,
+        receipt_pda: pagoResult.receiptPda,
+        tx_signature: txSig,
+        nonce: pagoResult.nonce,
+        monto: Number(susc.monto),
+        tipo_activo: (susc.tipo_activo || "SOL") as "SOL" | "USDC",
+        usuario_remitente_solana: susc.usuario_remitente_solana ?? null,
+        destinatario_solana: susc.destinatario_solana,
+      });
 
       const baseUrl = process.env.BLINKS_BASE_URL || process.env.BASE_URL;
       let blinkUrl: string | null = null;
@@ -78,7 +92,7 @@ export async function ejecutarPagos() {
 
       const logExtras = blinkOnboarding ? ` | Onboarding: ${blinkOnboarding}` : "";
       console.log(
-        `[Keeper] Pago ${susc.tipo_activo || "SOL"} ejecutado: ${susc.id} -> ${txSig} | Blink: ${blinkUrl || "N/A"}${logExtras}`
+        `[Keeper] Pago ${susc.tipo_activo || "SOL"} ejecutado: ${susc.id} -> ${txSig} | Receipt: ${pagoResult.receiptPda} | Blink: ${blinkUrl || "N/A"}${logExtras}`
       );
 
       await enviarNotificacionPago({
@@ -95,15 +109,20 @@ export async function ejecutarPagos() {
   }
 }
 
-const intervalMin = parseInt(process.env.KEEPER_INTERVAL_MINUTES || "60", 10) || 60;
-const cronExpr = intervalMin >= 60
-  ? "0 * * * *"
-  : `*/${Math.max(1, intervalMin)} * * * *`;
+/** Solo arranca el cron cuando se ejecuta `npm run keeper` (no en imports de run-once/smoke). */
+const isCronProcess =
+  typeof process.argv[1] === "string" &&
+  (process.argv[1].includes("keeper/cron") || process.argv[1].endsWith("cron.ts"));
 
-cron.schedule(cronExpr, ejecutarPagos);
+if (isCronProcess) {
+  const intervalMin = parseInt(process.env.KEEPER_INTERVAL_MINUTES || "60", 10) || 60;
+  const cronExpr =
+    intervalMin >= 60 ? "0 * * * *" : `*/${Math.max(1, intervalMin)} * * * *`;
 
-console.log(`[Keeper] Iniciado. Ejecutará pagos cada ${intervalMin} minuto(s).`);
-ejecutarPagos().catch(console.error);
+  cron.schedule(cronExpr, ejecutarPagos);
 
-// Mantener el proceso vivo
-process.on("SIGINT", () => process.exit(0));
+  console.log(`[Keeper] Iniciado. Ejecutará pagos cada ${intervalMin} minuto(s).`);
+  ejecutarPagos().catch(console.error);
+
+  process.on("SIGINT", () => process.exit(0));
+}

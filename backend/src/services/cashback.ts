@@ -100,7 +100,7 @@ export async function obtenerResumenCashback(usuario_wa: string) {
 
   const codigoRes = await pool.query(
     "SELECT codigo FROM cashback_referidos WHERE referidor_wa = $1 AND referido_wa = $1 LIMIT 1",
-    [usuario_wa, usuario_wa]
+    [usuario_wa]
   );
 
   return {

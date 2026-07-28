@@ -1,0 +1,53 @@
+/**
+ * Registro de pagos (mirror off-chain del historial composable)
+ */
+import pool from "../db/pool.js";
+
+export interface RegistrarPagoParams {
+  suscripcion_id: string;
+  receipt_pda: string;
+  tx_signature: string;
+  nonce: number;
+  monto: number;
+  tipo_activo: "SOL" | "USDC";
+  usuario_remitente_solana?: string | null;
+  destinatario_solana: string;
+}
+
+export async function registrarPagoEnDb(params: RegistrarPagoParams) {
+  await pool.query(
+    `INSERT INTO pagos (
+      suscripcion_id, receipt_pda, tx_signature, nonce, monto, tipo_activo,
+      usuario_remitente_solana, destinatario_solana
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    [
+      params.suscripcion_id,
+      params.receipt_pda,
+      params.tx_signature,
+      params.nonce,
+      params.monto,
+      params.tipo_activo,
+      params.usuario_remitente_solana ?? null,
+      params.destinatario_solana,
+    ]
+  );
+}
+
+export async function listarPagosPorSuscripcion(suscripcionId: string) {
+  const res = await pool.query(
+    `SELECT * FROM pagos WHERE suscripcion_id = $1 ORDER BY created_at DESC`,
+    [suscripcionId]
+  );
+  return res.rows;
+}
+
+export async function listarPagosPorWallet(wallet: string) {
+  const res = await pool.query(
+    `SELECT * FROM pagos
+     WHERE usuario_remitente_solana = $1 OR destinatario_solana = $1
+     ORDER BY created_at DESC
+     LIMIT 50`,
+    [wallet]
+  );
+  return res.rows;
+}

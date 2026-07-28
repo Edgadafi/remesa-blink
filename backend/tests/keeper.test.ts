@@ -14,13 +14,25 @@ vi.mock("../src/services/suscripciones.js", () => ({
   actualizarSuscripcionDespuesPago: vi.fn(),
 }));
 
+vi.mock("../src/services/pagos.js", () => ({
+  registrarPagoEnDb: vi.fn(),
+}));
+
 vi.mock("../src/services/cashback.js", () => ({
   registrarCashbackPorRemesa: vi.fn(),
 }));
 
 vi.mock("../src/services/solana.js", () => ({
-  ejecutarPagoOnChain: vi.fn().mockResolvedValue("tx-sig-123"),
-  ejecutarPagoUsdcOnChain: vi.fn().mockResolvedValue("tx-sig-usdc-456"),
+  ejecutarPagoOnChain: vi.fn().mockResolvedValue({
+    txSignature: "tx-sig-123",
+    receiptPda: "ReceiptPda111111111111111111111111111111",
+    nonce: 0,
+  }),
+  ejecutarPagoUsdcOnChain: vi.fn().mockResolvedValue({
+    txSignature: "tx-sig-usdc-456",
+    receiptPda: "ReceiptPda222222222222222222222222222222",
+    nonce: 0,
+  }),
   getKeeperKeypair: vi.fn().mockReturnValue({
     publicKey: { toBase58: () => "KeeperPubkey111111111111111111111111111" },
   }),
@@ -40,6 +52,7 @@ vi.mock("node-cron", () => ({
 const { ejecutarPagos } = await import("../src/keeper/cron.js");
 const { listarSuscripcionesPendientesPago } = await import("../src/services/suscripciones.js");
 const { actualizarSuscripcionDespuesPago } = await import("../src/services/suscripciones.js");
+const { registrarPagoEnDb } = await import("../src/services/pagos.js");
 const { registrarCashbackPorRemesa } = await import("../src/services/cashback.js");
 const { ejecutarPagoOnChain, ejecutarPagoUsdcOnChain } = await import("../src/services/solana.js");
 const { enviarNotificacionPago } = await import("../src/services/notificaciones.js");
@@ -97,6 +110,13 @@ describe("Keeper - ejecutarPagos", () => {
       "5215550000000",
       1,
       "susc-1"
+    );
+    expect(registrarPagoEnDb).toHaveBeenCalledWith(
+      expect.objectContaining({
+        suscripcion_id: "susc-1",
+        tx_signature: "tx-sig-123",
+        receipt_pda: "ReceiptPda111111111111111111111111111111",
+      })
     );
     expect(enviarNotificacionPago).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -174,7 +194,11 @@ describe("Keeper - ejecutarPagos", () => {
     ]);
     vi.mocked(ejecutarPagoOnChain)
       .mockRejectedValueOnce(new Error("RPC error"))
-      .mockResolvedValueOnce("tx-ok");
+      .mockResolvedValueOnce({
+        txSignature: "tx-ok",
+        receiptPda: "ReceiptOk",
+        nonce: 0,
+      });
 
     await ejecutarPagos();
 

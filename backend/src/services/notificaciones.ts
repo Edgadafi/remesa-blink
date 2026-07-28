@@ -4,6 +4,8 @@
 const BOT_INTERNAL_URL = process.env.BOT_INTERNAL_URL || "http://localhost:3002";
 const BOT_INTERNAL_SECRET = process.env.BOT_INTERNAL_SECRET || "";
 
+const SUPPORT_EMAIL = "remesatia@gmail.com";
+
 export interface NotifPagoParams {
   destinatario_wa: string;
   remitente_wa: string;
@@ -13,19 +15,71 @@ export interface NotifPagoParams {
   blinkOnboarding: string | null;
 }
 
-function buildMensajePago(params: NotifPagoParams): string {
+function formatMontoDisplay(montoHuman: number, tipoActivo: string): string {
+  if (tipoActivo === "USDC") {
+    const n = Number.isInteger(montoHuman)
+      ? String(montoHuman)
+      : montoHuman.toFixed(2);
+    return `$${n} USDC`;
+  }
+  const n = montoHuman.toFixed(9).replace(/\.?0+$/, "");
+  return `${n} SOL`;
+}
+
+/**
+ * Copy post-pago receptora — UX confianza (docs/UX-TRUST-DESIGN.md).
+ * Exportado para tests.
+ */
+export function buildMensajePago(params: NotifPagoParams): string {
   const { montoHuman, tipo_activo, blinkUrl, blinkOnboarding } = params;
-  const activo = tipo_activo === "USDC" ? "USDC" : "SOL";
-  let msg = `*Remesa recibida*\n\nRecibiste ${montoHuman} ${activo}. `;
+  const montoStr = formatMontoDisplay(montoHuman, tipo_activo);
+
+  const lines: string[] = [
+    "✅ *Remesa de tu familia*",
+    "",
+    `Recibiste *${montoStr}* de quien te envía desde EE.UU.`,
+  ];
+
+  if (tipo_activo === "USDC") {
+    lines.push(
+      "",
+      "_Dólares digitales — puedes verlos o convertirlos a pesos con el link._"
+    );
+  }
+
+  lines.push(
+    "",
+    "Es el mismo aviso que te manda tu familiar — no es spam.",
+    ""
+  );
 
   if (blinkUrl) {
-    msg += `\n\n🔗 Para reclamar o convertir: ${blinkUrl}`;
-  }
-  if (blinkOnboarding) {
-    msg += `\n\n📋 Si aún no registraste tu cuenta para recibir MXN: ${blinkOnboarding}`;
+    lines.push(
+      "1️⃣ Toca el link de abajo",
+      "2️⃣ Se abre una página segura (~2 min)",
+      "3️⃣ Confirma en tu app de wallet (Phantom u otra)",
+      "",
+      `🔗 ${blinkUrl}`
+    );
   }
 
-  return msg;
+  if (blinkOnboarding) {
+    lines.push(
+      "",
+      "📋 *Para recibir pesos en tu cuenta (SPEI)*",
+      "Primero completa tu registro (una sola vez):",
+      blinkOnboarding
+    );
+  }
+
+  lines.push(
+    "",
+    "¿Dudas? Responde *AYUDA* o pregunta en la tiendita de confianza.",
+    "",
+    `_Si el link no abre, escríbenos a ${SUPPORT_EMAIL} con tu número._`
+  );
+
+  return lines.join("\n");
 }
 
 export async function enviarMensaje(to: string, text: string): Promise<void> {

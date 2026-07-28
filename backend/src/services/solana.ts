@@ -27,6 +27,9 @@ const PROGRAM_ID = new PublicKey(
   process.env.PROGRAM_ID || "B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2"
 );
 
+/** Mint sentinel on-chain para pagos SOL (Pubkey default). */
+export const MINT_SOL_SENTINEL = PublicKey.default;
+
 const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
 const USDC_DEVNET = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 const USDC_MAINNET = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
@@ -35,13 +38,18 @@ export const USDC_MINT = new PublicKey(
   process.env.USDC_MINT || (RPC_URL.includes("devnet") ? USDC_DEVNET : USDC_MAINNET)
 );
 
-// Frecuencia enum (debe coincidir con el programa)
 export const FrecuenciaAnchor = {
   Desconocida: { desconocida: {} },
   Diario: { diario: {} },
   Semanal: { semanal: {} },
   Mensual: { mensual: {} },
 } as const;
+
+export interface PagoOnChainResult {
+  txSignature: string;
+  receiptPda: string;
+  nonce: number;
+}
 
 export function getProgram(): Program {
   const connection = new Connection(
@@ -81,9 +89,6 @@ export function getConnection(): Connection {
   );
 }
 
-/**
- * Deriva el PDA de una suscripción
- */
 export function getSuscripcionPda(
   remitente: PublicKey,
   destinatario: PublicKey
@@ -110,15 +115,78 @@ export function getSuscripcionUsdcPda(
   );
 }
 
+export function getPagoReceiptPda(
+  suscripcionPda: PublicKey,
+  nonce: number | bigint
+): [PublicKey, number] {
+  const nonceBuf = Buffer.alloc(8);
+  nonceBuf.writeBigUInt64LE(BigInt(nonce));
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("receipt"), suscripcionPda.toBuffer(), nonceBuf],
+    PROGRAM_ID
+  );
+}
+
+export function getPerfilRemitentePda(wallet: PublicKey): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("perfil_remitente"), wallet.toBuffer()],
+    PROGRAM_ID
+  );
+}
+
+export function getPerfilDestinatarioPda(wallet: PublicKey): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("perfil_destinatario"), wallet.toBuffer()],
+    PROGRAM_ID
+  );
+}
+
+export async function fetchPerfilRemitente(wallet: PublicKey) {
+  const program = getProgram();
+  const [pda] = getPerfilRemitentePda(wallet);
+  try {
+    return await program.account.perfilRemitente.fetch(pda);
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchPerfilDestinatario(wallet: PublicKey) {
+  const program = getProgram();
+  const [pda] = getPerfilDestinatarioPda(wallet);
+  try {
+    return await program.account.perfilDestinatario.fetch(pda);
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSuscripcionContadorPagos(
+  remitente: PublicKey,
+  destinatario: PublicKey,
+  tipo: "SOL" | "USDC" = "SOL",
+  mint: PublicKey = USDC_MINT
+): Promise<number> {
+  const program = getProgram();
+  if (tipo === "USDC") {
+    const [pda] = getSuscripcionUsdcPda(remitente, destinatario, mint);
+    const acct = await program.account.suscripcionUsdc.fetch(pda);
+    return Number(acct.contadorPagos);
+  }
+  const [pda] = getSuscripcionPda(remitente, destinatario);
+  const acct = await program.account.suscripcion.fetch(pda);
+  return Number(acct.contadorPagos);
+}
+
 /**
- * Registra una suscripción en el programa Anchor.
- * MVP: keeper actúa como remitente (custodial). Los fondos salen del keeper.
+ * Registra suscripción SOL. usuarioRemitente = identidad composable (wallet real).
  */
 export async function registrarSuscripcionOnChain(
   remitente: PublicKey,
   destinatario: PublicKey,
   monto: bigint,
-  frecuencia: "diario" | "semanal" | "mensual"
+  frecuencia: "diario" | "semanal" | "mensual",
+  usuarioRemitente?: PublicKey
 ): Promise<string> {
   const program = getProgram();
   const keeper = getKeeperKeypair();
@@ -128,10 +196,10 @@ export async function registrarSuscripcionOnChain(
     mensual: FrecuenciaAnchor.Mensual,
   };
 
-  // Keeper = remitente on-chain (modelo custodial para MVP)
+  const identity = usuarioRemitente ?? keeper.publicKey;
   const montoBn = new BN(monto.toString());
   const tx = await program.methods
-    .registrarSuscripcion(montoBn, freqMap[frecuencia])
+    .registrarSuscripcion(montoBn, freqMap[frecuencia], identity)
     .accounts({
       suscripcion: getSuscripcionPda(keeper.publicKey, destinatario)[0],
       remitente: keeper.publicKey,
@@ -141,46 +209,49 @@ export async function registrarSuscripcionOnChain(
     .transaction();
 
   const connection = getConnection();
-  const sig = await sendAndConfirmTransaction(connection, tx, [keeper]);
-  return sig;
+  return sendAndConfirmTransaction(connection, tx, [keeper]);
 }
 
-/**
- * Ejecuta un pago en el programa Anchor (keeper)
- */
 export async function ejecutarPagoOnChain(
   remitente: PublicKey,
   destinatario: PublicKey
-): Promise<string> {
+): Promise<PagoOnChainResult> {
   const program = getProgram();
+  const keeper = getKeeperKeypair();
   const [suscripcionPda] = getSuscripcionPda(remitente, destinatario);
+
+  const suscripcionBefore = await program.account.suscripcion.fetch(suscripcionPda);
+  const nonce = Number(suscripcionBefore.contadorPagos);
+  const [receiptPda] = getPagoReceiptPda(suscripcionPda, nonce);
+  const [perfilRemitentePda] = getPerfilRemitentePda(suscripcionBefore.usuarioRemitente);
+  const [perfilDestinatarioPda] = getPerfilDestinatarioPda(destinatario);
 
   const tx = await program.methods
     .ejecutarPago()
     .accounts({
       suscripcion: suscripcionPda,
+      receipt: receiptPda,
+      perfilRemitente: perfilRemitentePda,
+      perfilDestinatario: perfilDestinatarioPda,
       remitente,
       destinatario,
-      keeper: getKeeperKeypair().publicKey,
+      keeper: keeper.publicKey,
       systemProgram: anchor.web3.SystemProgram.programId,
     })
     .transaction();
 
-  const keeper = getKeeperKeypair();
   const connection = getConnection();
-  const sig = await sendAndConfirmTransaction(connection, tx, [keeper]);
-  return sig;
+  const txSignature = await sendAndConfirmTransaction(connection, tx, [keeper]);
+  return { txSignature, receiptPda: receiptPda.toBase58(), nonce };
 }
 
-/**
- * Registra una suscripción USDC en el programa Anchor.
- */
 export async function registrarSuscripcionUsdcOnChain(
   remitente: PublicKey,
   destinatario: PublicKey,
   montoRaw: bigint,
   frecuencia: "diario" | "semanal" | "mensual",
-  mint: PublicKey = USDC_MINT
+  mint: PublicKey = USDC_MINT,
+  usuarioRemitente?: PublicKey
 ): Promise<string> {
   const program = getProgram();
   const keeper = getKeeperKeypair();
@@ -190,9 +261,10 @@ export async function registrarSuscripcionUsdcOnChain(
     mensual: FrecuenciaAnchor.Mensual,
   };
 
+  const identity = usuarioRemitente ?? keeper.publicKey;
   const montoBn = new BN(montoRaw.toString());
   const tx = await program.methods
-    .registrarSuscripcionUsdc(montoBn, freqMap[frecuencia])
+    .registrarSuscripcionUsdc(montoBn, freqMap[frecuencia], identity)
     .accounts({
       suscripcionUsdc: getSuscripcionUsdcPda(keeper.publicKey, destinatario, mint)[0],
       remitente: keeper.publicKey,
@@ -203,21 +275,23 @@ export async function registrarSuscripcionUsdcOnChain(
     .transaction();
 
   const connection = getConnection();
-  const sig = await sendAndConfirmTransaction(connection, tx, [keeper]);
-  return sig;
+  return sendAndConfirmTransaction(connection, tx, [keeper]);
 }
 
-/**
- * Ejecuta un pago USDC. Requiere ATAs de keeper y destinatario.
- */
 export async function ejecutarPagoUsdcOnChain(
   remitente: PublicKey,
   destinatario: PublicKey,
   mint: PublicKey = USDC_MINT
-): Promise<string> {
+): Promise<PagoOnChainResult> {
   const program = getProgram();
   const keeper = getKeeperKeypair();
   const [suscripcionPda] = getSuscripcionUsdcPda(remitente, destinatario, mint);
+
+  const suscripcionBefore = await program.account.suscripcionUsdc.fetch(suscripcionPda);
+  const nonce = Number(suscripcionBefore.contadorPagos);
+  const [receiptPda] = getPagoReceiptPda(suscripcionPda, nonce);
+  const [perfilRemitentePda] = getPerfilRemitentePda(suscripcionBefore.usuarioRemitente);
+  const [perfilDestinatarioPda] = getPerfilDestinatarioPda(destinatario);
 
   const sourceAta = getAssociatedTokenAddressSync(mint, keeper.publicKey);
   const destAta = getAssociatedTokenAddressSync(mint, destinatario);
@@ -233,16 +307,20 @@ export async function ejecutarPagoUsdcOnChain(
     .ejecutarPagoUsdc()
     .accounts({
       suscripcionUsdc: suscripcionPda,
+      receipt: receiptPda,
+      perfilRemitente: perfilRemitentePda,
+      perfilDestinatario: perfilDestinatarioPda,
       sourceTokenAccount: sourceAta,
       destTokenAccount: destAta,
       authority: keeper.publicKey,
       tokenProgram: TOKEN_PROGRAM_ID,
+      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 
   const tx = new Transaction().add(createAtaIx, ix);
 
   const connection = getConnection();
-  const sig = await sendAndConfirmTransaction(connection, tx, [keeper]);
-  return sig;
+  const txSignature = await sendAndConfirmTransaction(connection, tx, [keeper]);
+  return { txSignature, receiptPda: receiptPda.toBase58(), nonce };
 }

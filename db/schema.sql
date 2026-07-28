@@ -4,6 +4,15 @@
 -- Extensión para UUIDs
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- Función compartida para triggers updated_at (debe existir antes de los triggers)
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Tabla: suscripciones
 -- Almacena las remesas recurrentes (on-chain + off-chain)
 CREATE TABLE IF NOT EXISTS suscripciones (
@@ -17,6 +26,7 @@ CREATE TABLE IF NOT EXISTS suscripciones (
     proximo_pago TIMESTAMPTZ NOT NULL,
     ultimo_pago TIMESTAMPTZ,
     pda_address VARCHAR(44),
+    usuario_remitente_solana VARCHAR(44),
     activa BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -32,6 +42,69 @@ BEGIN
         ALTER TABLE suscripciones ADD COLUMN tipo_activo VARCHAR(10) NOT NULL DEFAULT 'SOL' CHECK (tipo_activo IN ('SOL', 'USDC'));
     END IF;
 END $$;
+
+-- Migración: usuario_remitente_solana
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'suscripciones' AND column_name = 'usuario_remitente_solana'
+    ) THEN
+        ALTER TABLE suscripciones ADD COLUMN usuario_remitente_solana VARCHAR(44);
+    END IF;
+END $$;
+
+-- Tabla: pagos (mirror off-chain del historial composable)
+CREATE TABLE IF NOT EXISTS pagos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    suscripcion_id UUID REFERENCES suscripciones(id),
+    receipt_pda VARCHAR(44),
+    tx_signature VARCHAR(88) NOT NULL,
+    nonce BIGINT NOT NULL DEFAULT 0,
+    monto BIGINT NOT NULL,
+    tipo_activo VARCHAR(10) NOT NULL CHECK (tipo_activo IN ('SOL', 'USDC')),
+    usuario_remitente_solana VARCHAR(44),
+    destinatario_solana VARCHAR(44),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_pagos_suscripcion ON pagos(suscripcion_id);
+CREATE INDEX IF NOT EXISTS idx_pagos_usuario_remitente ON pagos(usuario_remitente_solana);
+CREATE INDEX IF NOT EXISTS idx_pagos_destinatario ON pagos(destinatario_solana);
+
+-- Tabla: usuarios_piloto (identificación temprana — validación M2/M4)
+CREATE TABLE IF NOT EXISTS usuarios_piloto (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    whatsapp VARCHAR(50) NOT NULL,
+    rol VARCHAR(20) NOT NULL CHECK (rol IN ('remitente', 'receptora', 'promotor', 'tiendita')),
+    nombre_opcional VARCHAR(120),
+    genero VARCHAR(20) CHECK (genero IN ('femenino', 'masculino', 'otro', 'prefiero_no_decir')),
+    edad_rango VARCHAR(20),
+    estado VARCHAR(80),
+    municipio VARCHAR(120),
+    zona VARCHAR(20) CHECK (zona IN ('rural', 'semiurbana', 'urbana')),
+    bancarizado VARCHAR(10) CHECK (bancarizado IN ('si', 'no', 'sub')),
+    canal_confianza VARCHAR(30) CHECK (canal_confianza IN (
+        'tiendita', 'comerciantes', 'pyme', 'asociacion_migrante',
+        'iglesia', 'asociacion', 'familia', 'microfinanzas', 'otro'
+    )),
+    canal_detalle TEXT,
+    referido_por_id UUID REFERENCES usuarios_piloto(id),
+    wallet_solana VARCHAR(44),
+    notas TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_usuarios_piloto_rol ON usuarios_piloto(rol);
+CREATE INDEX IF NOT EXISTS idx_usuarios_piloto_zona ON usuarios_piloto(zona);
+CREATE INDEX IF NOT EXISTS idx_usuarios_piloto_whatsapp ON usuarios_piloto(whatsapp);
+
+DROP TRIGGER IF EXISTS trg_usuarios_piloto_updated_at ON usuarios_piloto;
+CREATE TRIGGER trg_usuarios_piloto_updated_at
+    BEFORE UPDATE ON usuarios_piloto
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
 CREATE INDEX IF NOT EXISTS idx_suscripciones_remitente_activa ON suscripciones(remitente_wa, activa);
 CREATE INDEX IF NOT EXISTS idx_suscripciones_destinatario ON suscripciones(destinatario_wa, activa);
@@ -111,21 +184,12 @@ CREATE TABLE IF NOT EXISTS beneficiarios_etherfuse (
 
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_etherfuse_kyc ON beneficiarios_etherfuse(kyc_status);
 
--- Trigger updated_at para beneficiarios_etherfuse
+-- Triggers updated_at
 DROP TRIGGER IF EXISTS trg_beneficiarios_etherfuse_updated_at ON beneficiarios_etherfuse;
 CREATE TRIGGER trg_beneficiarios_etherfuse_updated_at
     BEFORE UPDATE ON beneficiarios_etherfuse
     FOR EACH ROW
     EXECUTE PROCEDURE update_updated_at_column();
-
--- Trigger para updated_at en suscripciones
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
 
 DROP TRIGGER IF EXISTS trg_suscripciones_updated_at ON suscripciones;
 CREATE TRIGGER trg_suscripciones_updated_at

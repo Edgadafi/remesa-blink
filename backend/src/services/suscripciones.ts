@@ -24,10 +24,12 @@ function addSeconds(date: Date, seconds: number): Date {
 export interface NuevaSuscripcion {
   remitente_wa: string;
   destinatario_wa: string;
-  destinatario_solana: string; // Requerido: wallet que recibe
-  monto: number; // en SOL o USDC según tipo_activo
+  destinatario_solana: string;
+  monto: number;
   frecuencia: "diario" | "semanal" | "mensual";
-  tipo_activo?: "SOL" | "USDC"; // por defecto SOL
+  tipo_activo?: "SOL" | "USDC";
+  /** Wallet del remitente real (composabilidad). Si omitido, usa keeper. */
+  usuario_remitente_solana?: string;
 }
 
 export async function crearSuscripcion(data: NuevaSuscripcion) {
@@ -40,38 +42,44 @@ export async function crearSuscripcion(data: NuevaSuscripcion) {
   const { getKeeperKeypair } = await import("./solana.js");
   const keeper = getKeeperKeypair();
 
+  const usuarioRemitente = data.usuario_remitente_solana
+    ? new PublicKey(data.usuario_remitente_solana)
+    : keeper.publicKey;
+
   let txSig: string;
   let pda: PublicKey;
   let montoDb: number;
 
   if (tipo_activo === "USDC") {
-    const montoRaw = BigInt(Math.round(data.monto * 1e6)); // USDC 6 decimals
+    const montoRaw = BigInt(Math.round(data.monto * 1e6));
     txSig = await registrarSuscripcionUsdcOnChain(
       keeper.publicKey,
       destinatario,
       montoRaw,
       data.frecuencia,
-      USDC_MINT
+      USDC_MINT,
+      usuarioRemitente
     );
     [pda] = getSuscripcionUsdcPda(keeper.publicKey, destinatario, USDC_MINT);
-    montoDb = Math.round(data.monto * 1e6); // guardar raw para BIGINT
+    montoDb = Math.round(data.monto * 1e6);
   } else {
     const montoLamports = BigInt(Math.round(data.monto * 1e9));
     txSig = await registrarSuscripcionOnChain(
       keeper.publicKey,
       destinatario,
       montoLamports,
-      data.frecuencia
+      data.frecuencia,
+      usuarioRemitente
     );
     [pda] = getSuscripcionPda(keeper.publicKey, destinatario);
-    montoDb = Math.round(data.monto * 1e9); // lamports
+    montoDb = Math.round(data.monto * 1e9);
   }
 
   const result = await pool.query(
     `INSERT INTO suscripciones (
       remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
-      proximo_pago, pda_address, activa
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true)
+      proximo_pago, pda_address, usuario_remitente_solana, activa
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true)
     RETURNING *`,
     [
       data.remitente_wa,
@@ -82,6 +90,7 @@ export async function crearSuscripcion(data: NuevaSuscripcion) {
       tipo_activo,
       proximo_pago,
       pda.toBase58(),
+      usuarioRemitente.toBase58(),
     ]
   );
 

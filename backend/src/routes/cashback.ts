@@ -42,6 +42,26 @@ router.post("/registrar-referido", async (req, res) => {
   }
 });
 
+function describeErr(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  if (err && typeof err === "object" && "message" in err) {
+    return String((err as { message: unknown }).message);
+  }
+  return "Error desconocido";
+}
+
+/** Campos útiles de errores node-postgres */
+function pgExtras(err: unknown): string {
+  if (!err || typeof err !== "object") return "";
+  const e = err as { code?: string; detail?: string; schema?: string; table?: string };
+  const parts: string[] = [];
+  if (e.code) parts.push(`código PG ${e.code}`);
+  if (e.table) parts.push(`tabla: ${e.table}`);
+  if (e.detail) parts.push(e.detail);
+  return parts.length ? ` (${parts.join("; ")})` : "";
+}
+
 router.get("/:wa", async (req, res) => {
   try {
     const wa = req.params.wa;
@@ -49,7 +69,13 @@ router.get("/:wa", async (req, res) => {
     res.json(resumen);
   } catch (err) {
     console.error("Error obtener cashback:", err);
-    res.status(500).json({ error: "Error al obtener cashback" });
+    const base = describeErr(err);
+    const extras = pgExtras(err);
+    const tail =
+      " — Comprueba backend/.env DATABASE_URL, que PostgreSQL esté arriba y ejecuta `npm run db:schema` desde la raíz del repo. En Neon/Supabase suele hacer falta ?sslmode=require en la URL.";
+    res.status(500).json({
+      error: `${base}${extras}${tail}`,
+    });
   }
 });
 
