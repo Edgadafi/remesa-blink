@@ -24,6 +24,7 @@
     "tunnel:quick": "bash scripts/cloudflare-tunnel-quick.sh",
     "dev:tunnel": "bash scripts/dev-with-tunnel.sh",
     "skills:install": "npx --yes skills add https://github.com/solana-foundation/solana-dev-skill -y",
-    "mcp:keeper": "cd backend && npm run mcp"
+    "mcp:keeper": "cd backend && npm run mcp",
+    "demo:preflight": "bash scripts/demo-preflight.sh"
   }
 }
