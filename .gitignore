@@ -37,3 +37,6 @@ auth_info.bak.*/
 bot/auth_info.bak.*/
 frontend/nul
 *.Zone.Identifier
+
+# Local Dialect Blinks inspector clone (optional)
+blinks-inspector/
