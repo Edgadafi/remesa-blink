@@ -1,0 +1,34 @@
+flowchart TB
+  subgraph prod [Producción en vivo]
+    Vercel["Vercel frontend\nfrontend-bay-phi-92.vercel.app\n/piloto + brand hub"]
+    SB[(Supabase Postgres)]
+  end
+
+  subgraph edge [Edge temporal — Quick Tunnel]
+    CF["cloudflared\n*.trycloudflare.com\nBLINKS_BASE_URL"]
+    Named["api.remesablink.com\nNO LIVE — dominio pendiente"]
+  end
+
+  subgraph wsl [WSL local — Demo Day]
+    API["Express :3000\nAPI + Actions/Blinks"]
+    Bot[Bot WhatsApp :3002]
+    Keeper[Keeper cron]
+  end
+
+  subgraph solana [Solana devnet]
+    RPC[RPC / Helius]
+    Prog["Anchor remesas\nB1G72Cc..."]
+  end
+
+  Vercel -->|usuarios_piloto| SB
+  Vercel -->|NEXT_PUBLIC_API_URL| CF
+  CF --> API
+  Named -.->|futuro named tunnel| API
+  Bot --> API
+  API --> SB
+  API --> RPC
+  Keeper --> RPC
+  Keeper --> Prog
+  Keeper --> Bot
+  API -->|Blinks GET/POST| Prog
+  Prog --> RPC

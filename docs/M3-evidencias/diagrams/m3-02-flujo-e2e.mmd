@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant R as Remitente_WA
+  participant B as Bot_Backend
+  participant K as Keeper
+  participant C as Solana_Anchor
+  participant D as Receptora_WA
+  participant W as Wallet_receptora
+
+  R->>B: /recurrente monto frecuencia destino
+  B->>C: registrar_suscripcion signer=Keeper
+  Note over K: Fondos SOL/USDC prefondeados en Keeper
+  K->>C: ejecutar_pago cuando vence proximo_pago
+  C->>W: transfer SOL/USDC a wallet destino
+  K->>D: WhatsApp texto + URL Action Blink
+  D->>W: Abre link fallback web/wallet
+  opt MXN
+    W->>C: Action convertir-mxn
+    C->>D: SPEI vía Etherfuse
+  end

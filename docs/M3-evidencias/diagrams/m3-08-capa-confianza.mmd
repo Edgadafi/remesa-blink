@@ -1,0 +1,28 @@
+flowchart LR
+  subgraph agente [Agente IA]
+    Bot[Bot WhatsApp]
+  end
+
+  subgraph reglas [Reglas on-chain]
+    Sub[Suscripcion PDA]
+    Valid[activa + proximo_pago]
+  end
+
+  subgraph audit [Auditoria verificable]
+    Receipt[PagoReceipt PDA]
+    Ev[PagoEjecutado]
+  end
+
+  subgraph humanos [Humanos en el loop]
+    Rem[Remitente /mis-remesas]
+    Rec[Receptora aviso WA]
+    Aliado[Tiendita aliada]
+  end
+
+  Bot -->|configura una vez| Sub
+  Sub --> Valid
+  Valid -->|keeper ejecuta| Receipt
+  Receipt --> Ev
+  Receipt --> Rem
+  Ev --> Rec
+  Rec --> Aliado

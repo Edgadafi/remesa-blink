@@ -1,0 +1,13 @@
+sequenceDiagram
+  participant K as Keeper
+  participant N as notificaciones.ts
+  participant Bot as Bot_WA
+  participant D as Receptora
+  participant Act as GET_api_actions
+
+  K->>N: enviarNotificacionPago
+  N->>Bot: POST /internal/send texto+URL
+  Bot->>D: Remesa recibida + link Blink
+  D->>Act: Tap link HTTPS
+  Act->>D: Action metadata JSON
+  Note over D: Wallet o navegador abre POST tx

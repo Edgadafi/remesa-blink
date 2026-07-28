@@ -1,0 +1,90 @@
+flowchart TB
+  subgraph users [Usuarios]
+    RemWA[Remitente WhatsApp]
+    RecWA[Receptora WhatsApp]
+    Aliado[Tiendita / promotor]
+    Piloto[Waitlist /piloto]
+  end
+
+  subgraph vercel [Vercel — frontend]
+    FE[Next.js brand hub Papel/Nopal]
+    PilotAPI["/api/pilotos"]
+  end
+
+  subgraph tunnel [Cloudflare Quick Tunnel — temporal]
+    CF["*.trycloudflare.com"]
+  end
+
+  subgraph local [WSL local — API + Blinks + keeper]
+    Bot[Bot WhatsApp Baileys]
+    API[Express API :3000]
+    Actions[Solana Actions / Blinks]
+    KeeperCron[Keeper cron]
+    CompAPI["GET /api/composability/perfil/:wallet"]
+  end
+
+  subgraph data [Datos]
+    PG[(Supabase PostgreSQL)]
+  end
+
+  subgraph onchain [On-chain Solana devnet]
+    Prog[Anchor remesas_recurrentes]
+    USDC[USDC SPL]
+  end
+
+  subgraph composability [Capa composabilidad — estado legible]
+    SubPDA[Suscripcion PDA]
+    Receipt[PagoReceipt PDA]
+    PerfilR[PerfilRemitente PDA]
+    PerfilD[PerfilDestinatario PDA]
+    EvPago[PagoEjecutado event]
+  end
+
+  subgraph readers [Lectores externos]
+    Explorer[Solana Explorer]
+    Indexer[Indexer / Helius]
+    ThirdParty[Otros programas / DeFi futuro]
+  end
+
+  subgraph external [Externos]
+    RPC[Solana RPC devnet]
+    EF[Etherfuse off-ramp SPEI]
+    Wallet[Wallet receptora Phantom etc]
+  end
+
+  RemWA --> Bot
+  RecWA --> Bot
+  Aliado --> FE
+  Piloto --> FE
+  FE --> PilotAPI
+  PilotAPI --> PG
+  FE -->|NEXT_PUBLIC_API_URL| CF
+  CF --> API
+  Bot --> API
+  API --> Actions
+  API --> PG
+  API --> Prog
+  KeeperCron --> Prog
+  KeeperCron --> RPC
+  Prog --> USDC
+  Prog -->|escribe| SubPDA
+  Prog -->|escribe| Receipt
+  Prog -->|actualiza| PerfilR
+  Prog -->|actualiza| PerfilD
+  Prog -->|emite| EvPago
+  Actions -->|registrar / ejecutar via Prog| Prog
+  KeeperCron -->|ejecutar_pago escribe| Prog
+  CompAPI -->|lee PDAs| Receipt
+  CompAPI -->|lee PDAs| PerfilR
+  CompAPI -->|lee PDAs| PerfilD
+  API --> CompAPI
+  Receipt --> Explorer
+  PerfilR --> Explorer
+  EvPago --> Indexer
+  Receipt --> ThirdParty
+  PerfilR --> ThirdParty
+  KeeperCron --> Bot
+  API --> EF
+  Wallet -->|abre Blink URL| Actions
+  Actions --> Prog
+  RPC --> Prog

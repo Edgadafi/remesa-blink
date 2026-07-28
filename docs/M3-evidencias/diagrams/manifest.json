@@ -1,0 +1,47 @@
+[
+  {
+    "name": "m3-08-capa-confianza",
+    "png": "diagrams/m3-08-capa-confianza.png",
+    "mmd": "diagrams/m3-08-capa-confianza.mmd"
+  },
+  {
+    "name": "m3-01-vista-contexto",
+    "png": "diagrams/m3-01-vista-contexto.png",
+    "mmd": "diagrams/m3-01-vista-contexto.mmd"
+  },
+  {
+    "name": "m3-02-flujo-e2e",
+    "png": "diagrams/m3-02-flujo-e2e.png",
+    "mmd": "diagrams/m3-02-flujo-e2e.mmd"
+  },
+  {
+    "name": "m3-09-capa-composabilidad",
+    "png": "diagrams/m3-09-capa-composabilidad.png",
+    "mmd": "diagrams/m3-09-capa-composabilidad.mmd"
+  },
+  {
+    "name": "m3-03-mvp-custodia-keeper",
+    "png": "diagrams/m3-03-mvp-custodia-keeper.png",
+    "mmd": "diagrams/m3-03-mvp-custodia-keeper.mmd"
+  },
+  {
+    "name": "m3-04-fase-e-nocustodial",
+    "png": "diagrams/m3-04-fase-e-nocustodial.png",
+    "mmd": "diagrams/m3-04-fase-e-nocustodial.mmd"
+  },
+  {
+    "name": "m3-05-wa-blink-flujo",
+    "png": "diagrams/m3-05-wa-blink-flujo.png",
+    "mmd": "diagrams/m3-05-wa-blink-flujo.mmd"
+  },
+  {
+    "name": "m3-06-fallback-ux",
+    "png": "diagrams/m3-06-fallback-ux.png",
+    "mmd": "diagrams/m3-06-fallback-ux.mmd"
+  },
+  {
+    "name": "m3-07-despliegue-devnet",
+    "png": "diagrams/m3-07-despliegue-devnet.png",
+    "mmd": "diagrams/m3-07-despliegue-devnet.mmd"
+  }
+]

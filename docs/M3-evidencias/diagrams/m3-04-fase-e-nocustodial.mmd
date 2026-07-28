@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph user [Remitente]
+    W[Wallet usuario]
+    WA[WhatsApp UX]
+  end
+
+  subgraph chain [On-chain futuro]
+    Sub[Suscripcion PDA remitente=Usuario]
+    Vault[Vault PDA o ATA + delegate]
+    Dest[Destinatario]
+  end
+
+  WA -->|configura| Sub
+  W -->|deposita USDC| Vault
+  W -->|firma registro + revocación| Sub
+  KeeperK[Keeper autorizado] -->|ejecutar_pago con permiso| Vault
+  Vault --> Dest

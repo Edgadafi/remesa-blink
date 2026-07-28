@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph off [Off-chain]
+    WA[remitente_wa]
+  end
+
+  subgraph keeper_wallet [Keeper wallet]
+    SOL[SOL balance]
+    ATA[USDC ATA keeper]
+  end
+
+  subgraph chain [On-chain]
+    Sub[Suscripcion PDA remitente=Keeper]
+    Dest[Wallet destinatario]
+  end
+
+  WA -->|programa por chat| Sub
+  SOL -->|ejecutar_pago| Dest
+  ATA -->|ejecutar_pago_usdc| Dest
+  KeeperSig[Keeper firma tx] --> Sub

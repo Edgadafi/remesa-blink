@@ -8,7 +8,8 @@
 | Receptora (MX) | 4 |
 | Promotor / aliado GTM | 2 |
 
-**Marca:** [BRAND-IDENTITY.md](./BRAND-IDENTITY.md)
+**Marca:** [BRAND-IDENTITY.md](./BRAND-IDENTITY.md) v1.1 — escudo, Dorado TIA, Palatino, rieles orgánicos  
+**UX confianza (sesión Pauline Moon, jul 2026):** [UX-TRUST-DESIGN.md](./UX-TRUST-DESIGN.md)
 
 ---
 

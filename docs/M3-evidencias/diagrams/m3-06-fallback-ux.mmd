@@ -1,0 +1,20 @@
+flowchart TD
+  Start[Receptora recibe WhatsApp] --> Read[Lee mensaje en español simple]
+  Read --> Tap[Toca link azul]
+  Tap --> Render{Cliente renderiza Blink?}
+
+  Render -->|Sí wallet integrada| BlinkUI[UI Action nativa]
+  Render -->|No preview WA| Web[Abre navegador HTTPS]
+
+  Web --> Page[Landing Action con 3 pasos]
+  Page --> OpenWallet[Botón Abrir en Phantom/Solflare]
+  Page --> QR[QR para mismo link]
+  Page --> Help[¿Necesitas ayuda? tiendita aliada]
+
+  BlinkUI --> Sign[Usuario firma tx]
+  OpenWallet --> Sign
+  Sign --> OK[USDC en wallet / SPEI si convertir-mxn]
+
+  Tap --> Fail[Link roto o timeout]
+  Fail --> Retry[Reenviar link + tx explorer]
+  Fail --> Human[Contacto remesatia@gmail.com o tiendita]

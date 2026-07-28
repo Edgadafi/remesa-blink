@@ -1,0 +1,12 @@
+{
+  "wallet": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
+  "remitente": {
+    "pda": "PerfilRemitentePda1111111111111111111111111",
+    "totalEnviado": "1000000000",
+    "pagosCompletados": 3,
+    "primeraActividad": 1700000000,
+    "ultimaActividad": 1700100000
+  },
+  "destinatario": null,
+  "pagos": []
+}

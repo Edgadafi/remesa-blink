@@ -1,0 +1,349 @@
+/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}

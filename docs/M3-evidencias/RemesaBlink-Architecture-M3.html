@@ -1,0 +1,899 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/><title>RemesaBlink Architecture M3</title><style>/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}
+
+.diagram-img { display: block; max-width: 100%; height: auto; margin: 4mm auto 6mm; border: 1px solid rgba(201,162,39,0.45); border-radius: 4px; background: #fff; page-break-inside: avoid; }
+</style></head><body>
+  <section class="cover-page">
+    <div class="cover-bar">
+      <p class="program">Solana Latam Labs · WayLearn</p>
+      <h1>RemesaBlink</h1>
+      <p class="doc-type">Arquitectura On/Off-Chain · Milestone 3</p>
+    </div>
+    <div class="cover-body">
+      <div class="cover-escudo"><svg viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg"><path d="M60 6c-8 4-14 12-14 20 0 2 1 4 2 5l12-8 12 8c1-1 2-3 2-5 0-8-6-16-14-20z" fill="#C9A227" opacity="0.9"/><path d="M48 28c4 6 8 10 12 12 4-2 8-6 12-12-3 2-6 3-12 3s-9-1-12-3z" fill="#2D5016"/><ellipse cx="52" cy="34" rx="2.5" ry="3" fill="#C45C3E"/><ellipse cx="60" cy="36" rx="2.5" ry="3" fill="#C45C3E"/><ellipse cx="68" cy="34" rx="2.5" ry="3" fill="#C45C3E"/><path d="M38 24h44M32 24h2M86 24h2" stroke="#C9A227" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <p class="cover-tagline">Dollars in / Pesos en casa</p>
+      <table class="cover-meta"><tr><th>Proyecto</th><td>RemesaBlink (Remesa Blink)</td></tr><tr><th>Documento</th><td>Arquitectura On/Off-Chain — M3</td></tr><tr><th>Founder</th><td>Edgadafi</td></tr><tr><th>Contacto</th><td>quierochiachida@gmail.com</td></tr><tr><th>Fecha entrega M3</th><td>10 de julio de 2026</td></tr><tr><th>Program ID</th><td>B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2</td></tr><tr><th>Mentor WayLearn</th><td>Diana Torres e Isaac Klassen</td></tr><tr><th>Repositorio</th><td>https://github.com/Edgadafi/remesa-blink</td></tr><tr><th>Clasificación</th><td>Confidencial</td></tr></table>
+    </div>
+    <div class="cover-footer">BRINGING - IT - CLOSER<div class="cover-confidential">Confidencial · Julio 2026</div></div>
+  </section>
+  <div class="content-wrap">
+    <div class="page-header"><span class="brand">RemesaBlink</span><span class="meta">Arquitectura M3 · Dollars in / Pesos en casa</span></div>
+    <div class="toc"><h2>Índice</h2><ol><li><span class="num">1</span><span>Resumen ejecutivo</span></li><li><span class="num">2</span><span>Diagrama sistema on/off-chain</span></li><li><span class="num">3</span><span>Modelo de autorización de fondos</span></li><li><span class="num">4</span><span>Flujo WhatsApp → Blink y fallbacks</span></li><li><span class="num">5</span><span>Componentes y responsabilidades</span></li><li><span class="num">6</span><span>Datos: source of truth</span></li><li><span class="num">7</span><span>Despliegue actual devnet</span></li><li><span class="num">8</span><span>Principales riesgos técnicos</span></li><li><span class="num">9</span><span>Evolución post–Demo Day</span></li><li><span class="num">10</span><span>Evidencias M3</span></li></ol></div><h2>1. Resumen ejecutivo</h2>
+<p>RemesaBlink combina <strong>UX off-chain</strong> (WhatsApp, landing, bot conversacional) con <strong>lógica financiera verificable on-chain</strong> (suscripciones Anchor, USDC/SOL, receipts y perfiles composables).</p>
+<p>En el <strong>MVP de incubación (devnet)</strong> el modelo es <strong>custodial vía keeper</strong>: el remitente opera por WhatsApp sin wallet propia; una wallet operada por el equipo (<strong>keeper</strong>) prefondea SOL/USDC, registra la suscripción on-chain y ejecuta pagos recurrentes cuando vence <code>proximo_pago</code>.</p>
+<h3>1.1 Capa de confianza — agente, reglas, receipt, humanos</h3>
+<p>No automatizamos la confianza ciega: <strong>automatizamos el envío</strong>, pero cada ciclo queda <strong>auditable on-chain</strong> y <strong>visible para la familia</strong> off-chain. Modelo alineado con MVPs de IA en pagos (capa de control humano + trazabilidad):</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Qué hace</th>
+<th>Componente</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Agente</strong></td>
+<td>Recibe intención en lenguaje natural; configura remesa recurrente</td>
+<td>Bot WhatsApp + API</td>
+</tr>
+<tr>
+<td><strong>Reglas</strong></td>
+<td>Solo paga si <code>activa</code> y venció <code>proximo_pago</code>; monto y frecuencia en PDA</td>
+<td>Programa Anchor</td>
+</tr>
+<tr>
+<td><strong>Auditoría</strong></td>
+<td>Recibo inmutable por pago + evento indexable</td>
+<td><code>PagoReceipt</code> + <code>PagoEjecutado</code></td>
+</tr>
+<tr>
+<td><strong>Humanos</strong></td>
+<td>Remitente consulta <code>/mis-remesas</code>; receptora recibe aviso WA; aliado explica el link</td>
+<td>Familia + tiendita</td>
+</tr>
+</tbody></table>
+<p><strong>Pitch (1 frase):</strong> <em>El agente en WhatsApp programa; Solana audita; tu familia vigila.</em></p>
+<p>Documento canónico del modelo de confianza: <a href="./TRUST-MODEL.md">TRUST-MODEL.md</a>. Esquema de cuentas: <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a>.</p>
+<p><img class="diagram-img" src="diagrams/m3-08-capa-confianza.png" alt="capa confianza"></p>
+<p>Este documento responde al feedback del mentor WayLearn (M1):</p>
+<ol>
+<li><strong>Qué significa “pago recurrente” técnicamente</strong> — autorización, custodia y quién firma.</li>
+<li><strong>Flujo WhatsApp → Blink</strong> — qué pasa cuando el cliente no renderiza el Blink online.</li>
+</ol>
+<hr>
+<h2 class="section-break">2. Diagrama sistema (on/off-chain)</h2>
+<h3>2.1 Vista de contexto</h3>
+<p><img class="diagram-img" src="diagrams/m3-01-vista-contexto.png" alt="vista contexto"></p>
+<h3>2.2 Flujo E2E principal</h3>
+<p><img class="diagram-img" src="diagrams/m3-02-flujo-e2e.png" alt="flujo e2e"></p>
+<h3>2.3 Capa de composabilidad (on-chain legible)</h3>
+<p>Blinks y el keeper <strong>escriben</strong> estado en el programa Anchor; otros clientes <strong>leen</strong> sin depender del mirror PostgreSQL. Esa capa es lo que hace el historial de remesas verificable y reutilizable (crédito/DeFi futuro, Explorer, indexers).</p>
+<p><img class="diagram-img" src="diagrams/m3-09-capa-composabilidad.png" alt="capa composabilidad"></p>
+<table>
+<thead>
+<tr>
+<th>Primitiva</th>
+<th>Tipo</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Suscripcion</code> / <code>SuscripcionUsdc</code></td>
+<td>PDA</td>
+<td>Calendario, monto, frecuencia, <code>proximo_pago</code></td>
+</tr>
+<tr>
+<td><code>PagoEjecutado</code></td>
+<td>Evento</td>
+<td>Indexación (Helius, backend)</td>
+</tr>
+<tr>
+<td><code>PagoReceipt</code></td>
+<td>PDA</td>
+<td>Recibo inmutable por pago (nonce)</td>
+</tr>
+<tr>
+<td><code>PerfilRemitente</code> / <code>PerfilDestinatario</code></td>
+<td>PDA</td>
+<td>Agregados de reputación por wallet</td>
+</tr>
+</tbody></table>
+<p><strong>Puente UX:</strong> <code>GET /api/composability/perfil/:wallet</code> lee PDAs vía RPC y opcionalmente el mirror <code>pagos</code>. Source of truth = on-chain.</p>
+<p>Detalle técnico (seeds, CPI, identidad <code>usuario_remitente</code>): <a href="./COMPOSABILITY.md">COMPOSABILITY.md</a> · <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a></p>
+<hr>
+<h2 class="section-break">3. Modelo de autorización de fondos</h2>
+<h3>3.1 Definición: “pago recurrente” en RemesaBlink</h3>
+<table>
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>MVP custodial (devnet, hoy)</th>
+<th>Objetivo Fase E (post Demo Day)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>¿Quién prefondea?</td>
+<td><strong>Keeper</strong> (wallet operada por el equipo)</td>
+<td><strong>Wallet del remitente</strong> (vault PDA o ATA propia)</td>
+</tr>
+<tr>
+<td>¿El programa retiene fondos?</td>
+<td><strong>No</strong> — no hay escrow PDA en el programa</td>
+<td>Opcional: <strong>vault PDA</strong> con reglas de retiro</td>
+</tr>
+<tr>
+<td>¿Delegación SPL / approve USDC?</td>
+<td><strong>No</strong> en MVP</td>
+<td><strong>Sí</strong> — delegación limitada o approve revocable</td>
+</tr>
+<tr>
+<td>¿Quién firma cada envío?</td>
+<td><strong>Keeper</strong> (<code>ejecutar_pago</code> / <code>ejecutar_pago_usdc</code>)</td>
+<td>Keeper con <strong>permiso on-chain</strong>; usuario no firma cada ciclo</td>
+</tr>
+<tr>
+<td>¿Quién firma el alta de suscripción?</td>
+<td><strong>Keeper</strong> como <code>remitente</code> en PDA</td>
+<td><strong>Usuario</strong> como <code>remitente</code> signer</td>
+</tr>
+<tr>
+<td>¿Remitente WhatsApp usa wallet?</td>
+<td><strong>No</strong> (identidad off-chain <code>remitente_wa</code>)</td>
+<td>Wallet propia o smart wallet abstracted</td>
+</tr>
+<tr>
+<td>¿Identidad composable?</td>
+<td>Campo <code>usuario_remitente</code> en PDA (perfil/receipt)</td>
+<td>Misma wallet = authority económica</td>
+</tr>
+</tbody></table>
+<h3>3.2 Diagrama MVP — custodia keeper</h3>
+<p><img class="diagram-img" src="diagrams/m3-03-mvp-custodia-keeper.png" alt="mvp custodia keeper"></p>
+<p><strong>Reglas on-chain en cada ciclo:</strong></p>
+<ol>
+<li><code>suscripcion.activa == true</code></li>
+<li><code>Clock &gt;= suscripcion.proximo_pago</code></li>
+<li>Transfer desde cuenta <strong>remitente</strong> de la PDA (= keeper en MVP) hacia <strong>destinatario</strong></li>
+<li>Emisión de <code>PagoReceipt</code>, actualización de perfiles, evento <code>PagoEjecutado</code></li>
+</ol>
+<p><strong>Lo que NO es el MVP:</strong> débito automático firmado por el usuario cada quincena; escrow custodial en smart contract; delegación Token-2022.</p>
+<h3>3.3 Diagrama objetivo — Fase E no-custodial</h3>
+<p><img class="diagram-img" src="diagrams/m3-04-fase-e-nocustodial.png" alt="fase e nocustodial"></p>
+<p>Roadmap detallado: <a href="./FASE-E-NO-CUSTODIAL.md">FASE-E-NO-CUSTODIAL.md</a></p>
+<h3>3.4 Tabla comparativa para pitch / mentores</h3>
+<table>
+<thead>
+<tr>
+<th>Dimensión</th>
+<th>MVP (M3–M5)</th>
+<th>Fase E</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Riesgo operacional</td>
+<td>Liquidez keeper; rotación de keys</td>
+<td>Riesgo distribuido al usuario</td>
+</tr>
+<tr>
+<td>UX remitente</td>
+<td>Máxima simplicidad (solo WA)</td>
+<td>Wallet o abstracción</td>
+</tr>
+<tr>
+<td>Compliance</td>
+<td>Validación piloto; no mainnet sin legal</td>
+<td>NMLS / MSB según asesoría</td>
+</tr>
+<tr>
+<td>Composabilidad</td>
+<td><code>usuario_remitente</code> ≠ authority fondos</td>
+<td><code>usuario_remitente</code> = authority</td>
+</tr>
+<tr>
+<td>Demo Day</td>
+<td>Honesto: “custodial devnet”</td>
+<td>Narrativa migración documentada</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">4. Flujo WhatsApp → Blink y fallbacks UX</h2>
+<h3>4.1 Limitación conocida</h3>
+<p><strong>WhatsApp no renderiza Solana Blinks</strong> como Dialect, Phantom o X. La receptora recibe un <strong>mensaje de texto con URL</strong> (<code>Action</code> HTTP).</p>
+<h3>4.2 Flujo actual (implementado)</h3>
+<p><img class="diagram-img" src="diagrams/m3-05-wa-blink-flujo.png" alt="wa blink flujo"></p>
+<p><strong>URLs generadas por keeper</strong> (<code>backend/src/keeper/cron.ts</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Condición</th>
+<th>URL Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>USDC + KYC Etherfuse verified</td>
+<td><code>/api/actions/convertir-mxn?amount=</code></td>
+</tr>
+<tr>
+<td>USDC sin KYC</td>
+<td><code>/api/actions/enviar-remesa-usdc</code> + onboarding <code>/api/actions/onboarding-mxn</code></td>
+</tr>
+<tr>
+<td>SOL</td>
+<td><code>/api/actions/enviar-remesa?amount=&amp;destination=</code></td>
+</tr>
+</tbody></table>
+<h3>4.3 Árbol de fallback UX (M3 — especificación)</h3>
+<p><img class="diagram-img" src="diagrams/m3-06-fallback-ux.png" alt="fallback ux"></p>
+<h3>4.4 Copy WhatsApp (español simple — M3)</h3>
+<blockquote class="note">
+<p><strong>UX confianza:</strong> pending / confirmed / failed diseñados — ver <a href="./UX-TRUST-DESIGN.md">UX-TRUST-DESIGN.md</a> (sesión Pauline Moon, WayLearn jul 2026).</p>
+</blockquote>
+<p><strong>Mensaje principal (post-pago):</strong></p>
+<pre><code>*Remesa recibida*
+
+Recibiste {monto} {USDC|SOL} de tu familia.
+
+1️⃣ Toca el link de abajo
+2️⃣ Se abre una página segura
+3️⃣ Confirma en tu app de wallet (Phantom u otra)
+
+🔗 {blinkUrl}
+</code></pre>
+<p><strong>Si onboarding MXN pendiente:</strong></p>
+<pre><code>📋 Para recibir pesos en tu cuenta (SPEI), primero completa tu registro:
+{onboardingUrl}
+</code></pre>
+<p><strong>Fallback humano:</strong></p>
+<pre><code>Si el link no abre, escribe a la tiendita que te refirió o a remesatia@gmail.com
+con tu número. Te reenviamos el paso a paso.
+</code></pre>
+<h3>4.5 Estado implementación vs. pendiente M4/M5</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Notificación WA con URL</td>
+<td>✅ Implementado</td>
+</tr>
+<tr>
+<td>Actions GET/POST backend</td>
+<td>✅ Implementado + tests</td>
+</tr>
+<tr>
+<td>Página intermedia 3 pasos (web)</td>
+<td>📋 M4 — UX receptora</td>
+</tr>
+<tr>
+<td>Deep link Phantom / Solflare</td>
+<td>📋 M4</td>
+</tr>
+<tr>
+<td>Reenvío automático link caído</td>
+<td>📋 M5</td>
+</tr>
+<tr>
+<td>Demo en dispositivo real WA</td>
+<td>📋 M5 Demo Day</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">5. Componentes y responsabilidades</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Stack</th>
+<th>Responsabilidad</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>anchor/remesas_recurrentes</code></td>
+<td>Rust / Anchor 0.32</td>
+<td>Suscripciones, pagos, receipts, perfiles</td>
+</tr>
+<tr>
+<td><code>backend/</code> Express</td>
+<td>Node</td>
+<td>API REST, Blinks Actions, keeper cron, Solana client</td>
+</tr>
+<tr>
+<td><code>bot/</code> Baileys</td>
+<td>Node</td>
+<td>WhatsApp usuario + <code>/internal/send</code></td>
+</tr>
+<tr>
+<td><code>frontend/</code> Next.js</td>
+<td>React</td>
+<td>Brand hub + <code>/piloto</code> waitlist, UI suscripciones</td>
+</tr>
+<tr>
+<td>Supabase</td>
+<td>PostgreSQL</td>
+<td>Mirror off-chain, <code>usuarios_piloto</code>, RLS</td>
+</tr>
+<tr>
+<td>Vercel</td>
+<td>Hosting</td>
+<td>Frontend prod (<code>frontend-bay-phi-92.vercel.app</code>)</td>
+</tr>
+<tr>
+<td>Cloudflare Quick Tunnel</td>
+<td>Tunnel temporal</td>
+<td>Expone Express :3000 vía <code>*.trycloudflare.com</code></td>
+</tr>
+<tr>
+<td>Etherfuse</td>
+<td>API</td>
+<td>Off-ramp MXN / KYC</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">6. Datos: source of truth</h2>
+<p>Fuente canónica (tabla extendida, gaps G1–G10, seeds PDA): <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a> §7.</p>
+<p>| Dato                                | Source of truth             | Mirror off-chain                        |
+| Suscripción activa, monto, schedule | PDA on-chain                | <code>suscripciones</code> (PG)                    |
+| Pago ejecutado                      | <code>PagoReceipt</code> + evento      | <code>pagos</code> (PG)                            |
+| Perfil reputación                   | PDA perfil                  | <code>GET /api/composability/perfil/:wallet</code> |
+| Waitlist piloto                     | <code>usuarios_piloto</code> (PG)      | —                                       |
+| Cashback promocional                | PG + futuro <code>reward_system</code> | —                                       |</p>
+<hr>
+<h2 class="section-break">7. Despliegue actual (devnet)</h2>
+<p><strong>Estado Demo Day (jul 2026):</strong> frontend en Vercel; API + Blinks + keeper en WSL local expuestos con <strong>Cloudflare Quick Tunnel</strong> (<code>*.trycloudflare.com</code>). El hostname fijo <code>api.remesablink.com</code> es <strong>aspiracional</strong> — <code>remesablink.com</code> aún no está registrado (NXDOMAIN). Ver <a href="./CLOUDFLARE-TUNNEL.md">CLOUDFLARE-TUNNEL.md</a>.</p>
+<p><img class="diagram-img" src="diagrams/m3-07-despliegue-devnet.png" alt="despliegue devnet"></p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>URL / notas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Landing piloto</td>
+<td><a href="https://frontend-bay-phi-92.vercel.app/piloto">https://frontend-bay-phi-92.vercel.app/piloto</a></td>
+</tr>
+<tr>
+<td>Frontend (Vercel)</td>
+<td><a href="https://frontend-bay-phi-92.vercel.app">https://frontend-bay-phi-92.vercel.app</a></td>
+</tr>
+<tr>
+<td>Backend + Blinks</td>
+<td>Cloudflare <strong>Quick Tunnel</strong> → Express <code>:3000</code> (<code>BLINKS_BASE_URL</code> = <code>*.trycloudflare.com</code>)</td>
+</tr>
+<tr>
+<td>Named API (pendiente)</td>
+<td><code>api.remesablink.com</code> — <strong>no live</strong>; <code>remesablink.com</code> NXDOMAIN</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>Supabase Postgres (<code>usuarios_piloto</code>, mirror suscripciones/pagos)</td>
+</tr>
+<tr>
+<td>Program (devnet)</td>
+<td><code>B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2</code></td>
+</tr>
+<tr>
+<td>Explorer</td>
+<td><a href="https://explorer.solana.com/?cluster=devnet">https://explorer.solana.com/?cluster=devnet</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">8. Principales riesgos técnicos</h2>
+<p>Tabla consolidada para revisión antes del desarrollo fuerte del MVP (M4–M5). Prioridad: lo que puede romper la demo E2E o la narrativa ante mentores e inversores.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Riesgo</th>
+<th>Área</th>
+<th>Impacto en MVP</th>
+<th>Mitigación</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R1</td>
+<td><strong>Custodia keeper</strong> — liquidez SOL/USDC, rotación de keys, concentración operacional</td>
+<td>On-chain / ops</td>
+<td>Demo falla si keeper sin fondos; narrativa “no custodial” no aplica en devnet</td>
+<td>Preflight <code>keeper:smoke</code> + balance USDC; documentar Fase E (<a href="./FASE-E-NO-CUSTODIAL.md">FASE-E-NO-CUSTODIAL.md</a>); keys en <code>.env</code> nunca en repo</td>
+<td>Activo (devnet)</td>
+</tr>
+<tr>
+<td>R2</td>
+<td><strong>WhatsApp no renderiza Blinks</strong> — solo URL en texto</td>
+<td>UX off-chain</td>
+<td>Receptora no crypto-native no entiende el link</td>
+<td>Copy español simple (§4.4); landing 3 pasos + QR (M4); árbol fallback §4.3</td>
+<td>Parcial — M4 UX</td>
+</tr>
+<tr>
+<td>R3</td>
+<td><strong>Receptora sin wallet o no abre link</strong></td>
+<td>UX</td>
+<td>E2E se corta después del pago on-chain</td>
+<td>Deep link Phantom/Solflare (M4); aliado tiendita; reenvío link + explorer (M5)</td>
+<td>Pendiente M4/M5</td>
+</tr>
+<tr>
+<td>R4</td>
+<td><strong>Etherfuse / KYC SPEI</strong></td>
+<td>API externa</td>
+<td>No convierte USDC → MXN en piloto</td>
+<td>Flujo demo USDC en wallet; onboarding KYC documentado; MXN como fase 2</td>
+<td>Piloto</td>
+</tr>
+<tr>
+<td>R5</td>
+<td><strong>Desincronía PG vs chain</strong></td>
+<td>Datos</td>
+<td>UI/backend muestran estado incorrecto</td>
+<td>Source of truth on-chain para finanzas (§6); sync keeper post-tx; no confiar solo en mirror</td>
+<td>Monitorear</td>
+</tr>
+<tr>
+<td>R6</td>
+<td><strong>Backend/bot en local + Quick Tunnel</strong></td>
+<td>Infra</td>
+<td>Demo inestable fuera de laptop; URL <code>*.trycloudflare.com</code> rota al reiniciar</td>
+<td><code>npm run dev:tunnel</code>; named tunnel <code>api.remesablink.com</code> cuando haya dominio (<a href="./CLOUDFLARE-TUNNEL.md">CLOUDFLARE-TUNNEL.md</a>); roadmap Render</td>
+<td>Demo local</td>
+</tr>
+<tr>
+<td>R7</td>
+<td><strong>RPC devnet gratuito</strong></td>
+<td>Solana</td>
+<td>Timeouts, tx no confirmadas en demo</td>
+<td>Retry + simulate; Helius/QuickNode antes de eventos críticos</td>
+<td>Bajo</td>
+</tr>
+<tr>
+<td>R8</td>
+<td><strong>Baileys / sesión WhatsApp</strong></td>
+<td>Bot</td>
+<td>Ban o desconexión = sin canal remitente</td>
+<td>Sesión dedicada piloto; fallback email/llamada; no escalar spam</td>
+<td>Piloto</td>
+</tr>
+<tr>
+<td>R9</td>
+<td><strong>Mainnet sin marco legal</strong></td>
+<td>Compliance</td>
+<td>Bloqueo comercial, grants, alianzas</td>
+<td>No mainnet sin asesoría NMLS/MSB; honesto en pitch: “custodial devnet”</td>
+<td>Post Demo Day</td>
+</tr>
+<tr>
+<td>R10</td>
+<td><strong>Keeper como</strong> <code>remitente</code> <strong>en PDA</strong></td>
+<td>Composabilidad</td>
+<td>Perfiles/receipts no reflejan wallet real del usuario</td>
+<td>Campo <code>usuario_remitente</code> en PDA; migración Fase E con usuario signer</td>
+<td>Aceptado MVP</td>
+</tr>
+</tbody></table>
+<h3>Prioridad pre–Demo Day</h3>
+<ol>
+<li><strong>R2 + R3</strong> — UX receptora (mayor riesgo de confusión en usuario real).</li>
+<li><strong>R1</strong> — liquidez y smoke tests antes de cada demo.</li>
+<li><strong>R6</strong> — túnel estable o deploy parcial para piloto fuera de local.</li>
+</ol>
+<h3>Criterio de “riesgo cerrado” para M5</h3>
+<ul>
+<li>Familia piloto completa un ciclo: WA remitente → pago keeper → notificación receptora → link abierto (wallet o landing) sin intervención manual del founder.</li>
+</ul>
+<hr>
+<h2 class="section-break">9. Evolución post–Demo Day</h2>
+<ol>
+<li><strong>Fase D</strong> — CPI cashback <code>reward_system</code> desde <code>ejecutar_pago</code></li>
+<li><strong>Fase E</strong> — no-custodial: vault/delegación, usuario signer en registro</li>
+<li><strong>Mainnet</strong> — solo tras legal + auditoría + RPC pago (Helius)</li>
+<li><strong>Blink registry</strong> — Dialect URL pública para previews fuera de WA</li>
+</ol>
+<hr>
+<h2 class="section-break">10. Evidencias M3</h2>
+<table>
+<thead>
+<tr>
+<th>Evidencia</th>
+<th>Ubicación</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Este documento</td>
+<td><code>docs/ARCHITECTURE-M3.md</code></td>
+</tr>
+<tr>
+<td>PDF export</td>
+<td><code>docs/M3-evidencias/RemesaBlink-Architecture-M3.pdf</code></td>
+</tr>
+<tr>
+<td>Composabilidad</td>
+<td><code>docs/COMPOSABILITY.md</code></td>
+</tr>
+<tr>
+<td>Tests Blinks</td>
+<td><code>backend/tests/blinks.test.ts</code></td>
+</tr>
+<tr>
+<td>Program Rust</td>
+<td><code>anchor/remesas_recurrentes/programs/.../lib.rs</code></td>
+</tr>
+<tr>
+<td>Diagramas PNG</td>
+<td><code>docs/M3-evidencias/diagrams/m3-01-*.png</code> … <code>m3-09-*.png</code> (incluye capa composabilidad)</td>
+</tr>
+<tr>
+<td>Esquema PDAs</td>
+<td><a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a></td>
+</tr>
+<tr>
+<td>Modelo confianza</td>
+<td><a href="./TRUST-MODEL.md">TRUST-MODEL.md</a></td>
+</tr>
+</tbody></table>
+<h3>Autoevaluación M3 (WayLearn)</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Diagrama on/off-chain claro</li>
+<li><input checked="" disabled="" type="checkbox"> Modelo autorización fondos MVP vs Fase E</li>
+<li><input checked="" disabled="" type="checkbox"> Fallback WhatsApp → Blink especificado</li>
+<li><input checked="" disabled="" type="checkbox"> Componentes y source of truth</li>
+<li><input checked="" disabled="" type="checkbox"> Riesgos técnicos consolidados (§8)</li>
+<li><input checked="" disabled="" type="checkbox"> PDF subido a Drive</li>
+<li><input checked="" disabled="" type="checkbox"> Compartido con mentor Discord</li>
+</ul>
+<hr>
+<p><em>WayLearn Solana Latam Labs · RemesaBlink · Arquitectura M3 · Julio 2026</em></p>
+
+    <div class="doc-footer">WayLearn · RemesaBlink · Arquitectura M3 · Julio 2026</div>
+  </div></body></html>

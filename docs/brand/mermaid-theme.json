@@ -1,0 +1,14 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Palatino, Georgia, serif",
+    "primaryColor": "#F5F0E8",
+    "primaryTextColor": "#2C2416",
+    "primaryBorderColor": "#C9A227",
+    "lineColor": "#4A7C59",
+    "secondaryColor": "#E8DFD0",
+    "tertiaryColor": "#C45C3E",
+    "noteBkgColor": "#F5F0E8",
+    "noteTextColor": "#2C2416"
+  }
+}

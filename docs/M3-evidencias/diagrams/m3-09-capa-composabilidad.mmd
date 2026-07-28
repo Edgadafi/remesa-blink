@@ -1,0 +1,42 @@
+flowchart TB
+  subgraph writers [Escritores RemesaBlink]
+    direction LR
+    Blink[Solana Actions / Blinks]
+    Keeper[Keeper cron]
+    Prog[Anchor remesas_recurrentes]
+  end
+
+  subgraph layer [Capa composabilidad]
+    direction TB
+    Sub[Suscripcion PDA]
+    Receipt[PagoReceipt PDA]
+    PerfilR[PerfilRemitente PDA]
+    PerfilD[PerfilDestinatario PDA]
+    Ev[PagoEjecutado event]
+  end
+
+  subgraph readers [Lectores]
+    direction LR
+    CompAPI["API composability perfil"]
+    Explorer[Solana Explorer]
+    Helius[Indexer Helius]
+    CPI[CPI futuro]
+  end
+
+  Blink -->|registrar o pago| Prog
+  Keeper -->|ejecutar_pago| Prog
+  Prog --> Sub
+  Prog --> Receipt
+  Prog --> PerfilR
+  Prog --> PerfilD
+  Prog --> Ev
+  Sub --> CompAPI
+  Receipt --> CompAPI
+  PerfilR --> CompAPI
+  PerfilD --> CompAPI
+  Receipt --> Explorer
+  PerfilR --> Explorer
+  PerfilD --> Explorer
+  Ev --> Helius
+  Receipt --> CPI
+  PerfilR --> CPI
