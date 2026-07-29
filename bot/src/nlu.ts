@@ -80,7 +80,10 @@ export function detectIntent(raw: string): Intent {
 
   if (
     /\b(soporte|ayuda humana|hablar con|asesor|problema|no funciona)\b/.test(t) ||
-    t === "4"
+    t === "4" ||
+    t === "soprte" ||
+    t === "soport" ||
+    t === "suporte"
   ) {
     return "soporte";
   }
@@ -111,14 +114,110 @@ export function parseMonto(raw: string): number | null {
 
 export function parseTipoActivo(raw: string): "SOL" | "USDC" {
   const t = normalizeText(raw);
-  if (/\bsol\b/.test(t)) return "SOL";
+  // Requiere intención explícita (evitar que ejemplos del bot disparen SOL)
+  if (/(^|\s)(\d+(?:\.\d+)?\s*)?sol(ana)?(\s|$)/.test(t) && !/\busdc\b/.test(t)) {
+    if (/\bsol\b/.test(t)) return "SOL";
+  }
   return "USDC";
+}
+
+/** Borrador extraído de un mensaje tipo “enviar 2000 a mi mujer”. */
+export type EnviarParsed = {
+  monto?: number;
+  tipo_activo: "SOL" | "USDC";
+  frecuencia?: "diario" | "semanal" | "mensual";
+  nombre_contacto?: string;
+};
+
+/**
+ * One-shot: monto (+ moneda), nombre cariñoso y frecuencia si vienen en la misma frase.
+ * Ej.: "enviar 2000 dólares a mi mujer", "manda 300 a mi amor cada mes".
+ */
+export function parseEnviarOneshoot(raw: string): EnviarParsed {
+  const out: EnviarParsed = { tipo_activo: parseTipoActivo(raw) };
+  const monto = parseMontoEnviarPhrase(raw);
+  if (monto != null) out.monto = monto;
+  const freq = parseFrecuencia(raw);
+  if (freq) out.frecuencia = freq;
+  const nombre = parseNombreEnviarPhrase(raw);
+  if (nombre) out.nombre_contacto = nombre;
+  return out;
+}
+
+/** Primer monto de la frase de envío (ignora WA largos ≥10 dígitos). */
+function parseMontoEnviarPhrase(raw: string): number | null {
+  const t = normalizeText(raw).replace(/[$,]/g, " ");
+  const re = /\b(\d+(?:\.\d+)?)\b/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(t)) !== null) {
+    const token = m[1];
+    // Evitar confundir ladas / WA (10+ dígitos enteros)
+    if (/^\d{10,}$/.test(token)) continue;
+    const n = parseFloat(token);
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  return null;
+}
+
+/**
+ * Nombre tras "a" / "para" (mi mujer, mi amor, mi reina, Mamá…).
+ * Conserva mayúsculas del mensaje original cuando se puede.
+ */
+export function parseNombreEnviarPhrase(raw: string): string | null {
+  const t = normalizeText(raw);
+  // Quitar verbo + monto/moneda para aislar "a X"
+  const withoutVerb = t
+    .replace(
+      /^(?:quiero\s+)?(?:enviar|manda|mandar|envio|envío|remesa|programar)(?:\s+remesa)?\s*/i,
+      ""
+    )
+    .trim();
+
+  const m = withoutVerb.match(
+    /\b(?:a|para)\s+((?:mi\s+)?[a-záéíóúñü]+(?:\s+[a-záéíóúñü]+){0,3})(?=\s+(?:cada|diario|semanal|mensual|al\s+mes|todos|en\s+pesos|dolares|dólares|usd|usdc|sol\b|\d)|$|[.,!?])/i
+  );
+  if (!m?.[1]) return null;
+
+  let candidate = m[1].trim();
+  // Recortar cola de moneda / ruido si quedó dentro
+  candidate = candidate
+    .replace(
+      /\s+(?:dolares|dólares|usd|usdc|sol|pesos|en|de)$/i,
+      ""
+    )
+    .trim();
+  if (!candidate || /^(cada|diario|semanal|mensual)$/i.test(candidate)) return null;
+
+  // Recuperar casing del texto original (búsqueda case-insensitive)
+  const orig = recoverOriginalCasing(raw, candidate) ?? candidate;
+  return parseNombreContacto(orig);
+}
+
+function recoverOriginalCasing(raw: string, normalizedNeedle: string): string | null {
+  const compact = raw.replace(/\s+/g, " ").trim();
+  const esc = normalizedNeedle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");
+  const re = new RegExp(esc, "i");
+  const hit = compact.match(re);
+  return hit?.[0]?.trim() ?? null;
 }
 
 export function parseWhatsAppDigits(raw: string): string | null {
   const digits = raw.replace(/\D/g, "");
   if (digits.length < 10 || digits.length > 15) return null;
   return digits;
+}
+
+/**
+ * Alias familiar (multi-palabra OK: "mi amor", "mi corazón", "Mamá").
+ * Max 40 chars (= VARCHAR(40)). Rechaza WA / wallet / vacío / solo dígitos.
+ */
+export function parseNombreContacto(raw: string): string | null {
+  const s = raw.trim().replace(/\s+/g, " ");
+  if (s.length < 1 || s.length > 40) return null;
+  if (parseWhatsAppDigits(s)) return null;
+  if (looksLikeSolanaAddress(s)) return null;
+  if (/^[\d+\s().-]+$/.test(s)) return null;
+  return s;
 }
 
 export function looksLikeSolanaAddress(raw: string): boolean {

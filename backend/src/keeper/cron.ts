@@ -15,7 +15,7 @@ import {
   ejecutarPagoUsdcOnChain,
   getKeeperKeypair,
 } from "../services/solana.js";
-import { enviarNotificacionPago } from "../services/notificaciones.js";
+import { enviarNotificacionPago, enviarMensaje } from "../services/notificaciones.js";
 import { PublicKey } from "@solana/web3.js";
 
 const FRECUENCIA_SECONDS: Record<string, number> = {
@@ -102,7 +102,45 @@ export async function ejecutarPagos() {
         tipo_activo: susc.tipo_activo || "SOL",
         blinkUrl,
         blinkOnboarding,
+        txSignature: txSig,
+        receiptPda: pagoResult.receiptPda,
       });
+
+      if (blinkUrl && susc.destinatario_wa) {
+        try {
+          await pool.query(
+            `INSERT INTO blinks_pendientes (
+               suscripcion_id, tx_signature, destinatario_wa, monto, url_blink, estado
+             ) VALUES ($1, $2, $3, $4, $5, 'enviado')`,
+            [
+              susc.id,
+              txSig,
+              susc.destinatario_wa,
+              Number(susc.monto),
+              blinkUrl,
+            ]
+          );
+        } catch (blinkErr) {
+          console.warn(
+            "[Keeper] No se pudo persistir blinks_pendientes:",
+            blinkErr instanceof Error ? blinkErr.message : blinkErr
+          );
+        }
+      }
+
+      // Aviso al remitente con el mismo comprobante (útil para demo / grabación)
+      if (susc.remitente_wa) {
+        const explorer = `https://explorer.solana.com/tx/${txSig}?cluster=devnet`;
+        const montoStr =
+          susc.tipo_activo === "USDC" ? `$${montoHuman}` : `${montoHuman} SOL`;
+        await enviarMensaje(
+          susc.remitente_wa,
+          `✅ *Pago enviado a tu familia*\n\n` +
+            `Monto: *${montoStr}*\n\n` +
+            `📄 *Comprobante del envío* (puedes abrir el enlace):\n${explorer}\n` +
+            `Cualquiera puede verificar que el dinero quedó registrado.`
+        );
+      }
     } catch (err) {
       console.error(`[Keeper] Error en suscripcion ${susc.id}:`, err);
     }

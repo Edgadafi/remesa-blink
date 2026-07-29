@@ -42,10 +42,8 @@ async function main() {
     bankAccountId = ETHERFUSE_DEMO_BANK_ACCOUNT_ID;
     console.log("Modo --use-org-bank:", { customerId, bankAccountId });
     const ui = {
-      email:
-        process.env.ETHERFUSE_DEMO_EMAIL ||
-        `demo+${wallet.slice(0, 6)}@remesablink.com`,
-      displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Demo",
+      email: process.env.ETHERFUSE_DEMO_EMAIL || "remesatia@gmail.com",
+      displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink",
     };
     try {
       url = await createOnboardingUrl(customerId, bankAccountId, wallet, ui);
@@ -84,9 +82,8 @@ async function main() {
     try {
       url = await createOnboardingUrl(customerId, bankAccountId, wallet, {
         email:
-          process.env.ETHERFUSE_DEMO_EMAIL ||
-          `demo+${wallet.slice(0, 6)}@remesablink.com`,
-        displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Demo",
+          process.env.ETHERFUSE_DEMO_EMAIL || "remesatia@gmail.com",
+        displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink",
       });
     } catch (err) {
       const orgId = parseOrgFrom409Error(err);
@@ -104,9 +101,8 @@ async function main() {
       }
       url = await createOnboardingUrl(customerId, bankAccountId, wallet, {
         email:
-          process.env.ETHERFUSE_DEMO_EMAIL ||
-          `demo+${wallet.slice(0, 6)}@remesablink.com`,
-        displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Demo",
+          process.env.ETHERFUSE_DEMO_EMAIL || "remesatia@gmail.com",
+        displayName: process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink",
       });
     }
   }

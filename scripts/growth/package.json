@@ -1,0 +1,17 @@
+{
+  "name": "remesa-blink-growth",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "explorador": "tsx explorador_local.ts"
+  },
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.1",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

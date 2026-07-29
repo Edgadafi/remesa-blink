@@ -7,7 +7,11 @@ import makeWASocket, {
   DisconnectReason,
   fetchLatestBaileysVersion,
   Browsers,
+  isLidUser,
+  jidNormalizedUser,
   type WASocket,
+  type WAMessage,
+  type WAMessageKey,
 } from "@whiskeysockets/baileys";
 import express from "express";
 import pino from "pino";
@@ -17,16 +21,23 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import {
   buildAyuda,
+  buildAyudaEnFlujo,
   buildCancelado,
   buildEnviarAskFamilia,
   buildEnviarAskFrecuencia,
   buildEnviarAskMonto,
+  buildEnviarAskNombre,
   buildEnviarAskWallet,
+  buildEnviarUnderstood,
   buildFrecuenciaInvalida,
+  buildHistorialPagosLista,
+  buildHistorialPagosVacio,
   buildMisRemesasLista,
   buildMisRemesasVacio,
   buildMontoInvalido,
+  buildNombreInvalido,
   buildNoEntendi,
+  buildRateLimitAviso,
   buildRecurrentePending,
   buildRecurrenteUso,
   buildSoporte,
@@ -34,17 +45,31 @@ import {
   buildSuscripcionError,
   buildWaInvalido,
   buildWalletInvalida,
+  buildExplorerTxUrl,
+  formatDestinatarioLabel,
+  formatFechaCorta,
   labelFrecuencia,
+  labelPasoEnviar,
 } from "./copy.js";
 import {
   detectIntent,
   looksLikeSolanaAddress,
+  parseEnviarOneshoot,
   parseFrecuencia,
   parseMonto,
+  parseNombreContacto,
   parseTipoActivo,
   parseWhatsAppDigits,
+  type EnviarParsed,
 } from "./nlu.js";
-import { clearSession, getSession, setStep, startEnviar } from "./session.js";
+import {
+  clearSession,
+  getSession,
+  nextEnviarStep,
+  setStep,
+  startEnviar,
+  type EnviarDraft,
+} from "./session.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -57,8 +82,40 @@ const logger = pino({ level: process.env.DEBUG ? "debug" : "info" });
 let sock: WASocket | null = null;
 let whatsappOpen = false;
 
+/** Evita reprocesar el mismo mensaje (Baileys a veces re-emite upserts). */
+const seenMsgIds = new Set<string>();
+const SEEN_MAX = 500;
+
+/** Anti-loop: tope de respuestas por chat en ventana corta. */
+const replyBuckets = new Map<string, { n: number; resetAt: number }>();
+const REPLY_WINDOW_MS = 8_000;
+const REPLY_MAX = 4;
+
 function log(msg: string, color = "\x1b[0m") {
   console.log(`${color}${msg}\x1b[0m`);
+}
+
+function rememberMsgId(id: string | undefined | null): boolean {
+  if (!id) return false;
+  if (seenMsgIds.has(id)) return true;
+  seenMsgIds.add(id);
+  if (seenMsgIds.size > SEEN_MAX) {
+    const first = seenMsgIds.values().next().value;
+    if (first) seenMsgIds.delete(first);
+  }
+  return false;
+}
+
+function allowReply(wa: string): boolean {
+  const now = Date.now();
+  const b = replyBuckets.get(wa);
+  if (!b || now > b.resetAt) {
+    replyBuckets.set(wa, { n: 1, resetAt: now + REPLY_WINDOW_MS });
+    return true;
+  }
+  if (b.n >= REPLY_MAX) return false;
+  b.n += 1;
+  return true;
 }
 
 function toJid(wa: string): string {
@@ -66,14 +123,60 @@ function toJid(wa: string): string {
   return `${clean}@s.whatsapp.net`;
 }
 
+type PeerIds = {
+  /** JID para sendMessage (LID o PN — el que WA usó en el chat). */
+  replyJid: string;
+  /** Identificador estable para sesión + API (preferir dígitos de teléfono). */
+  waId: string;
+};
+
+/**
+ * WhatsApp 2026 usa @lid. Baileys v7 expone remoteJidAlt (PN) cuando aplica.
+ * Sin esto: session key = LID numérico → API rota + Bad MAC al mezclar PN/LID.
+ */
+async function resolvePeer(sock: WASocket, m: WAMessage): Promise<PeerIds | null> {
+  const key = m.key as WAMessageKey & {
+    remoteJidAlt?: string;
+    participantAlt?: string;
+  };
+  const remote = key.remoteJid;
+  if (!remote || remote === "status@broadcast") return null;
+
+  const participant = key.participant;
+  const alt = key.remoteJidAlt || key.participantAlt || undefined;
+  const replyJid = participant || remote;
+
+  let pnJid: string | undefined;
+  if (alt && String(alt).includes("@s.whatsapp.net")) {
+    pnJid = jidNormalizedUser(alt);
+  } else if (remote.includes("@s.whatsapp.net")) {
+    pnJid = jidNormalizedUser(remote);
+  } else if (isLidUser(remote) || remote.endsWith("@lid")) {
+    try {
+      const mapped = await sock.signalRepository?.lidMapping?.getPNForLID?.(remote);
+      if (mapped) pnJid = jidNormalizedUser(mapped);
+    } catch {
+      /* mapping aún no disponible */
+    }
+  }
+
+  const waId = (pnJid || replyJid)
+    .replace(/@.*/, "")
+    .replace(/:\d+$/, "")
+    .replace(/\D/g, "") || replyJid.replace(/@.*/, "");
+
+  return { replyJid, waId };
+}
+
 /** Mensaje legible para errores HTTP del backend (JSON { error } o Zod flatten). */
 function formatApiError(err: unknown): string {
+  let raw = "";
   if (axios.isAxiosError(err)) {
     const d = err.response?.data;
     if (d && typeof d === "object" && "error" in d) {
       const e = (d as { error: unknown }).error;
-      if (typeof e === "string") return e;
-      if (e && typeof e === "object" && "formErrors" in e) {
+      if (typeof e === "string") raw = e;
+      else if (e && typeof e === "object" && "formErrors" in e) {
         const o = e as { formErrors?: string[]; fieldErrors?: Record<string, string[]> };
         const parts: string[] = [];
         if (Array.isArray(o.formErrors) && o.formErrors.length) parts.push(...o.formErrors);
@@ -82,18 +185,40 @@ function formatApiError(err: unknown): string {
             if (Array.isArray(v) && v.length) parts.push(`${k}: ${v.join(", ")}`);
           }
         }
-        if (parts.length) return parts.join("; ");
+        if (parts.length) raw = parts.join("; ");
+      } else {
+        try {
+          raw = JSON.stringify(e);
+        } catch {
+          raw = err.message;
+        }
       }
-      try {
-        return JSON.stringify(e);
-      } catch {
-        return err.message;
-      }
+    } else if (err.response?.status) {
+      raw = `HTTP ${err.response.status}: ${err.message}`;
+    } else {
+      raw = err.message;
     }
-    if (err.response?.status) return `HTTP ${err.response.status}: ${err.message}`;
+  } else if (err instanceof Error) {
+    raw = err.message;
+  } else {
+    raw = String(err);
   }
-  if (err instanceof Error) return err.message;
-  return String(err);
+
+  // Map Solana / RPC dumps → short Spanish (also handled in buildSuscripcionError)
+  if (/already in use/i.test(raw) || /Allocate:/i.test(raw)) {
+    return "Ya tienes una remesa activa a esa cuenta. Escribe *mis envíos*.";
+  }
+  if (/Simulation failed|custom program error|Transaction simulation/i.test(raw)) {
+    return "No se pudo registrar ahora. Revisa los datos o escribe *soporte*.";
+  }
+  if (/insufficient|fondos|balance/i.test(raw)) {
+    return "No hay saldo suficiente para completar el registro. Escribe *soporte*.";
+  }
+  // Truncate long dumps so they never flood the chat if leaked
+  if (raw.length > 160) {
+    return "Algo falló al programar. Escribe *enviar* de nuevo o *soporte*.";
+  }
+  return raw;
 }
 
 function formatMontoSuscripcion(s: {
@@ -102,7 +227,10 @@ function formatMontoSuscripcion(s: {
 }): string {
   const tipo = (s.tipo_activo || "SOL").toUpperCase();
   const raw = BigInt(String(s.monto).replace(/\..*$/, ""));
-  if (tipo === "USDC") return `${Number(raw) / 1e6} USDC`;
+  if (tipo === "USDC") {
+    const n = Number(raw) / 1e6;
+    return Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`;
+  }
   return `${Number(raw) / 1e9} SOL`;
 }
 
@@ -131,6 +259,8 @@ async function connect() {
     printQRInTerminal: false,
     syncFullHistory: false,
     markOnlineOnConnect: false,
+    // Evita 408 "Timed Out" en init queries (log terminal)
+    defaultQueryTimeoutMs: 60_000,
     logger,
   });
   sock = wa;
@@ -168,27 +298,57 @@ async function connect() {
 
   wa.ev.on("creds.update", saveCreds);
 
-  wa.ev.on("messages.upsert", async ({ messages }) => {
+  wa.ev.on("messages.upsert", async ({ messages, type }) => {
+    // Ignorar historial al conectar; solo mensajes nuevos en vivo
+    if (type !== "notify") return;
+
     for (const m of messages) {
       if (!m.message) continue;
-      const jid = m.key.remoteJid!;
-      const participant = m.key.participant;
+      if (rememberMsgId(m.key.id)) continue;
+
       const fromMe = m.key.fromMe ?? false;
       const text =
         m.message.conversation ||
         m.message.extendedTextMessage?.text ||
         "";
-      // Ignorar fromMe salvo /comandos, frases del menú o flujo activo
+
+      /**
+       * CRÍTICO: nunca procesar mensajes enviados por el propio bot.
+       * Self-test: OTRO WhatsApp → número del bot.
+       */
       if (fromMe) {
-        const sessionWa = (participant || jid).replace(/@.*/, "");
-        const inFlow = getSession(sessionWa).step !== "idle";
-        const intent = detectIntent(text);
-        if (!text.trim().startsWith("/") && intent === "unknown" && !inFlow) continue;
+        if (process.env.BOT_ALLOW_FROM_ME !== "1") continue;
+        if (text.length > 48) continue;
       }
-      const replyJid = participant || jid;
-      log(`[Bot] Recibido de ${replyJid}: ${text.slice(0, 50)}${text.length > 50 ? "..." : ""}`, "\x1b[90m");
+
+      if (!text.trim()) continue;
+
+      const peer = await resolvePeer(wa, m);
+      if (!peer) continue;
+
+      if (fromMe && process.env.BOT_ALLOW_FROM_ME === "1") {
+        if (getSession(peer.waId).step !== "idle") {
+          if (detectIntent(text) !== "cancelar") continue;
+        }
+      }
+
+      if (!allowReply(peer.waId)) {
+        log(`[Bot] Rate-limit replies a ${peer.waId} — posible loop evitado`, "\x1b[33m");
+        clearSession(peer.waId);
+        try {
+          await sock.sendMessage(peer.replyJid, { text: buildRateLimitAviso() });
+        } catch {
+          /* ignore send failure under rate limit */
+        }
+        continue;
+      }
+
+      log(
+        `[Bot] Recibido de ${peer.replyJid} (id=${peer.waId}): ${text.slice(0, 50)}${text.length > 50 ? "..." : ""}`,
+        "\x1b[90m"
+      );
       try {
-        await handleCommand(wa, replyJid, jid, text, fromMe);
+        await handleCommand(wa, peer.replyJid, peer.waId, text, fromMe);
       } catch (err) {
         log(`[Bot] Error: ${(err as Error).message}`, "\x1b[31m");
       }
@@ -251,6 +411,7 @@ async function crearSuscripcion(
     frecuencia: string;
     destinatario_wa: string;
     wallet: string;
+    nombre_contacto?: string;
   }
 ) {
   await send(
@@ -258,23 +419,51 @@ async function crearSuscripcion(
       monto: params.monto,
       tipo_activo: params.tipo_activo,
       frecuencia: params.frecuencia,
+      nombre_contacto: params.nombre_contacto,
     })
   );
   try {
-    await axios.post(`${API_BASE}/api/suscripciones`, {
+    const res = await axios.post(`${API_BASE}/api/suscripciones`, {
       remitente_wa,
       destinatario_wa: params.destinatario_wa,
       destinatario_solana: params.wallet,
       tipo_activo: params.tipo_activo,
       monto: params.monto,
       frecuencia: params.frecuencia,
+      ...(params.nombre_contacto
+        ? { nombre_contacto: params.nombre_contacto }
+        : {}),
     });
+    const txSig =
+      typeof res.data?.tx_signature === "string" ? res.data.tx_signature : null;
+    const reused = Boolean(res.data?.reused);
+    const cluster =
+      (process.env.SOLANA_CLUSTER || "devnet").includes("mainnet")
+        ? "mainnet-beta"
+        : "devnet";
+    const explorerUrl = txSig ? buildExplorerTxUrl(txSig, cluster) : null;
+    const rawMonto = Number(res.data?.monto);
+    const montoConfirm =
+      Number.isFinite(rawMonto) && rawMonto > 0
+        ? params.tipo_activo === "USDC"
+          ? rawMonto / 1e6
+          : rawMonto / 1e9
+        : params.monto;
+    const nombreConfirm =
+      (typeof res.data?.nombre_contacto === "string" && res.data.nombre_contacto) ||
+      params.nombre_contacto ||
+      null;
     await send(
       buildSuscripcionConfirmada({
-        monto: params.monto,
+        monto: montoConfirm,
         tipo_activo: params.tipo_activo,
         frecuencia: params.frecuencia,
         destinatario_wa: params.destinatario_wa,
+        nombre_contacto: nombreConfirm,
+        montoPedido: params.monto,
+        txSignature: txSig,
+        explorerUrl,
+        reused,
       })
     );
   } catch (err: unknown) {
@@ -284,22 +473,72 @@ async function crearSuscripcion(
 
 async function handleMisEnvios(send: (msg: string) => Promise<unknown>, wa: string) {
   try {
-    const res = await axios.get(`${API_BASE}/api/suscripciones/${wa}`);
-    const list = res.data;
-    if (!Array.isArray(list) || list.length === 0) {
+    const cluster = (process.env.SOLANA_CLUSTER || "devnet").includes("mainnet")
+      ? "mainnet-beta"
+      : "devnet";
+
+    const [susRes, pagosRes] = await Promise.all([
+      axios.get(`${API_BASE}/api/suscripciones/${wa}`),
+      axios.get(`${API_BASE}/api/suscripciones/${wa}/pagos`).catch(() => ({ data: [] })),
+    ]);
+
+    const list = Array.isArray(susRes.data) ? susRes.data : [];
+    const pagos = Array.isArray(pagosRes.data) ? pagosRes.data : [];
+
+    if (list.length === 0 && pagos.length === 0) {
       await send(buildMisRemesasVacio());
       return;
     }
-    const lines = list.map(
-      (s: {
-        monto: number | string;
-        frecuencia: string;
-        destinatario_wa: string;
-        tipo_activo?: string;
-      }) =>
-        `• *${formatMontoSuscripcion(s)}* · ${labelFrecuencia(s.frecuencia)} → +${s.destinatario_wa.replace(/\D/g, "")}`
-    );
-    await send(buildMisRemesasLista(lines));
+
+    const parts: string[] = [];
+
+    if (list.length > 0) {
+      const lines = list.map(
+        (s: {
+          monto: number | string;
+          frecuencia: string;
+          destinatario_wa: string;
+          nombre_contacto?: string | null;
+          tipo_activo?: string;
+          tx_signature?: string | null;
+        }) => {
+          const dest = formatDestinatarioLabel(s.nombre_contacto, s.destinatario_wa);
+          const base = `• *${formatMontoSuscripcion(s)}* · ${labelFrecuencia(s.frecuencia)} → a ${dest}`;
+          if (s.tx_signature) {
+            return `${base}\n  📄 Comprobante del envío:\n  ${buildExplorerTxUrl(s.tx_signature, cluster)}`;
+          }
+          return base;
+        }
+      );
+      parts.push(buildMisRemesasLista(lines));
+    } else {
+      parts.push(buildMisRemesasVacio());
+    }
+
+    if (pagos.length > 0) {
+      const pagoLines = pagos.map(
+        (p: {
+          monto: number | string;
+          tipo_activo?: string;
+          created_at?: string;
+          tx_signature?: string;
+        }) => {
+          const fecha = p.created_at ? formatFechaCorta(p.created_at) : "";
+          const monto = formatMontoSuscripcion(p);
+          const head = fecha ? `• *${monto}* · ${fecha}` : `• *${monto}*`;
+          if (p.tx_signature) {
+            return `${head}\n  📄 Comprobante del envío:\n  ${buildExplorerTxUrl(p.tx_signature, cluster)}`;
+          }
+          return head;
+        }
+      );
+      parts.push(buildHistorialPagosLista(pagoLines));
+    } else if (list.length > 0) {
+      parts.push(buildHistorialPagosVacio());
+    }
+
+    parts.push("Escribe *enviar* para agregar otra.");
+    await send(parts.join("\n\n"));
   } catch (err) {
     await send(`No pude consultar tus envíos: ${formatApiError(err)}`);
   }
@@ -320,6 +559,55 @@ async function handleRecompensas(send: (msg: string) => Promise<unknown>, wa: st
   }
 }
 
+/** Siguiente pregunta del flujo enviar (respeta borrador one-shot). */
+function promptForEnviarStep(
+  step: string,
+  draft: EnviarDraft,
+  parsed?: EnviarParsed
+): string {
+  const understood =
+    buildEnviarUnderstood({
+      monto: draft.monto ?? parsed?.monto,
+      tipo_activo: draft.tipo_activo,
+      nombre_contacto: draft.nombre_contacto ?? parsed?.nombre_contacto,
+      frecuencia: draft.frecuencia ?? parsed?.frecuencia,
+    }) ?? "";
+
+  if (step === "enviar_monto") {
+    return buildEnviarAskMonto();
+  }
+  if (step === "enviar_frecuencia") {
+    const monto = draft.monto!;
+    return buildEnviarAskFrecuencia(
+      monto,
+      draft.tipo_activo,
+      draft.nombre_contacto
+    );
+  }
+  if (step === "enviar_nombre") {
+    // Si ya confirmamos monto/freq arriba, no repetir solo el ask nombre
+    if (draft.monto != null && draft.frecuencia) {
+      return (
+        (understood ? `${understood}\n\n` : "") +
+        buildEnviarAskNombre().replace(/^Va:.*\n\n/, "")
+      );
+    }
+    return buildEnviarAskNombre(draft.monto, draft.tipo_activo);
+  }
+  if (step === "enviar_familia") {
+    const ask = buildEnviarAskFamilia(draft.nombre_contacto);
+    // One-shot completo (monto+nombre[+freq]): eco + WA
+    if (parsed && (parsed.monto != null || parsed.nombre_contacto)) {
+      return (understood ? `${understood}\n\n` : "") + ask;
+    }
+    return ask;
+  }
+  if (step === "enviar_wallet") {
+    return buildEnviarAskWallet(draft.nombre_contacto);
+  }
+  return buildEnviarAskMonto();
+}
+
 async function handleEnviarFlow(
   send: (msg: string) => Promise<unknown>,
   wa: string,
@@ -328,21 +616,52 @@ async function handleEnviarFlow(
   const session = getSession(wa);
   if (session.step === "idle") return false;
 
-  if (detectIntent(text) === "cancelar") {
+  const intent = detectIntent(text);
+
+  // Escapes del flujo (el copy dice "escribe soporte" — debe funcionar en cualquier paso)
+  if (intent === "cancelar") {
     clearSession(wa);
     await send(buildCancelado());
     return true;
   }
+  if (intent === "soporte") {
+    clearSession(wa);
+    await send(buildSoporte());
+    return true;
+  }
+  if (intent === "ayuda") {
+    // Mid-flow: show help without wiping draft
+    await send(buildAyudaEnFlujo(labelPasoEnviar(session.step)));
+    return true;
+  }
+  // Typo frecuente visto en piloto: "Soprte"
+  if (/^sop+o?rte$/i.test(text.trim().normalize("NFD").replace(/\p{M}/gu, ""))) {
+    clearSession(wa);
+    await send(buildSoporte());
+    return true;
+  }
 
   if (session.step === "enviar_monto") {
-    const monto = parseMonto(text);
+    // Permite “2000 a mi mujer cada mes” también en el paso de monto
+    const oneshot = parseEnviarOneshoot(text);
+    const monto = oneshot.monto ?? parseMonto(text);
     if (monto == null) {
       await send(buildMontoInvalido());
       return true;
     }
-    const tipo = parseTipoActivo(text);
-    setStep(wa, "enviar_frecuencia", { monto, tipo_activo: tipo });
-    await send(buildEnviarAskFrecuencia(monto, tipo));
+    const tipo = oneshot.tipo_activo || parseTipoActivo(text);
+    const patch: Partial<EnviarDraft> = {
+      monto,
+      tipo_activo: tipo,
+      ...(oneshot.frecuencia ? { frecuencia: oneshot.frecuencia } : {}),
+      ...(oneshot.nombre_contacto
+        ? { nombre_contacto: oneshot.nombre_contacto }
+        : {}),
+    };
+    const draft = { ...session.draft, ...patch };
+    const next = nextEnviarStep(draft);
+    setStep(wa, next, patch);
+    await send(promptForEnviarStep(next, { ...draft, ...patch }, oneshot));
     return true;
   }
 
@@ -352,8 +671,22 @@ async function handleEnviarFlow(
       await send(buildFrecuenciaInvalida());
       return true;
     }
-    setStep(wa, "enviar_familia", { frecuencia: freq });
-    await send(buildEnviarAskFamilia());
+    const patch: Partial<EnviarDraft> = { frecuencia: freq };
+    const draft = { ...session.draft, ...patch };
+    const next = nextEnviarStep(draft);
+    setStep(wa, next, patch);
+    await send(promptForEnviarStep(next, draft));
+    return true;
+  }
+
+  if (session.step === "enviar_nombre") {
+    const nombre = parseNombreContacto(text);
+    if (!nombre) {
+      await send(buildNombreInvalido());
+      return true;
+    }
+    setStep(wa, "enviar_familia", { nombre_contacto: nombre });
+    await send(buildEnviarAskFamilia(nombre));
     return true;
   }
 
@@ -363,14 +696,27 @@ async function handleEnviarFlow(
       await send(buildWaInvalido());
       return true;
     }
+    const nombre = getSession(wa).draft.nombre_contacto;
     setStep(wa, "enviar_wallet", { destinatario_wa: dest });
-    await send(buildEnviarAskWallet());
+    await send(buildEnviarAskWallet(nombre));
     return true;
   }
 
   if (session.step === "enviar_wallet") {
     if (!looksLikeSolanaAddress(text)) {
-      await send(buildWalletInvalida());
+      const fails = (session.draft.walletFails ?? 0) + 1;
+      if (fails >= 3) {
+        clearSession(wa);
+        await send(
+          "Demasiados intentos con el código. Escribe *enviar* para empezar de nuevo, *soporte* o *cancelar*."
+        );
+        return true;
+      }
+      setStep(wa, "enviar_wallet", { walletFails: fails });
+      await send(
+        buildWalletInvalida() +
+          "\n\nSi no tienes el código a la mano, escribe *soporte* o *cancelar*."
+      );
       return true;
     }
     const draft = getSession(wa).draft;
@@ -385,6 +731,7 @@ async function handleEnviarFlow(
       frecuencia: draft.frecuencia,
       destinatario_wa: draft.destinatario_wa,
       wallet: text.trim(),
+      nombre_contacto: draft.nombre_contacto,
     });
     return true;
   }
@@ -395,11 +742,11 @@ async function handleEnviarFlow(
 async function handleCommand(
   sock: WASocket,
   replyJid: string,
-  _chatJid: string,
+  waId: string,
   text: string,
   fromMe: boolean
 ) {
-  const wa = replyJid.replace(/@.*/, "");
+  const wa = waId;
   const send = (msg: string) => sock.sendMessage(replyJid, { text: msg });
 
   // Flujo guiado "enviar" (prioridad sobre menú)
@@ -419,8 +766,16 @@ async function handleCommand(
   }
 
   if (intent === "enviar") {
-    startEnviar(wa, parseTipoActivo(text));
-    await send(buildEnviarAskMonto());
+    const parsed = parseEnviarOneshoot(text);
+    const session = startEnviar(wa, {
+      tipo_activo: parsed.tipo_activo,
+      ...(parsed.monto != null ? { monto: parsed.monto } : {}),
+      ...(parsed.frecuencia ? { frecuencia: parsed.frecuencia } : {}),
+      ...(parsed.nombre_contacto
+        ? { nombre_contacto: parsed.nombre_contacto }
+        : {}),
+    });
+    await send(promptForEnviarStep(session.step, session.draft, parsed));
     return;
   }
 

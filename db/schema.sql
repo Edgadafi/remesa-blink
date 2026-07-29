@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS suscripciones (
     remitente_wa VARCHAR(50) NOT NULL,
     destinatario_wa VARCHAR(50) NOT NULL,
     destinatario_solana VARCHAR(44),
+    nombre_contacto VARCHAR(40),
     monto BIGINT NOT NULL CHECK (monto > 0),
     frecuencia VARCHAR(20) NOT NULL CHECK (frecuencia IN ('diario', 'semanal', 'mensual')),
     tipo_activo VARCHAR(10) NOT NULL DEFAULT 'SOL' CHECK (tipo_activo IN ('SOL', 'USDC')),
@@ -27,6 +28,7 @@ CREATE TABLE IF NOT EXISTS suscripciones (
     ultimo_pago TIMESTAMPTZ,
     pda_address VARCHAR(44),
     usuario_remitente_solana VARCHAR(44),
+    tx_signature VARCHAR(88),
     activa BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -51,6 +53,28 @@ BEGIN
         WHERE table_name = 'suscripciones' AND column_name = 'usuario_remitente_solana'
     ) THEN
         ALTER TABLE suscripciones ADD COLUMN usuario_remitente_solana VARCHAR(44);
+    END IF;
+END $$;
+
+-- Migración: tx_signature (registro on-chain al crear suscripción)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'suscripciones' AND column_name = 'tx_signature'
+    ) THEN
+        ALTER TABLE suscripciones ADD COLUMN tx_signature VARCHAR(88);
+    END IF;
+END $$;
+
+-- Migración: nombre_contacto (alias familiar en confirmaciones WA)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'suscripciones' AND column_name = 'nombre_contacto'
+    ) THEN
+        ALTER TABLE suscripciones ADD COLUMN nombre_contacto VARCHAR(40);
     END IF;
 END $$;
 
@@ -171,16 +195,23 @@ CREATE INDEX IF NOT EXISTS idx_blinks_pendientes_suscripcion ON blinks_pendiente
 CREATE INDEX IF NOT EXISTS idx_blinks_pendientes_estado ON blinks_pendientes(estado);
 
 -- Tabla: beneficiarios_etherfuse
--- Onboarding Etherfuse para off-ramp USDC -> MXN
+-- Onboarding Etherfuse para off-ramp USDC -> MXN (SPEI). Demo Day path.
+-- Bitso MXNB: no integrado (TODO post-demo). Ver docs/OFFRAMP-DEMO-DAY.md
 CREATE TABLE IF NOT EXISTS beneficiarios_etherfuse (
     destinatario_solana VARCHAR(44) PRIMARY KEY,
     destinatario_wa VARCHAR(50),
     etherfuse_customer_id UUID NOT NULL,
     etherfuse_bank_account_id UUID NOT NULL,
     kyc_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (kyc_status IN ('pending', 'verified', 'failed')),
+    last_order_id UUID,
+    last_order_status VARCHAR(32),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Idempotent upgrades for DBs created before last_order_* columns
+ALTER TABLE beneficiarios_etherfuse ADD COLUMN IF NOT EXISTS last_order_id UUID;
+ALTER TABLE beneficiarios_etherfuse ADD COLUMN IF NOT EXISTS last_order_status VARCHAR(32);
 
 CREATE INDEX IF NOT EXISTS idx_beneficiarios_etherfuse_kyc ON beneficiarios_etherfuse(kyc_status);
 

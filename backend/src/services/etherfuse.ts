@@ -44,10 +44,13 @@ export const ETHERFUSE_DEMO_BANK_ACCOUNT_ID =
   process.env.ETHERFUSE_DEMO_BANK_ACCOUNT_ID ||
   "9274aa72-7227-47ce-bbd4-49889e35edad";
 
+/** Real inbox for Sumsub OTP — never use .test / fake TLDs (Sumsub rejects them). */
 const DEFAULT_USER_EMAIL =
-  process.env.ETHERFUSE_DEMO_EMAIL || "demo@remesablink.com";
+  process.env.ETHERFUSE_ONBOARDING_EMAIL ||
+  process.env.ETHERFUSE_DEMO_EMAIL ||
+  "remesatia@gmail.com";
 const DEFAULT_USER_NAME =
-  process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink Demo";
+  process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink";
 
 interface QuoteResponse {
   quoteId: string;

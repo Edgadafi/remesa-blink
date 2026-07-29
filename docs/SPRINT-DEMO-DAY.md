@@ -54,3 +54,5 @@ Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refact
 | Preflight | `npm run demo:preflight` |
 | One-pager | [MENTOR-MARKETING-ONEPAGER.md](./MENTOR-MARKETING-ONEPAGER.md) |
 | Growth UTM | [GROWTH-SGE.md](./GROWTH-SGE.md) |
+| Guía piloto WA | [GUIA-USUARIO-PILOTO.md](./GUIA-USUARIO-PILOTO.md) |
+| UX bot (nombres / reuse) | [UX-BOT-MEJORAS.md](./UX-BOT-MEJORAS.md) |

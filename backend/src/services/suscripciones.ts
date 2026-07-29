@@ -9,6 +9,9 @@ import {
   getSuscripcionPda,
   getSuscripcionUsdcPda,
   USDC_MINT,
+  findExistingSuscripcionPda,
+  fetchSuscripcionMontoOnChain,
+  isAccountAlreadyInUseError,
 } from "./solana.js";
 
 const FRECUENCIA_MAP: Record<string, number> = {
@@ -28,8 +31,102 @@ export interface NuevaSuscripcion {
   monto: number;
   frecuencia: "diario" | "semanal" | "mensual";
   tipo_activo?: "SOL" | "USDC";
+  /** Alias familiar (ej. Mamá) — UX WA, no on-chain. */
+  nombre_contacto?: string | null;
   /** Wallet del remitente real (composabilidad). Si omitido, usa keeper. */
   usuario_remitente_solana?: string;
+}
+
+async function upsertSuscripcionDb(params: {
+  remitente_wa: string;
+  destinatario_wa: string;
+  destinatario_solana: string;
+  montoDb: number;
+  frecuencia: string;
+  tipo_activo: string;
+  proximo_pago: Date;
+  pda: string;
+  usuario_remitente_solana: string;
+  txSig: string | null;
+  reused: boolean;
+  nombre_contacto?: string | null;
+}) {
+  const nombre =
+    params.nombre_contacto?.trim().slice(0, 40) || null;
+
+  const existing = await pool.query(
+    `SELECT * FROM suscripciones
+     WHERE pda_address = $1
+     ORDER BY (activa = true) DESC, created_at DESC
+     LIMIT 1`,
+    [params.pda]
+  );
+
+  if (existing.rows[0]) {
+    const row = existing.rows[0];
+    const result = await pool.query(
+      `UPDATE suscripciones SET
+        activa = true,
+        remitente_wa = $1,
+        destinatario_wa = $2,
+        destinatario_solana = $3,
+        monto = $4,
+        frecuencia = $5,
+        tipo_activo = $6,
+        proximo_pago = $7,
+        usuario_remitente_solana = $8,
+        tx_signature = COALESCE($9, tx_signature),
+        nombre_contacto = COALESCE($10, nombre_contacto),
+        updated_at = NOW()
+       WHERE id = $11
+       RETURNING *`,
+      [
+        params.remitente_wa,
+        params.destinatario_wa,
+        params.destinatario_solana,
+        params.montoDb,
+        params.frecuencia,
+        params.tipo_activo,
+        params.proximo_pago,
+        params.usuario_remitente_solana,
+        params.txSig,
+        nombre,
+        row.id,
+      ]
+    );
+    return {
+      ...result.rows[0],
+      tx_signature: params.txSig,
+      reused: params.reused || Boolean(row.activa),
+    };
+  }
+
+  const result = await pool.query(
+    `INSERT INTO suscripciones (
+      remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
+      proximo_pago, pda_address, usuario_remitente_solana, tx_signature, nombre_contacto, activa
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true)
+    RETURNING *`,
+    [
+      params.remitente_wa,
+      params.destinatario_wa,
+      params.destinatario_solana,
+      params.montoDb,
+      params.frecuencia,
+      params.tipo_activo,
+      params.proximo_pago,
+      params.pda,
+      params.usuario_remitente_solana,
+      params.txSig,
+      nombre,
+    ]
+  );
+
+  return {
+    ...result.rows[0],
+    tx_signature: params.txSig,
+    reused: params.reused,
+  };
 }
 
 export async function crearSuscripcion(data: NuevaSuscripcion) {
@@ -46,55 +143,110 @@ export async function crearSuscripcion(data: NuevaSuscripcion) {
     ? new PublicKey(data.usuario_remitente_solana)
     : keeper.publicKey;
 
-  let txSig: string;
+  let txSig: string | null = null;
   let pda: PublicKey;
   let montoDb: number;
+  let reused = false;
 
   if (tipo_activo === "USDC") {
     const montoRaw = BigInt(Math.round(data.monto * 1e6));
-    txSig = await registrarSuscripcionUsdcOnChain(
+    [pda] = getSuscripcionUsdcPda(keeper.publicKey, destinatario, USDC_MINT);
+    const existingPda = await findExistingSuscripcionPda(
+      "USDC",
       keeper.publicKey,
       destinatario,
-      montoRaw,
-      data.frecuencia,
-      USDC_MINT,
-      usuarioRemitente
+      USDC_MINT
     );
-    [pda] = getSuscripcionUsdcPda(keeper.publicKey, destinatario, USDC_MINT);
-    montoDb = Math.round(data.monto * 1e6);
+
+    if (existingPda) {
+      reused = true;
+      const onChainMonto = await fetchSuscripcionMontoOnChain(
+        "USDC",
+        keeper.publicKey,
+        destinatario,
+        USDC_MINT
+      );
+      montoDb = onChainMonto != null ? Number(onChainMonto) : Number(montoRaw);
+    } else {
+      try {
+        txSig = await registrarSuscripcionUsdcOnChain(
+          keeper.publicKey,
+          destinatario,
+          montoRaw,
+          data.frecuencia,
+          USDC_MINT,
+          usuarioRemitente
+        );
+        montoDb = Number(montoRaw);
+      } catch (err) {
+        if (!isAccountAlreadyInUseError(err)) throw err;
+        // Race: account created between getAccountInfo and init
+        reused = true;
+        const onChainMonto = await fetchSuscripcionMontoOnChain(
+          "USDC",
+          keeper.publicKey,
+          destinatario,
+          USDC_MINT
+        );
+        montoDb = onChainMonto != null ? Number(onChainMonto) : Number(montoRaw);
+      }
+    }
   } else {
     const montoLamports = BigInt(Math.round(data.monto * 1e9));
-    txSig = await registrarSuscripcionOnChain(
-      keeper.publicKey,
-      destinatario,
-      montoLamports,
-      data.frecuencia,
-      usuarioRemitente
-    );
     [pda] = getSuscripcionPda(keeper.publicKey, destinatario);
-    montoDb = Math.round(data.monto * 1e9);
+    const existingPda = await findExistingSuscripcionPda(
+      "SOL",
+      keeper.publicKey,
+      destinatario
+    );
+
+    if (existingPda) {
+      reused = true;
+      const onChainMonto = await fetchSuscripcionMontoOnChain(
+        "SOL",
+        keeper.publicKey,
+        destinatario
+      );
+      montoDb =
+        onChainMonto != null ? Number(onChainMonto) : Number(montoLamports);
+    } else {
+      try {
+        txSig = await registrarSuscripcionOnChain(
+          keeper.publicKey,
+          destinatario,
+          montoLamports,
+          data.frecuencia,
+          usuarioRemitente
+        );
+        montoDb = Number(montoLamports);
+      } catch (err) {
+        if (!isAccountAlreadyInUseError(err)) throw err;
+        reused = true;
+        const onChainMonto = await fetchSuscripcionMontoOnChain(
+          "SOL",
+          keeper.publicKey,
+          destinatario
+        );
+        montoDb =
+          onChainMonto != null ? Number(onChainMonto) : Number(montoLamports);
+      }
+    }
   }
 
-  const result = await pool.query(
-    `INSERT INTO suscripciones (
-      remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
-      proximo_pago, pda_address, usuario_remitente_solana, activa
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true)
-    RETURNING *`,
-    [
-      data.remitente_wa,
-      data.destinatario_wa,
-      data.destinatario_solana,
-      montoDb,
-      data.frecuencia,
-      tipo_activo,
-      proximo_pago,
-      pda.toBase58(),
-      usuarioRemitente.toBase58(),
-    ]
-  );
-
-  return { ...result.rows[0], tx_signature: txSig };
+  return upsertSuscripcionDb({
+    remitente_wa: data.remitente_wa,
+    destinatario_wa: data.destinatario_wa,
+    destinatario_solana: data.destinatario_solana,
+    montoDb,
+    frecuencia: data.frecuencia,
+    tipo_activo,
+    proximo_pago,
+    pda: pda.toBase58(),
+    usuario_remitente_solana: usuarioRemitente.toBase58(),
+    txSig,
+    reused,
+    nombre_contacto: data.nombre_contacto,
+  });
 }
 
 export async function listarSuscripcionesPorUsuario(wa: string) {

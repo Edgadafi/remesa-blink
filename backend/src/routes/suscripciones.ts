@@ -6,6 +6,7 @@ import {
   crearSuscripcion,
   listarSuscripcionesPorUsuario,
 } from "../services/suscripciones.js";
+import { listarPagosPorWa } from "../services/pagos.js";
 import { z } from "zod";
 
 const router = Router();
@@ -17,6 +18,7 @@ const crearSchema = z.object({
   monto: z.number().positive(),
   frecuencia: z.enum(["diario", "semanal", "mensual"]),
   tipo_activo: z.enum(["SOL", "USDC"]).optional().default("SOL"),
+  nombre_contacto: z.string().trim().min(1).max(40).optional().nullable(),
   usuario_remitente_solana: z.string().min(32).max(44).optional(),
 });
 
@@ -33,6 +35,17 @@ router.post("/", async (req, res) => {
     res.status(500).json({
       error: err instanceof Error ? err.message : "Error al crear suscripcion",
     });
+  }
+});
+
+router.get("/:wa/pagos", async (req, res) => {
+  try {
+    const wa = req.params.wa;
+    const pagos = await listarPagosPorWa(wa);
+    res.json(pagos);
+  } catch (err) {
+    console.error("Error listar pagos por WA:", err);
+    res.status(500).json({ error: "Error al listar pagos" });
   }
 });
 

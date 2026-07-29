@@ -3,12 +3,13 @@ import { getBlinksBase } from "@/lib/config";
 
 export default function Home() {
   const blinkBase = getBlinksBase();
+  const wrap = (u: string) => `/blink?url=${encodeURIComponent(u)}`;
 
   const blinkLinks = [
-    { href: `${blinkBase}/api/actions/remesa`, label: "Remesa SOL", desc: "Acción avanzada (firma en wallet)." },
-    { href: `${blinkBase}/api/actions/enviar-remesa-usdc`, label: "Remesa USDC", desc: "Acción avanzada." },
-    { href: `${blinkBase}/api/actions/convertir-mxn`, label: "USDC → MXN", desc: "Off-ramp (avanzado)." },
-    { href: `${blinkBase}/api/actions/onboarding-mxn`, label: "Onboarding MXN", desc: "KYC / CLABE (avanzado)." },
+    { href: wrap(`${blinkBase}/api/actions/remesa`), label: "Remesa SOL", desc: "Acción avanzada (firma en wallet)." },
+    { href: wrap(`${blinkBase}/api/actions/enviar-remesa-usdc`), label: "Remesa USDC", desc: "Acción avanzada." },
+    { href: wrap(`${blinkBase}/api/actions/convertir-mxn`), label: "Recibir pesos", desc: "Off-ramp (sandbox)." },
+    { href: wrap(`${blinkBase}/api/actions/onboarding-mxn`), label: "Registro pesos", desc: "INE / CLABE (una vez)." },
   ];
 
   return (

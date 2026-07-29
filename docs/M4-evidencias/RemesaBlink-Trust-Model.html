@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>Modelo de confianza — RemesaBlink</title>
+  <style>/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}
+
+  .doc-header { padding: 28mm 16mm 12mm; border-bottom: 2px solid #2d5016; margin-bottom: 8mm; }
+  .doc-header .brand { color: #2d5016; font-family: Palatino, Georgia, serif; font-size: 14pt; letter-spacing: 0.04em; }
+  .doc-header h1 { margin: 8px 0 4px; color: #2c2416; font-size: 22pt; }
+  .doc-header .sub { color: #4a7c59; font-size: 11pt; }
+  .doc-header .escudo { width: 90px; margin-bottom: 8px; }
+  .content { padding: 0 4mm 16mm; }
+  pre { font-size: 8pt; background: #efe8dc; padding: 8px; overflow-wrap: anywhere; white-space: pre-wrap; }
+  code { font-family: "IBM Plex Mono", monospace; font-size: 0.9em; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 10px 0; }
+  th, td { border: 1px solid #2d5016; padding: 6px 8px; vertical-align: top; }
+  th { background: #2d5016; color: #f5f0e8; }
+  </style>
+</head>
+<body>
+  <header class="doc-header">
+    <div class="escudo"><svg viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Escudo RemesaBlink">
+  <path d="M60 6c-8 4-14 12-14 20 0 2 1 4 2 5l12-8 12 8c1-1 2-3 2-5 0-8-6-16-14-20z" fill="#C9A227" opacity="0.9"/>
+  <path d="M48 28c4 6 8 10 12 12 4-2 8-6 12-12-3 2-6 3-12 3s-9-1-12-3z" fill="#2D5016"/>
+  <ellipse cx="52" cy="34" rx="2.5" ry="3" fill="#C45C3E"/>
+  <ellipse cx="60" cy="36" rx="2.5" ry="3" fill="#C45C3E"/>
+  <ellipse cx="68" cy="34" rx="2.5" ry="3" fill="#C45C3E"/>
+  <path d="M38 24h44M32 24h2M86 24h2" stroke="#C9A227" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+    <div class="brand">REMESA BLINK · WAYLEARN</div>
+    <h1>Modelo de confianza</h1>
+    <p class="sub">TRUST-MODEL · Jul 2026 · Demo Day 31 ago 2026</p>
+    <p class="sub"><em>El agente en WhatsApp programa; Solana audita; tu familia vigila.</em></p>
+  </header>
+  <main class="content"><h1>Modelo de confianza — RemesaBlink</h1>
+<p>Qué promete RemesaBlink, cómo se verifica, y cuáles son los límites honestos del MVP.</p>
+<p><strong>Esquema de cuentas:</strong> <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a><br><strong>UX (copy WA, estados pending/ok/error):</strong> <a href="./UX-TRUST-DESIGN.md">UX-TRUST-DESIGN.md</a><br><strong>Pitch:</strong> <a href="./PITCH-TRUST-LAYER.md">PITCH-TRUST-LAYER.md</a><br><strong>Persona:</strong> <a href="./PERSONA-MX-US.md">PERSONA-MX-US.md</a></p>
+<p><strong>Principio rector:</strong> <em>Nosotros estamos vendiendo confianza</em> — no automatizamos la confianza ciega; automatizamos el envío con trazabilidad y humanos en el loop.</p>
+<p><strong>Pitch (1 frase):</strong> <em>El agente en WhatsApp programa; Solana audita; tu familia vigila.</em></p>
+<hr>
+<h2>1. Cuatro capas de confianza (producto)</h2>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Promesa al usuario</th>
+<th>Evidencia verificable</th>
+<th>Componente</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Agente</strong></td>
+<td>“Programo una vez en WhatsApp”</td>
+<td>Comando <code>/recurrente</code> + suscripción activa</td>
+<td>Bot + API</td>
+</tr>
+<tr>
+<td><strong>Reglas</strong></td>
+<td>“Solo paga si toca y está activa”</td>
+<td>PDA <code>activa</code>, <code>proximo_pago</code>, <code>Clock</code></td>
+<td>Anchor</td>
+</tr>
+<tr>
+<td><strong>Auditoría</strong></td>
+<td>“Cada envío deja comprobante”</td>
+<td><code>PagoReceipt</code> + Explorer + evento <code>PagoEjecutado</code></td>
+<td>On-chain</td>
+</tr>
+<tr>
+<td><strong>Humanos</strong></td>
+<td>“Mi familia ve el aviso”</td>
+<td>WA post-pago; tiendita aliada; <code>/mis-remesas</code></td>
+<td>Bot + <code>canal_confianza</code></td>
+</tr>
+</tbody></table>
+<p>Estas capas responden a la tendencia observada en MVPs de IA + pagos: <strong>el agente ejecuta; la confianza la construyen reglas verificables + supervisión humana</strong>.</p>
+<hr>
+<h2 class="section-break">2. Tres dominios de confianza</h2>
+<pre><code class="language-mermaid">flowchart TB
+  subgraph social [Confianza social]
+    familia[Familia transnacional]
+    tiendita[Tiendita aliada]
+    promotor[Promotor canal_confianza]
+  end
+
+  subgraph product [Confianza producto]
+    agente[Agente WA]
+    reglas[Reglas Anchor]
+    receipt[Receipt auditable]
+    humanos[Humanos en loop]
+  end
+
+  subgraph economic [Confianza economica]
+    keeper[Custodia keeper devnet]
+    noEscrow[Sin escrow PDA]
+    faseE[Fase E user vault]
+  end
+
+  social --&gt; product
+  product --&gt; economic
+</code></pre>
+<h3>2.1 Confianza social</h3>
+<ul>
+<li>Corredor MX ↔ EE.UU.; receptora rural a menudo no bancarizada (<a href="./PERSONA-MX-US.md">PERSONA-MX-US.md</a>).</li>
+<li>Adopción vía <strong>redes existentes</strong>: tiendita, comerciantes, asociación migrante, familia.</li>
+<li>Campo <code>usuarios_piloto.canal_confianza</code> documenta el puente social.</li>
+<li><strong>No sustituye</strong> prueba técnica: complementa el primer contacto y el soporte cuando el link falla.</li>
+</ul>
+<h3>2.2 Confianza producto (4 capas)</h3>
+<p>Flujo E2E de confianza verificable:</p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant R as Remitente_WA
+  participant A as Agente_Bot
+  participant C as Reglas_Anchor
+  participant K as Keeper
+  participant Rec as Receptora_WA
+  participant H as Humano_aliado
+
+  R-&gt;&gt;A: Programa remesa recurrente
+  A-&gt;&gt;C: registrar_suscripcion PDA
+  Note over C: activa + proximo_pago
+
+  K-&gt;&gt;C: ejecutar_pago cuando vence
+  C-&gt;&gt;C: PagoReceipt + Perfil PDA
+  K-&gt;&gt;Rec: Notificacion WA con link
+
+  Rec-&gt;&gt;Rec: Abre link / wallet
+  opt Dudas
+    Rec-&gt;&gt;H: Tiendita o AYUDA
+  end
+</code></pre>
+<h3>2.3 Confianza económica</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MVP (devnet, honesto)</th>
+<th>Fase E (objetivo)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quién tiene los fondos</td>
+<td>Keeper prefondeado</td>
+<td>Usuario (vault/ATA)</td>
+</tr>
+<tr>
+<td>Quién firma cada ciclo</td>
+<td>Keeper</td>
+<td>Keeper con permiso; usuario no firma cada vez</td>
+</tr>
+<tr>
+<td>Delegación / escrow</td>
+<td>No</td>
+<td>Vault PDA o SPL delegate revocable</td>
+</tr>
+<tr>
+<td>Narrativa pública</td>
+<td>“Piloto custodial devnet”</td>
+<td>Usuario controla fondos</td>
+</tr>
+</tbody></table>
+<p>Ver <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a> §9 y <a href="./FASE-E-NO-CUSTODIAL.md">FASE-E-NO-CUSTODIAL.md</a>.</p>
+<hr>
+<h2 class="section-break">3. Qué decimos / qué no decimos (MVP)</h2>
+<table>
+<thead>
+<tr>
+<th>Sí prometemos</th>
+<th>No prometemos en MVP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Remesa recurrente programada desde WhatsApp</td>
+<td>Que el remitente custodie en su wallet</td>
+</tr>
+<tr>
+<td>Comprobante on-chain por pago (<code>PagoReceipt</code>)</td>
+<td>Delegación SPL revocable del usuario</td>
+</tr>
+<tr>
+<td>Aviso a la familia en WhatsApp</td>
+<td>Que WA renderice Blinks nativamente</td>
+</tr>
+<tr>
+<td>Historial composable por wallet (<code>Perfil*</code>)</td>
+<td>Mainnet / cumplimiento NMLS sin asesoría</td>
+</tr>
+<tr>
+<td>Soporte humano (tiendita, email, AYUDA)</td>
+<td>Tipo de cambio MXN fijo en notificaciones</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">4. Matriz promesa → prueba (Demo Day)</h2>
+<table>
+<thead>
+<tr>
+<th>Promesa (demo / pitch)</th>
+<th>Prueba técnica</th>
+<th>Prueba UX</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“Remesa programada”</td>
+<td>Tx <code>registrar_suscripcion*</code> + PDA en Explorer</td>
+<td>WA confirmación remitente (<code>bot/src/copy.ts</code>)</td>
+</tr>
+<tr>
+<td>“Pago automático en ciclo”</td>
+<td>Tx <code>ejecutar_pago*</code> + <code>PagoReceipt</code></td>
+<td>Log keeper + notificación receptora</td>
+</tr>
+<tr>
+<td>“Comprobante auditable”</td>
+<td><code>PagoReceipt</code> PDA + <code>GET /api/composability/perfil/:wallet</code></td>
+<td>Link Explorer colapsado (“ver detalle técnico”)</td>
+</tr>
+<tr>
+<td>“Familia informada”</td>
+<td><code>enviarNotificacionPago</code> → bot</td>
+<td>Copy receptora (<code>notificaciones.ts</code>)</td>
+</tr>
+<tr>
+<td>“Confianza local”</td>
+<td><code>usuarios_piloto</code> + <code>canal_confianza</code></td>
+<td>Entrevistas M4 + aliado tiendita</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">5. Mensajes públicos alineados</h2>
+<table>
+<thead>
+<tr>
+<th>Canal</th>
+<th>Mensaje</th>
+<th>Capa que refuerza</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Redes (one-liner #3)</td>
+<td>“¿Cada quincena la misma fila en OXXO? RemesaBlink: dollars in, pesos en casa — automático por WhatsApp.”</td>
+<td>Agente + outcome familiar</td>
+</tr>
+<tr>
+<td>Landing <code>/piloto</code></td>
+<td>“El agente ejecuta; Solana deja comprobante; tu familia vigila.”</td>
+<td>Producto 4 capas</td>
+</tr>
+<tr>
+<td>WA receptora</td>
+<td>“Es el mismo aviso que te manda tu familiar — no es spam.”</td>
+<td>Humanos + social</td>
+</tr>
+<tr>
+<td>Pitch mentor</td>
+<td>Custodial devnet explícito + Fase E documentada</td>
+<td>Económica honesta</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">6. Límites de confianza (riesgos)</h2>
+<p>Cruce con <a href="./ARCHITECTURE-M3.md">ARCHITECTURE-M3.md</a> §8 (riesgos técnicos):</p>
+<table>
+<thead>
+<tr>
+<th>Riesgo</th>
+<th>Impacto en confianza</th>
+<th>Mitigación diseñada</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WA no renderiza Blinks</td>
+<td>Receptora confundida</td>
+<td>Copy 3 pasos + tiendita + AYUDA</td>
+</tr>
+<tr>
+<td>Drift PG ↔ chain</td>
+<td>Cron vs reglas divergen</td>
+<td>Backlog sync (G3) — <a href="./PDA-ACCOUNTS.md">PDA-ACCOUNTS.md</a></td>
+</tr>
+<tr>
+<td>Custodia keeper</td>
+<td>Usuario confía en equipo, no en wallet propia</td>
+<td>Honestidad MVP + Fase E</td>
+</tr>
+<tr>
+<td>Cancel solo PG</td>
+<td>“Cancelé” pero chain sigue activa</td>
+<td>Backlog G1/G2</td>
+</tr>
+<tr>
+<td>Etherfuse / KYC</td>
+<td>No convierte a MXN</td>
+<td>Flujo USDC + onboarding documentado</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 class="section-break">7. Evolución del modelo</h2>
+<pre><code class="language-mermaid">flowchart LR
+  M3[M3 Arquitectura]
+  TM[TRUST-MODEL este doc]
+  PDA[PDA-ACCOUNTS]
+  UX[UX-TRUST-DESIGN]
+  M4[M4 Piloto real]
+  FE[Fase E no-custodial]
+
+  M3 --&gt; TM
+  M3 --&gt; PDA
+  TM --&gt; UX
+  TM --&gt; M4
+  PDA --&gt; FE
+</code></pre>
+<p><strong>M4 (validación):</strong> entrevistas capturan objeciones de confianza (“¿qué necesitas ver para confiar en un bot con tu dinero?”) — alimentan UX y Fase E.</p>
+<p><strong>Fase E:</strong> confianza económica migra al usuario; capas producto (receipt, reglas, humanos) se mantienen.</p>
+<hr>
+<h2 class="section-break">8. Referencias cruzadas</h2>
+<table>
+<thead>
+<tr>
+<th>Documento</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="./ARCHITECTURE-M3.md">ARCHITECTURE-M3.md</a> §1.1</td>
+<td>Capa confianza en arquitectura</td>
+</tr>
+<tr>
+<td><a href="./COMPOSABILITY.md">COMPOSABILITY.md</a></td>
+<td><code>usuario_remitente</code> vs authority</td>
+</tr>
+<tr>
+<td><a href="./VALIDACION-USUARIOS.md">VALIDACION-USUARIOS.md</a></td>
+<td>Protocolo entrevistas + pilotos</td>
+</tr>
+<tr>
+<td><a href="./UX-TRUST-DESIGN.md">UX-TRUST-DESIGN.md</a></td>
+<td>Estados UI/WA Pauline Moon session</td>
+</tr>
+</tbody></table>
+<hr>
+<p><em>WayLearn · RemesaBlink · Trust Model · Jul 2026</em></p>
+</main>
+</body>
+</html>

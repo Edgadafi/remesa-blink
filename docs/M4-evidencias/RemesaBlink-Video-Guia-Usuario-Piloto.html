@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/><title>Video Guía de Usuario — Familia piloto</title>
+  <style>/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}
+
+  .doc-header{padding:22mm 14mm 10mm;border-bottom:2px solid #2d5016;margin-bottom:6mm}
+  .doc-header h1{margin:6px 0;font-size:20pt;color:#2c2416}
+  .brand{color:#2d5016;letter-spacing:.04em;font-size:11pt}
+  .content{padding:0 4mm 14mm}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  th,td{border:1px solid #2d5016;padding:5px 7px;vertical-align:top}
+  th{background:#2d5016;color:#f5f0e8}
+  </style></head><body>
+  <header class="doc-header"><div class="brand">REMESA BLINK + TIA</div>
+  <h1>Video Guía de Usuario — Familia piloto</h1></header><main class="content"><h1>Video Guía de Usuario — Familia piloto (60–90 s vertical)</h1>
+<p><strong>Marca:</strong> Remesa Blink + TIA<br><strong>Audiencia:</strong> Familia piloto (remitente + receptora)<br><strong>Arco:</strong> Registro en <code>/piloto</code> → primera remesa<br><strong>Formato:</strong> Vertical 9:16 · 60–90 segundos · solo español<br><strong>Companion:</strong> <a href="./GUIA-ABORDAJE-PILOTOS.md">GUIA-ABORDAJE-PILOTOS.md</a></p>
+<hr>
+<h2>Meta del video</h2>
+<p>Que al terminar digan: “Entiendo los 2 pasos y sé dónde entrar” — sin mencionar Solana.</p>
+<p><strong>CTA final (on-screen + voz):</strong>
+<code>frontend-bay-phi-92.vercel.app/piloto</code></p>
+<p>UTM sugerido al compartir:
+<code>?utm_source=video&amp;utm_medium=guia_usuario&amp;utm_campaign=remesa_sge_piloto</code></p>
+<hr>
+<h2>Guion VO (leer en voz alta · ~85 s)</h2>
+<table>
+<thead>
+<tr>
+<th>Seg</th>
+<th>VO (español simple)</th>
+<th>Pantalla / acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>0–5</strong></td>
+<td>“Si mandas dinero a tu familia en México cada mes… esto es para ustedes.”</td>
+<td>Portada: <strong>Remesa Blink + TIA</strong> · subtítulo: Guía de usuario piloto</td>
+</tr>
+<tr>
+<td><strong>5–15</strong></td>
+<td>“Se llama Remesa Blink, y TIA es la ayuda por WhatsApp. La idea: menos fila, menos ‘¿ya llegó?’.”</td>
+<td>Problema: cola / chat familiar (B-roll o mime)</td>
+</tr>
+<tr>
+<td><strong>15–35</strong></td>
+<td>“Paso uno: regístrense en el piloto. Entren al link, elijan si envían o reciben, pongan su WhatsApp y su municipio… y listo. Son de las 10 familias.”</td>
+<td>Screen recording: abrir <code>/piloto</code> → llenar form → enviar → confirmación</td>
+</tr>
+<tr>
+<td><strong>35–70</strong></td>
+<td>“Paso dos: la primera remesa. Quien envía abre Remesa Blink o escribe a TIA: hola… y luego enviar. Indican cuánto, cada cuánto, el WhatsApp de la familia… y confirman. Quien recibe solo espera el aviso en WhatsApp.”</td>
+<td>Screen: hub “Enviar a mi familia” <strong>o</strong> WA <code>hola</code> → <code>enviar</code> (pasos) + mock aviso receptora</td>
+</tr>
+<tr>
+<td><strong>70–82</strong></td>
+<td>“Si algo no abre, usen el formulario web o pregunten a su tiendita de confianza. Nosotros los acompañamos.”</td>
+<td>Texto: Soporte / AYUDA · backup <code>/nueva-remesa</code></td>
+</tr>
+<tr>
+<td><strong>82–90</strong></td>
+<td>“Remesa Blink + TIA. Link en la descripción: únanse al piloto.”</td>
+<td>End card: logo + URL <code>/piloto</code> + “10 familias”</td>
+</tr>
+</tbody></table>
+<p><strong>Palabras a evitar en VO:</strong> Solana, blockchain, Phantom, PDA, Blink (como jerga), USDC (salvo que el entorno lo exija; preferir “dólares / pesos”).</p>
+<hr>
+<h2>Textos en pantalla ( CapCut / Stories )</h2>
+<pre><code>0s   REMESA BLINK + TIA
+5s   Guía de usuario · Familia piloto
+15s  1. Registro en /piloto
+35s  2. Primera remesa (enviar)
+70s  ¿Dudas? · AYUDA / tiendita
+82s  frontend-bay-phi-92.vercel.app/piloto
+</code></pre>
+<hr>
+<h2>Shot list (filmar hoy · celular vertical)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Plano</th>
+<th>Duración</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S1</td>
+<td>Portada estática o motion 1 s</td>
+<td>3–5 s</td>
+<td>Usar asset <code>mapa</code>/portada generada o texto CapCut</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>Manos + celular (opcional cara)</td>
+<td>5–8 s</td>
+<td>Luz frontal; sin ruido</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Screen record <code>/piloto</code> completo</td>
+<td>18–22 s</td>
+<td>Zoom a campos; no mostrar datos reales de terceros</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>Screen record primera remesa</td>
+<td>25–35 s</td>
+<td>WA o web; velocidad 1.1–1.25x si se alarga</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>Aviso receptora (mock)</td>
+<td>5–8 s</td>
+<td>Notificación WA inventada / staging</td>
+</tr>
+<tr>
+<td>S6</td>
+<td>End card</td>
+<td>6–8 s</td>
+<td>URL grande, fondo Papel #F5F0E8, verde nopal</td>
+</tr>
+</tbody></table>
+<p><strong>Audio:</strong> VO limpia (auriculares mic) + música instrumental baja (sin letra) o silencio + VO.</p>
+<p><strong>Edición CapCut (orden):</strong></p>
+<ol>
+<li>Nuevo proyecto 9:16  </li>
+<li>Pegar clips S1→S6  </li>
+<li>Auto captions ES → corregir marca “Remesa Blink + TIA”  </li>
+<li>Export 1080×1920, 30 fps</li>
+</ol>
+<hr>
+<h2>Checklist “listo hoy”</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Guion leído en voz alta &lt; 90 s  </li>
+<li><input disabled="" type="checkbox"> Screen records de <code>/piloto</code> + primera remesa  </li>
+<li><input disabled="" type="checkbox"> VO grabada  </li>
+<li><input disabled="" type="checkbox"> CapCut exportado <code>.mp4</code>  </li>
+<li><input disabled="" type="checkbox"> Publicado o guardado + link listo para abordaje  </li>
+<li><input disabled="" type="checkbox"> Guía de abordaje impresa/PDF o en el teléfono</li>
+</ul>
+<hr>
+<h2>Disclaimer (poner en descripción del video)</h2>
+<blockquote class="note">
+<p>Piloto Remesa Blink + TIA. Herramienta en entorno de prueba / acompañamiento. No es consejo financiero. Cupo: 10 familias.</p>
+</blockquote>
+<hr>
+<p><em>Remesa Blink + TIA · Video guía usuario piloto · Jul 2026</em></p>
+</main></body></html>

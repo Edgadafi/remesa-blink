@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/><title>Guía de abordaje — Familias piloto</title>
+  <style>/* RemesaBlink brand kit — PDF export v1.1 */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --papel: #f5f0e8;
+  --verde-nopal: #2d5016;
+  --verde-cenote: #4a7c59;
+  --terracotta: #c45c3e;
+  --dorado-tia: #c9a227;
+  --tierra: #2c2416;
+  --font-display: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--papel);
+  color: var(--tierra);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* —— Cover —— */
+.cover-page {
+  page-break-after: always;
+  min-height: 297mm;
+  width: 100%;
+  background: var(--papel);
+  background-image: linear-gradient(180deg, rgba(201, 162, 39, 0.08) 0%, transparent 35%);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.cover-bar {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  padding: 10mm 16mm 8mm;
+  border-bottom: 3px solid var(--dorado-tia);
+}
+
+.cover-bar .program {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin: 0 0 4mm;
+}
+
+.cover-bar h1 {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 700;
+  color: var(--papel);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.cover-bar .doc-type {
+  font-family: var(--font-display);
+  font-size: 14pt;
+  color: var(--dorado-tia);
+  margin: 3mm 0 0;
+  font-weight: 400;
+}
+
+.cover-body {
+  flex: 1;
+  padding: 12mm 16mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-escudo {
+  width: 42mm;
+  margin: 6mm 0 8mm;
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--verde-cenote);
+  text-align: center;
+  margin: 0 0 10mm;
+}
+
+.cover-meta {
+  width: 100%;
+  max-width: 160mm;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+}
+
+.cover-meta th,
+.cover-meta td {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 2.5mm 3mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cover-meta th {
+  font-family: var(--font-display);
+  color: var(--terracotta);
+  width: 38%;
+  font-weight: 600;
+}
+
+.cover-meta td {
+  color: var(--tierra);
+}
+
+.cover-meta a {
+  color: var(--verde-cenote);
+  word-break: break-all;
+}
+
+.cover-footer {
+  margin-top: auto;
+  padding: 8mm 16mm 12mm;
+  border-top: 2px solid var(--dorado-tia);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  letter-spacing: 0.06em;
+}
+
+.cover-confidential {
+  display: inline-block;
+  margin-top: 3mm;
+  padding: 1.5mm 4mm;
+  border: 1px solid var(--terracotta);
+  color: var(--terracotta);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* —— Content pages —— */
+.content-wrap {
+  padding: 0;
+}
+
+.page-header {
+  border-bottom: 2px solid var(--dorado-tia);
+  padding-bottom: 3mm;
+  margin-bottom: 6mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.page-header .brand {
+  font-family: var(--font-display);
+  font-size: 11pt;
+  color: var(--verde-nopal);
+  font-weight: 700;
+}
+
+.page-header .meta {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--verde-cenote);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  color: var(--terracotta);
+  margin: 8mm 0 4mm;
+  page-break-after: avoid;
+  border-left: 4px solid var(--dorado-tia);
+  padding-left: 4mm;
+}
+
+h2:first-of-type {
+  margin-top: 0;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  color: var(--verde-nopal);
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  color: var(--verde-cenote);
+  margin: 4mm 0 2mm;
+}
+
+p {
+  margin: 0 0 3mm;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: var(--verde-nopal);
+}
+
+a {
+  color: var(--verde-cenote);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 5mm;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+thead th {
+  background: var(--verde-nopal);
+  color: var(--papel);
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 2mm 2.5mm;
+  text-align: left;
+}
+
+tbody td, tbody th {
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+blockquote, .note {
+  margin: 4mm 0;
+  padding: 3mm 4mm;
+  border-left: 3px solid var(--dorado-tia);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 9.5pt;
+  color: var(--tierra);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  background: rgba(201, 162, 39, 0.15);
+  padding: 0.5mm 1.5mm;
+  border-radius: 2px;
+}
+
+.toc {
+  page-break-after: always;
+}
+
+.toc h2 {
+  border-left: none;
+  padding-left: 0;
+  text-align: center;
+  color: var(--verde-nopal);
+}
+
+.toc ol {
+  list-style: none;
+  padding: 0;
+  max-width: 140mm;
+  margin: 0 auto;
+}
+
+.toc li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(201, 162, 39, 0.5);
+  padding: 2mm 0;
+  font-size: 10pt;
+}
+
+.toc li span.num {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  margin-right: 4mm;
+}
+
+.toc li a {
+  color: var(--tierra);
+  text-decoration: none;
+  flex: 1;
+}
+
+.section-break {
+  page-break-before: always;
+}
+
+.doc-footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 1px solid var(--dorado-tia);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--verde-cenote);
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(201, 162, 39, 0.4);
+  margin: 6mm 0;
+}
+
+@media print {
+  .cover-page {
+    page-break-after: always;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+  table, blockquote {
+    page-break-inside: avoid;
+  }
+}
+
+  .doc-header{padding:22mm 14mm 10mm;border-bottom:2px solid #2d5016;margin-bottom:6mm}
+  .doc-header h1{margin:6px 0;font-size:20pt;color:#2c2416}
+  .brand{color:#2d5016;letter-spacing:.04em;font-size:11pt}
+  .content{padding:0 4mm 14mm}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  th,td{border:1px solid #2d5016;padding:5px 7px;vertical-align:top}
+  th{background:#2d5016;color:#f5f0e8}
+  </style></head><body>
+  <header class="doc-header"><div class="brand">REMESA BLINK + TIA</div>
+  <h1>Guía de abordaje — Familias piloto</h1></header><main class="content"><h1>Guía de abordaje — Familias piloto</h1>
+<p><strong>Marca en pantalla/voz:</strong> Remesa Blink + TIA<br><strong>Objetivo hoy:</strong> 1 familia entiende y completa <strong>registro en <code>/piloto</code> + primera remesa</strong> (o deja el form + cita para la remesa).<br><strong>Demo Day WayLearn:</strong> 31 ago 2026 · Meta: 10 familias.</p>
+<p>Persona: <a href="./PERSONA-MX-US.md">PERSONA-MX-US.md</a> · Trust: <a href="./TRUST-MODEL.md">TRUST-MODEL.md</a> · Video: <a href="./VIDEO-GUIA-USUARIO-PILOTO.md">VIDEO-GUIA-USUARIO-PILOTO.md</a></p>
+<hr>
+<h2>1. Qué es un “abordaje” exitoso</h2>
+<p>No es una venta de crypto. Es una <strong>invitación de confianza</strong>:</p>
+<blockquote class="note">
+<p>“Estamos buscando 10 familias para probar un envío recurrente: él programa una vez; ella recibe aviso en WhatsApp. ¿Nos dejan 5 minutos?”</p>
+</blockquote>
+<p><strong>Criterio de éxito (hoy):</strong></p>
+<ol>
+<li>Familia (o un lado) deja datos en <code>/piloto</code>, <strong>o</strong></li>
+<li>Completan primera remesa de prueba (monto mínimo / web o WA), <strong>y</strong></li>
+<li>Quedan con número de soporte / TIA y saben a quién preguntar.</li>
+</ol>
+<hr>
+<h2>2. Quién habla con quién</h2>
+<table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Quién aborda</th>
+<th>Qué lleva</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Remitente (EE.UU.)</td>
+<td>Llamada/WA + link</td>
+<td>Link <code>/piloto</code>, video guía, pantalla compartida opcional</td>
+</tr>
+<tr>
+<td>Receptora (MX)</td>
+<td>Visita o WA + aliado</td>
+<td>Video, “no es spam”, tiendita de confianza</td>
+</tr>
+<tr>
+<td>Familia completa</td>
+<td>Una sola sesión (ideal)</td>
+<td>Ambos lados en llamada + form</td>
+</tr>
+</tbody></table>
+<p><strong>Marca:</strong> siempre <strong>Remesa Blink + TIA</strong> (TIA = el asistente en WhatsApp / la ayuda). No abrir con Solana, Phantom ni Explorer.</p>
+<hr>
+<h2>3. Script de puerta / WhatsApp (60 segundos)</h2>
+<p><strong>Apertura</strong></p>
+<blockquote class="note">
+<p>Hola, soy [nombre] de Remesa Blink + TIA. Estamos armando un piloto con 10 familias que mandan dinero de EE.UU. a México cada mes. ¿Ustedes envían o reciben apoyo del norte?</p>
+</blockquote>
+<p><strong>Problema (1 frase)</strong></p>
+<blockquote class="note">
+<p>La idea es que dejen de pelearse con la fila del OXXO y con “¿ya llegó?” cada quincena.</p>
+</blockquote>
+<p><strong>Qué pedimos</strong></p>
+<blockquote class="note">
+<p>Hoy solo: registrarse en el piloto (2 minutos) y, si les late, programar la primera remesa de prueba con nosotros acompañándolos.</p>
+</blockquote>
+<p><strong>Cierre</strong></p>
+<blockquote class="note">
+<p>Les paso el link y un video de un minuto. Si algo no cuadra, no pasa nada — no les pedimos INE ni depósito por adelantado para el registro.</p>
+</blockquote>
+<hr>
+<h2>4. Checklist de materiales (mochila digital)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Link: <a href="https://frontend-bay-phi-92.vercel.app/piloto?utm_source=abordaje&utm_medium=offline&utm_campaign=remesa_sge_piloto">https://frontend-bay-phi-92.vercel.app/piloto?utm_source=abordaje&amp;utm_medium=offline&amp;utm_campaign=remesa_sge_piloto</a></li>
+<li><input disabled="" type="checkbox"> Video Guía de Usuario (60–90 s) — ver <a href="./VIDEO-GUIA-USUARIO-PILOTO.md">VIDEO-GUIA-USUARIO-PILOTO.md</a></li>
+<li><input disabled="" type="checkbox"> Backup web: <a href="https://frontend-bay-phi-92.vercel.app/nueva-remesa">https://frontend-bay-phi-92.vercel.app/nueva-remesa</a></li>
+<li><input disabled="" type="checkbox"> WhatsApp soporte / bot TIA (número anotado)</li>
+<li><input disabled="" type="checkbox"> One-pager: <a href="./MENTOR-MARKETING-ONEPAGER.md">MENTOR-MARKETING-ONEPAGER.md</a></li>
+<li><input disabled="" type="checkbox"> Celular con datos + captura de pantalla del form lleno (evidencia)</li>
+</ul>
+<hr>
+<h2>5. Flujo guiado en vivo (registro + primera remesa)</h2>
+<h3>Paso A — Registro piloto (~2 min)</h3>
+<ol>
+<li>Abrir <code>/piloto</code> en el celular de ellos (o el tuyo y pasar el teléfono).</li>
+<li>Elegir rol: remitente / receptora / promotor.</li>
+<li>WhatsApp + municipio/estado + canal de confianza (familia, tiendita, etc.).</li>
+<li>Enviar. Confirmar: “Ya quedaron en la lista del piloto.”</li>
+</ol>
+<h3>Paso B — Primera remesa (~5–10 min)</h3>
+<ol>
+<li>Remitente: hub → <strong>Enviar a mi familia</strong> o WA TIA: <code>hola</code> → <code>enviar</code>.</li>
+<li>Monto mínimo de prueba, frecuencia, WhatsApp de la familia, wallet destino (si aplica en el entorno de demo).</li>
+<li>Confirmar: “Quedó programada; cuando corra el ciclo, ella recibe aviso.”</li>
+<li>Si el bot no está: usar <code>/nueva-remesa</code> (backup).</li>
+</ol>
+<p><strong>No mostrar</strong> Explorer ni jerga DeFi salvo que pregunten “¿dónde queda el comprobante?” → entonces: “queda un recibo verificable; se lo enseñamos después.”</p>
+<hr>
+<h2>6. Objeciones frecuentes</h2>
+<table>
+<thead>
+<tr>
+<th>Dicen</th>
+<th>Respondes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“¿Es banco / es legal?”</td>
+<td>“Es un piloto de tecnología en red de prueba / acompañados. No pedimos que dejen su sueldo entero.”</td>
+</tr>
+<tr>
+<td>“No tengo wallet”</td>
+<td>“El registro del piloto no pide wallet. La remesa de prueba la hacemos juntos; la receptora solo necesita WhatsApp.”</td>
+</tr>
+<tr>
+<td>“Me da miedo el link”</td>
+<td>“Entren solo por el link que les paso yo / la tiendita. TIA no pide contraseñas bancarias.”</td>
+</tr>
+<tr>
+<td>“Luego”</td>
+<td>“¿Les marco mañana 5 minutos? Les dejo el video; el cupo es 10 familias.”</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>7. Después del abordaje (mismo día)</h2>
+<ol>
+<li>Anotar en sheet: nombre, WA, rol, municipio, ¿registro?, ¿primera remesa?, notas.</li>
+<li>Verificar fila en <code>usuarios_piloto</code> / contador <code>/piloto</code>.</li>
+<li>Enviar mensaje de seguimiento TIA:<blockquote class="note">
+<p>Gracias por unirse al piloto Remesa Blink + TIA. Si se traban, escriban AYUDA o mándenme mensaje. Video: [link].</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h2>8. Ética / compliance corto</h2>
+<ul>
+<li>Consentimiento para grabar si el video incluye su cara/voz.</li>
+<li>No prometer “sin comisiones para siempre” si el modelo de aliado cobra comisión — sé claro: piloto / demo.</li>
+<li>No spam masivo de wa.me; un mensaje personalizado por familia.</li>
+<li>Datos del form = piloto WayLearn, no venta a terceros.</li>
+</ul>
+<hr>
+<p><em>Remesa Blink + TIA · Guía de abordaje pilotos · Jul 2026</em></p>
+</main></body></html>

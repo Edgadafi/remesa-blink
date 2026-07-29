@@ -5,10 +5,12 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
-    "postinstall": "bash scripts/patch-baileys-platform.sh"
+    "smoke:nlu": "tsx scripts/smoke-nlu.ts",
+    "postinstall": "bash scripts/patch-baileys-platform.sh",
+    "reset-auth": "bash scripts/reset-auth.sh"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.23",
+    "@whiskeysockets/baileys": "^7.0.0-rc13",
     "axios": "^1.7.7",
     "express": "^4.21.0",
     "pino": "^9.4.0",

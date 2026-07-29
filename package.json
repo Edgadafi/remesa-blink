@@ -29,7 +29,10 @@
     "docs:diagrams:m3": "node scripts/render-mermaid-diagrams.mjs",
     "docs:pdf:m2": "node scripts/export-business-foundation-pdf.mjs",
     "docs:pdf:m3": "node scripts/export-architecture-m3-pdf.mjs",
-    "demo:preflight": "bash scripts/demo-preflight.sh"
+    "docs:pdf:trust": "node scripts/export-trust-model-pdf.mjs",
+    "docs:pdf:piloto": "node scripts/export-piloto-guides-pdf.mjs",
+    "demo:preflight": "bash scripts/demo-preflight.sh",
+    "growth:explorador": "npm run explorador --prefix scripts/growth"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^11.4.2",

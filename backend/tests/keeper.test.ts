@@ -40,6 +40,7 @@ vi.mock("../src/services/solana.js", () => ({
 
 vi.mock("../src/services/notificaciones.js", () => ({
   enviarNotificacionPago: vi.fn().mockResolvedValue(undefined),
+  enviarMensaje: vi.fn().mockResolvedValue(undefined),
 }));
 
 vi.mock("node-cron", () => ({

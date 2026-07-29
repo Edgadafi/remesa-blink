@@ -147,7 +147,7 @@ Lenguaje natural (recomendado para piloto / Demo Day):
 | Escribes | Qué hace |
 |----------|----------|
 | hola / ayuda | Menú |
-| enviar | Guía paso a paso (monto → frecuencia → WA familia → wallet) |
+| enviar | Guía paso a paso (monto → frecuencia → nombre → WA familia → wallet) |
 | mis envíos | Lista remesas activas |
 | recompensas | Cashback / referidos |
 | soporte | Contacto humano |

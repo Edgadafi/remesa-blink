@@ -8,6 +8,10 @@ Documentos de diseño (sin implementación de código en este sprint).
 | [TRUST-MODEL.md](../TRUST-MODEL.md) | Modelo de confianza: 4 capas producto, 3 dominios, promesa→prueba |
 | [UX-TRUST-DESIGN.md](../UX-TRUST-DESIGN.md) | Copy WA y estados UX (Pauline Moon session) |
 | [PITCH-TRUST-LAYER.md](../PITCH-TRUST-LAYER.md) | Elevator pitch y Demo Day |
+| [GUIA-ABORDAJE-PILOTOS.md](../GUIA-ABORDAJE-PILOTOS.md) | Abordaje familias piloto (registro + 1ª remesa) |
+| [VIDEO-GUIA-USUARIO-PILOTO.md](../VIDEO-GUIA-USUARIO-PILOTO.md) | Guion vertical 60–90 s Guía de Usuario |
+| [RemesaBlink-Guia-Abordaje-Pilotos.pdf](./RemesaBlink-Guia-Abordaje-Pilotos.pdf) | PDF abordaje |
+| [RemesaBlink-Video-Guia-Usuario-Piloto.pdf](./RemesaBlink-Video-Guia-Usuario-Piloto.pdf) | PDF guion video |
 
 ## Diagramas (Markdown)
 

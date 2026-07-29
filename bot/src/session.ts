@@ -6,6 +6,7 @@ export type FlowStep =
   | "idle"
   | "enviar_monto"
   | "enviar_frecuencia"
+  | "enviar_nombre"
   | "enviar_familia"
   | "enviar_wallet";
 
@@ -13,8 +14,11 @@ export type EnviarDraft = {
   monto?: number;
   tipo_activo: "SOL" | "USDC";
   frecuencia?: "diario" | "semanal" | "mensual";
+  nombre_contacto?: string;
   destinatario_wa?: string;
   wallet?: string;
+  /** Intentos fallidos en paso wallet (anti-loop). */
+  walletFails?: number;
 };
 
 type Session = {
@@ -46,10 +50,29 @@ export function getSession(wa: string): Session {
   return fresh;
 }
 
-export function startEnviar(wa: string, tipo: "SOL" | "USDC" = "USDC"): Session {
+/** Primer paso faltante según borrador (one-shot puede saltar pasos). */
+export function nextEnviarStep(draft: EnviarDraft): FlowStep {
+  if (draft.monto == null) return "enviar_monto";
+  if (!draft.frecuencia) return "enviar_frecuencia";
+  if (!draft.nombre_contacto?.trim()) return "enviar_nombre";
+  if (!draft.destinatario_wa) return "enviar_familia";
+  if (!draft.wallet) return "enviar_wallet";
+  return "enviar_familia";
+}
+
+export function startEnviar(
+  wa: string,
+  tipoOrDraft: "SOL" | "USDC" | Partial<EnviarDraft> = "USDC"
+): Session {
+  const partial: Partial<EnviarDraft> =
+    typeof tipoOrDraft === "string" ? { tipo_activo: tipoOrDraft } : tipoOrDraft;
+  const draft: EnviarDraft = {
+    ...partial,
+    tipo_activo: partial.tipo_activo ?? "USDC",
+  };
   return touch(wa, {
-    step: "enviar_monto",
-    draft: { tipo_activo: tipo },
+    step: nextEnviarStep(draft),
+    draft,
     updatedAt: Date.now(),
   });
 }

@@ -1,6 +1,7 @@
 # Off-ramp Demo Day — Etherfuse sandbox → SPEI MXN
 
-**Alcance:** sandbox `api.sand.etherfuse.com` solo. No mainnet. No Bitso MXNB live.
+**Alcance:** sandbox `api.sand.etherfuse.com` solo. No mainnet. No Bitso MXNB live.  
+**Guía familia piloto:** [GUIA-USUARIO-PILOTO.md](./GUIA-USUARIO-PILOTO.md)
 
 ## Lecciones (2026-07 phone demo)
 
@@ -55,3 +56,12 @@ npx tsx scripts/demo-mark-kyc-verified.ts <wallet> [wa] [customerId] [bankId]
 ```bash
 cd backend && npx tsx scripts/demo-quote-assets.ts <wallet>
 ```
+
+## Webhook Etherfuse (Demo Day)
+
+URL pública: `{BLINKS_BASE_URL}/api/webhooks/etherfuse` (quick tunnel trycloudflare).
+
+Registro sandbox: `POST /ramp/webhook` body `{ id: uuid, url, eventType }` — un registro por `kyc_updated`, `customer_updated`, `order_updated`, `bank_account_updated`. Guardar cada `secret` (base64) en `ETHERFUSE_WEBHOOK_SECRET` (coma-separados). Listar: `POST /ramp/webhooks` con `{}`.
+
+Para ver el webhook KYC: 1) tunnel + secret cargados, 2) onboarding (`onboarding-mxn` o `POST /api/etherfuse/onboarding-url`), 3) completar KYC hosted, 4) llega `kyc_updated` → `kyc_status=verified`. POST sin `x-signature` → 401.
+

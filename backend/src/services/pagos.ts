@@ -51,3 +51,27 @@ export async function listarPagosPorWallet(wallet: string) {
   );
   return res.rows;
 }
+
+/** Historial de pagos (mirror) para un WhatsApp — mini-índice Demo Day. */
+export async function listarPagosPorWa(wa: string, limit = 20) {
+  const res = await pool.query(
+    `SELECT
+       p.id,
+       p.suscripcion_id,
+       p.receipt_pda,
+       p.tx_signature,
+       p.nonce,
+       p.monto,
+       p.tipo_activo,
+       p.usuario_remitente_solana,
+       p.destinatario_solana,
+       p.created_at
+     FROM pagos p
+     INNER JOIN suscripciones s ON s.id = p.suscripcion_id
+     WHERE s.remitente_wa = $1 OR s.destinatario_wa = $1
+     ORDER BY p.created_at DESC
+     LIMIT $2`,
+    [wa, limit]
+  );
+  return res.rows;
+}
