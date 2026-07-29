@@ -8,7 +8,13 @@ import {
   type ActionGetResponse,
 } from "@solana/actions";
 import pool from "../db/pool.js";
-import { createQuote, createOrder } from "../services/etherfuse.js";
+import {
+  createQuote,
+  createOrder,
+  assertEtherfuseIdsUsable,
+  mapEtherfuseError,
+  EtherfuseUserError,
+} from "../services/etherfuse.js";
 import { getOnboardingPresignedUrl, AlreadyOnboardedError } from "./etherfuse.js";
 import {
   Connection,
@@ -38,6 +44,15 @@ function getBaseUrl(): string {
   return process.env.BLINKS_BASE_URL || process.env.BASE_URL || "http://localhost:3000";
 }
 
+/** Icon absoluto estable (el favicon de solana.com a menudo falla en móvil). */
+function blinkIconUrl(): string {
+  const front =
+    process.env.FRONTEND_PUBLIC_URL?.replace(/\/$/, "") ||
+    "https://frontend-bay-phi-92.vercel.app";
+  return `${front}/piloto/hero-banner.png`;
+}
+
+
 router.get("/actions.json", (_req, res) => {
   const base = getBaseUrl();
   res.json({
@@ -45,8 +60,8 @@ router.get("/actions.json", (_req, res) => {
       { url: `${base}/api/actions/remesa`, label: "Remesa", description: "Transferir SOL a una wallet de destino (alias de enviar-remesa)" },
       { url: `${base}/api/actions/enviar-remesa`, label: "Enviar Remesa SOL", description: "Transferir SOL a una wallet de destino" },
       { url: `${base}/api/actions/enviar-remesa-usdc`, label: "Enviar Remesa USDC", description: "Transferir USDC a una wallet de destino" },
-      { url: `${base}/api/actions/convertir-mxn`, label: "Convertir USDC a MXN", description: "Off-ramp USDC a pesos via Etherfuse (SPEI)" },
-      { url: `${base}/api/actions/onboarding-mxn`, label: "Completar Onboarding MXN", description: "KYC + CLABE para convertir USDC a pesos en tu banco" },
+      { url: `${base}/api/actions/convertir-mxn`, label: "Recibir pesos en tu cuenta", description: "Pasar remesa a pesos mexicanos (SPEI / Etherfuse sandbox)" },
+      { url: `${base}/api/actions/onboarding-mxn`, label: "Registrar cuenta para pesos", description: "INE + CLABE una sola vez para recibir pesos en tu banco" },
     ],
   });
 });
@@ -56,7 +71,7 @@ function remesaMetadata(hrefPath: string): ActionGetResponse {
   return {
     type: "action",
     title: "Remesa Blink",
-    icon: "https://solana.com/favicon.ico",
+    icon: blinkIconUrl(),
     description: "Transferir SOL a una wallet de destino",
     label: "Enviar Remesa SOL",
     links: {
@@ -85,7 +100,7 @@ router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
   const payload: ActionGetResponse = {
     type: "action",
     title: "Remesa Blink USDC",
-    icon: "https://solana.com/favicon.ico",
+    icon: blinkIconUrl(),
     description: "Transferir USDC a una wallet de destino",
     label: "Enviar Remesa USDC",
     links: {
@@ -191,16 +206,16 @@ router.get("/api/actions/onboarding-mxn", (_req, res) => {
   const base = getBaseUrl();
   res.json({
     type: "action",
-    title: "Completar Onboarding MXN",
-    icon: "https://solana.com/favicon.ico",
-    description: "Registra KYC y CLABE para convertir USDC a pesos via SPEI",
-    label: "Completar Onboarding MXN",
+    title: "Registrar cuenta para pesos",
+    icon: blinkIconUrl(),
+    description: "Completa tu registro (INE + CLABE) una sola vez para recibir pesos en tu banco",
+    label: "Obtener enlace de registro",
     links: {
       actions: [{
         label: "Obtener enlace",
         href: `${base}/api/actions/onboarding-mxn`,
         parameters: [
-          { name: "account", label: "Tu wallet", required: true, type: "text" },
+          { name: "account", label: "Tu cuenta (wallet)", required: true, type: "text" },
         ],
       }],
     },
@@ -216,39 +231,45 @@ router.post("/api/actions/onboarding-mxn", async (req, res) => {
     const { presignedUrl } = await getOnboardingPresignedUrl(account, null);
     res.json({
       link: presignedUrl,
-      message: "Abre el enlace para completar KYC y registrar tu CLABE. Válido 15 min.",
+      message: "Abre el enlace para registrar tu INE y CLABE. Válido 15 min. Después podrás recibir pesos en tu banco.",
     });
   } catch (err) {
     if (err instanceof AlreadyOnboardedError) {
       return res.status(409).json({
-        message: "El destinatario ya está registrado en Etherfuse.",
+        message: "Ya estás registrada para recibir pesos. Usa el link de conversión.",
         code: "ALREADY_ONBOARDED",
       });
     }
     console.error("Error onboarding-mxn:", err);
     res.status(500).json({
-      message: err instanceof Error ? err.message : "Error al obtener enlace",
+      message: mapEtherfuseError(err),
     });
   }
 });
 
 // --- Convertir USDC a MXN (Etherfuse off-ramp) ---
 
-router.get("/api/actions/convertir-mxn", (_req, res) => {
+router.get("/api/actions/convertir-mxn", (req, res) => {
   const base = getBaseUrl();
+  const amountQ = typeof req.query.amount === "string" ? req.query.amount : "";
+  const href = amountQ
+    ? `${base}/api/actions/convertir-mxn?amount=${encodeURIComponent(amountQ)}`
+    : `${base}/api/actions/convertir-mxn`;
   res.json({
     type: "action",
-    title: "Convertir USDC a MXN",
-    icon: "https://solana.com/favicon.ico",
-    description: "Convertir USDC a pesos mexicanos via SPEI (Etherfuse)",
-    label: "Convertir USDC a MXN",
+    title: "Recibir pesos en tu cuenta",
+    icon: blinkIconUrl(),
+    description: "Pasa tu remesa a pesos mexicanos. Llegan a tu banco en unos minutos.",
+    label: "Recibir pesos",
     links: {
       actions: [{
-        label: "Convertir",
-        href: `${base}/api/actions/convertir-mxn`,
+        label: amountQ ? `Recibir pesos ($${amountQ})` : "Recibir pesos",
+        href,
         parameters: [
-          { name: "account", label: "Tu wallet (con USDC)", required: true, type: "text" },
-          { name: "amount", label: "Monto USDC", required: true, type: "number" },
+          { name: "account", label: "Tu cuenta (con el dinero de la remesa)", required: true, type: "text" },
+          ...(amountQ
+            ? []
+            : [{ name: "amount", label: "Monto", required: true, type: "number" as const }]),
         ],
       }],
     },
@@ -274,38 +295,70 @@ router.post("/api/actions/convertir-mxn", async (req, res) => {
     const sourceAmount = String(Math.round(amountNum * 1e6) / 1e6);
 
     const row = await pool.query(
-      `SELECT etherfuse_customer_id, etherfuse_bank_account_id, kyc_status
+      `SELECT etherfuse_customer_id, etherfuse_bank_account_id, kyc_status, destinatario_wa
        FROM beneficiarios_etherfuse WHERE destinatario_solana = $1`,
       [account]
     );
     if (!row.rows[0]) {
       return res.status(400).json({
-        message: "Onboarding requerido. Completa KYC y CLABE en /api/etherfuse/onboarding-url",
+        message: "Primero registra tu cuenta para pesos (INE + CLABE). Usa el link de registro.",
       });
     }
-    const { etherfuse_customer_id, etherfuse_bank_account_id, kyc_status } = row.rows[0];
+    const { etherfuse_customer_id, etherfuse_bank_account_id, kyc_status, destinatario_wa } =
+      row.rows[0];
     if (kyc_status !== "verified") {
       return res.status(400).json({
-        message: "KYC pendiente o rechazado. Estado: " + kyc_status,
+        message:
+          kyc_status === "failed"
+            ? "Tu registro no pudo verificarse. Responde AYUDA en WhatsApp."
+            : "Tu registro aún está en revisión. En cuanto quede listo te avisamos por WhatsApp.",
       });
     }
 
+    await assertEtherfuseIdsUsable(etherfuse_customer_id, etherfuse_bank_account_id);
+
     const quote = await createQuote(etherfuse_customer_id, sourceAmount);
-    const { burnTransaction, statusPage } = await createOrder(
+    const { orderId, burnTransaction, statusPage } = await createOrder(
       quote.quoteId,
       etherfuse_bank_account_id,
       account
     );
 
+    await pool.query(
+      `UPDATE beneficiarios_etherfuse
+       SET last_order_id = $1::uuid, last_order_status = 'pending', updated_at = NOW()
+       WHERE destinatario_solana = $2`,
+      [orderId, account]
+    );
+
+    if (destinatario_wa) {
+      await pool.query(
+        `UPDATE blinks_pendientes
+         SET estado = 'enviado'
+         WHERE estado = 'pendiente'
+           AND destinatario_wa = $1
+           AND url_blink LIKE '%convertir-mxn%'`,
+        [destinatario_wa]
+      );
+    }
+
+    const statusHint = statusPage ? ` Seguimiento: ${statusPage}` : "";
     res.json({
       transaction: burnTransaction,
-      message: `${amt} USDC → MXN en tu banco via SPEI. ${statusPage ? `Estado: ${statusPage}` : ""}`,
+      message: `$${amt} → pesos en tu cuenta bancaria (~15 min).${statusHint}`,
     });
   } catch (err) {
     console.error("Error convertir-mxn:", err);
-    res.status(500).json({
-      message: err instanceof Error ? err.message : "Error al crear orden de conversión",
-    });
+    const friendly = mapEtherfuseError(err);
+    const status =
+      err instanceof EtherfuseUserError &&
+      (err.code === "FORBIDDEN" ||
+        err.code === "STALE_IDS" ||
+        err.code === "TERMS" ||
+        err.code === "NON_STABLE")
+        ? 400
+        : 500;
+    res.status(status).json({ message: friendly });
   }
 });
 

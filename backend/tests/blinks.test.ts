@@ -158,6 +158,13 @@ describe("Blinks - GET enviar-remesa-usdc, onboarding-mxn, convertir-mxn", () =>
     const res = await request(app).get("/api/actions/convertir-mxn");
     expect(res.status).toBe(200);
     expect(res.body.type).toBe("action");
+    expect(res.body.title).toMatch(/pesos/i);
+  });
+
+  it("GET /api/actions/convertir-mxn?amount= prefija monto en href", async () => {
+    const res = await request(app).get("/api/actions/convertir-mxn?amount=25");
+    expect(res.status).toBe(200);
+    expect(res.body.links?.actions?.[0]?.href).toContain("amount=25");
   });
 });
 

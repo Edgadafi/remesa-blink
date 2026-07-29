@@ -178,6 +178,53 @@ export async function fetchSuscripcionContadorPagos(
   return Number(acct.contadorPagos);
 }
 
+/** True if Solana rejected init because the PDA account already exists. */
+export function isAccountAlreadyInUseError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return /already in use/i.test(msg) || /Allocate:/i.test(msg);
+}
+
+/**
+ * Returns PDA if the on-chain account exists (any owner/data), else null.
+ * Used to skip `init` on re-register (same keeper + destinatario [+ mint]).
+ */
+export async function findExistingSuscripcionPda(
+  tipo: "SOL" | "USDC",
+  remitente: PublicKey,
+  destinatario: PublicKey,
+  mint: PublicKey = USDC_MINT
+): Promise<PublicKey | null> {
+  const connection = getConnection();
+  const [pda] =
+    tipo === "USDC"
+      ? getSuscripcionUsdcPda(remitente, destinatario, mint)
+      : getSuscripcionPda(remitente, destinatario);
+  const info = await connection.getAccountInfo(pda, "confirmed");
+  return info ? pda : null;
+}
+
+/** On-chain monto (raw units) when PDA exists; null if missing/unreadable. */
+export async function fetchSuscripcionMontoOnChain(
+  tipo: "SOL" | "USDC",
+  remitente: PublicKey,
+  destinatario: PublicKey,
+  mint: PublicKey = USDC_MINT
+): Promise<bigint | null> {
+  const program = getProgram();
+  try {
+    if (tipo === "USDC") {
+      const [pda] = getSuscripcionUsdcPda(remitente, destinatario, mint);
+      const acct = await program.account.suscripcionUsdc.fetch(pda);
+      return BigInt(acct.monto.toString());
+    }
+    const [pda] = getSuscripcionPda(remitente, destinatario);
+    const acct = await program.account.suscripcion.fetch(pda);
+    return BigInt(acct.monto.toString());
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Registra suscripción SOL. usuarioRemitente = identidad composable (wallet real).
  */

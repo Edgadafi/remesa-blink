@@ -7,7 +7,9 @@
 1 familia piloto real → E2E estable (SOL) → UX WA simple → 5+ entrevistas → polish
 ```
 
-Fuera de scope explícito: mainnet, Fase E no-custodial, Etherfuse SPEI live, refactors amplios.
+Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refactors amplios.
+
+**In scope Demo Day (sandbox):** Etherfuse `convertir-mxn` / onboarding → pesos SPEI — ver [OFFRAMP-DEMO-DAY.md](./OFFRAMP-DEMO-DAY.md).
 
 ---
 

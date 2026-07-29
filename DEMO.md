@@ -100,7 +100,7 @@ USDC opcional: `npm run keeper:usdc-ata` + `npm run keeper:usdc-balance`.
 | **1:00–1:45** | Crear remesa | Formulario web **o** bot guiado. Monto mínimo. Mostrar tx Explorer **solo aquí** (~30–45 s proof). |
 | **1:45–2:15** | Keeper | `npm run keeper:run-once`. Log: **Receipt PDA** + tx + Blink URL. |
 | **2:15–2:30** | Composabilidad | Explorer: `PagoReceipt` + `PerfilRemitente`. API: `curl localhost:3000/api/composability/perfil/<wallet>`. |
-| **2:30–2:45** | Blink | Abrir URL Blink. Opcional USDC → Etherfuse `convertir-mxn`. |
+| **2:30–2:45** | Blink pesos | Si USDC + KYC: abrir `convertir-mxn` → “pesos en tu cuenta”. Guión: [docs/OFFRAMP-DEMO-DAY.md](./docs/OFFRAMP-DEMO-DAY.md). Sin API Etherfuse: mostrar GET metadata + WA. **No** Bitso en vivo. |
 | **2:45–3:00** | Cierre | "Cada pago deja receipt on-chain = reputación portable." Stack: Anchor, Actions, keeper. |
 
 Alias técnico (si hace falta): `/recurrente 0.001 SOL diario 5215512345678 <wallet_destino>`.
@@ -143,6 +143,7 @@ npm run e2e:usdc   # USDC + keeper (requiere USDC en keeper)
 | Composabilidad API | http://localhost:3000/api/composability/perfil/\<wallet\> |
 | One-pager mentora | [docs/MENTOR-MARKETING-ONEPAGER.md](./docs/MENTOR-MARKETING-ONEPAGER.md) |
 | Growth / UTM | [docs/GROWTH-SGE.md](./docs/GROWTH-SGE.md) |
+| Off-ramp pesos (Etherfuse sandbox) | [docs/OFFRAMP-DEMO-DAY.md](./docs/OFFRAMP-DEMO-DAY.md) |
 | Docs composable | [docs/COMPOSABILITY.md](./docs/COMPOSABILITY.md) |
 
 **No depender de** `remesablink.com` (aún no live) ni de túnel Cloudflare Quick Tunnel para la mentora.

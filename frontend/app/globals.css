@@ -438,6 +438,34 @@ p.lede {
   color: var(--color-verde-nopal);
 }
 
+.page-narrow {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-caption);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-verde-nopal);
+  margin-bottom: 0.75rem;
+}
+
+.blink-card {
+  gap: 1rem;
+}
+
+.blink-icon {
+  border-radius: 8px;
+}
+
+.msg-ok {
+  color: var(--color-verde-cenote);
+  white-space: pre-wrap;
+}
+
 .hub-blinks span {
   display: block;
   color: var(--muted);
