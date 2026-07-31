@@ -140,6 +140,7 @@ Herramienta en piloto / demos en red de prueba según el entorno. No es consejo 
 | Conversaciones WA calificadas | ≥ 5/semana |
 | Formato ganador | 1 identificado (retención o CTR) |
 | Hooks validados | ≥ 3 del banco con evidencia |
+| Club TIA (≥ Nopal) | Medir tras volumen real — ver [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md); no inventar % |
 
 ---
 
@@ -163,5 +164,6 @@ Misma plantilla para AviProfit, El Canario, retirobtc:
 - Demo técnica: [DEMO.md](../DEMO.md)  
 - Marca: [BRAND-IDENTITY.md](./BRAND-IDENTITY.md)  
 - Validación: [VALIDACION-USUARIOS.md](./VALIDACION-USUARIOS.md)  
+- Lealtad piloto: [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md)  
 
 **SGE (externo):** https://www.socialgrowthengineers.com/

@@ -5,19 +5,41 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { getApiBase } from "@/lib/config";
 import { normalizeWa } from "@/lib/wa";
 
+type LealtadResumen = {
+  nombre_nivel?: string;
+  envios_90d?: number;
+  volumen_usd_90d?: number;
+  cashback_pct?: number;
+};
+
 type Resumen = {
   total_acumulado: number;
   disponible: number;
+  reclamado: number;
   codigo_referido: string | null;
+  lealtad: LealtadResumen | null;
 };
 
 function toResumen(data: unknown): Resumen | null {
   if (data == null || typeof data !== "object" || Array.isArray(data)) return null;
   const d = data as Record<string, unknown>;
+  const L = d.lealtad;
+  let lealtad: LealtadResumen | null = null;
+  if (L && typeof L === "object" && !Array.isArray(L)) {
+    const lr = L as Record<string, unknown>;
+    lealtad = {
+      nombre_nivel: lr.nombre_nivel != null ? String(lr.nombre_nivel) : undefined,
+      envios_90d: lr.envios_90d != null ? Number(lr.envios_90d) : undefined,
+      volumen_usd_90d: lr.volumen_usd_90d != null ? Number(lr.volumen_usd_90d) : undefined,
+      cashback_pct: lr.cashback_pct != null ? Number(lr.cashback_pct) : undefined,
+    };
+  }
   return {
     total_acumulado: Number(d.total_acumulado ?? 0),
     disponible: Number(d.disponible ?? 0),
+    reclamado: Number(d.reclamado ?? 0),
     codigo_referido: (d.codigo_referido as string | null | undefined) ?? null,
+    lealtad,
   };
 }
 
@@ -171,8 +193,22 @@ export function CashbackPanel() {
 
       {resumen && (
         <div className="card stats">
+          {resumen.lealtad?.nombre_nivel && (
+            <p>
+              Club TIA: <strong>{resumen.lealtad.nombre_nivel}</strong>
+              {resumen.lealtad.envios_90d != null && (
+                <> · {resumen.lealtad.envios_90d} envíos / 90d</>
+              )}
+              {resumen.lealtad.cashback_pct != null && (
+                <> · cashback {resumen.lealtad.cashback_pct}%</>
+              )}
+            </p>
+          )}
           <p>
             Total acumulado: <strong>{resumen.total_acumulado}</strong>
+          </p>
+          <p>
+            Canjeado: <strong>{resumen.reclamado}</strong>
           </p>
           <p>
             Disponible: <strong>{resumen.disponible}</strong>

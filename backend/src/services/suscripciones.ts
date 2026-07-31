@@ -101,26 +101,65 @@ async function upsertSuscripcionDb(params: {
     };
   }
 
-  const result = await pool.query(
-    `INSERT INTO suscripciones (
-      remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
-      proximo_pago, pda_address, usuario_remitente_solana, tx_signature, nombre_contacto, activa
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true)
-    RETURNING *`,
-    [
-      params.remitente_wa,
-      params.destinatario_wa,
-      params.destinatario_solana,
-      params.montoDb,
-      params.frecuencia,
-      params.tipo_activo,
-      params.proximo_pago,
-      params.pda,
-      params.usuario_remitente_solana,
-      params.txSig,
-      nombre,
-    ]
-  );
+  let feeWaived = false;
+  try {
+    const { puedeWaiveFeeRecurrente } = await import("./lealtad.js");
+    feeWaived = await puedeWaiveFeeRecurrente(params.remitente_wa);
+  } catch {
+    feeWaived = false;
+  }
+
+  const insertParams = [
+    params.remitente_wa,
+    params.destinatario_wa,
+    params.destinatario_solana,
+    params.montoDb,
+    params.frecuencia,
+    params.tipo_activo,
+    params.proximo_pago,
+    params.pda,
+    params.usuario_remitente_solana,
+    params.txSig,
+    nombre,
+  ];
+
+  let result;
+  try {
+    result = await pool.query(
+      `INSERT INTO suscripciones (
+        remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
+        proximo_pago, pda_address, usuario_remitente_solana, tx_signature, nombre_contacto, activa, fee_waived
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true, $12)
+      RETURNING *`,
+      [...insertParams, feeWaived]
+    );
+  } catch {
+    result = await pool.query(
+      `INSERT INTO suscripciones (
+        remitente_wa, destinatario_wa, destinatario_solana, monto, frecuencia, tipo_activo,
+        proximo_pago, pda_address, usuario_remitente_solana, tx_signature, nombre_contacto, activa
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true)
+      RETURNING *`,
+      insertParams
+    );
+    feeWaived = false;
+  }
+
+  if (feeWaived) {
+    try {
+      await pool.query(
+        `INSERT INTO lealtad_beneficios_aplicados (usuario_wa, tipo, ref_id, detalle)
+         VALUES ($1, 'recurrente_gratis', $2, $3::jsonb)`,
+        [
+          params.remitente_wa,
+          result.rows[0].id,
+          JSON.stringify({ suscripcion_id: result.rows[0].id }),
+        ]
+      );
+    } catch {
+      /* opcional */
+    }
+  }
 
   return {
     ...result.rows[0],

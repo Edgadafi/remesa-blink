@@ -339,6 +339,61 @@ export function buildNoEntendi(): string {
   );
 }
 
+/** Resumen Club TIA dentro de *recompensas*. */
+export function buildRecompensasClubTia(d: {
+  total_acumulado?: number;
+  disponible?: number;
+  reclamado?: number;
+  codigo_referido?: string | null;
+  lealtad?: {
+    nombre_nivel?: string;
+    nivel?: string;
+    envios_90d?: number;
+    volumen_usd_90d?: number;
+    cashback_pct?: number;
+    fee_mult?: number;
+    siguiente?: {
+      nombre: string;
+      envios_faltan: number;
+      volumen_faltan: number;
+    } | null;
+  } | null;
+}): string {
+  const lines: string[] = ["*Tus recompensas — Club TIA*", ""];
+
+  const L = d.lealtad;
+  if (L?.nombre_nivel) {
+    lines.push(`Nivel: *${L.nombre_nivel}*`);
+    lines.push(
+      `Últimos 90 días: ${L.envios_90d ?? 0} envíos · ~$${(L.volumen_usd_90d ?? 0).toFixed(0)}`
+    );
+    if (L.cashback_pct != null) {
+      lines.push(`Cashback remesa: *${L.cashback_pct}%*`);
+    }
+    if (L.fee_mult != null && L.fee_mult < 1) {
+      const desc = Math.round((1 - L.fee_mult) * 100);
+      lines.push(`Descuento comisión: *−${desc}%* (cuando haya fee de plataforma)`);
+    }
+    if (L.siguiente) {
+      const faltan =
+        L.siguiente.envios_faltan <= L.siguiente.volumen_faltan
+          ? `${L.siguiente.envios_faltan} envíos`
+          : `~$${L.siguiente.volumen_faltan.toFixed(0)} más`;
+      lines.push(`Siguiente (*${L.siguiente.nombre}*): te faltan ${faltan}.`);
+    }
+    lines.push("");
+  }
+
+  lines.push(`Total ganado: $${Number(d.total_acumulado ?? 0).toFixed(2)}`);
+  lines.push(`Canjeado: $${Number(d.reclamado ?? 0).toFixed(2)}`);
+  lines.push(`Disponible: *$${Number(d.disponible ?? 0).toFixed(2)}*`);
+  lines.push(
+    `Código referido: ${d.codigo_referido || "aún no tienes — escribe *código*"}`
+  );
+  lines.push("", "Para canjear: *canjear 5* (tope $15/mes en piloto).");
+  return lines.join("\n");
+}
+
 /** Legacy slash help (alias técnico). */
 export function buildRecurrenteUso(): string {
   return (

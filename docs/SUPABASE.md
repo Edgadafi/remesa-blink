@@ -31,7 +31,9 @@
 
 ## Tablas
 
-`suscripciones`, `pagos`, `usuarios_piloto`, `cashback_programa`, `cashback_transacciones`, `cashback_referidos`, `blinks_pendientes`, `beneficiarios_etherfuse`
+`suscripciones`, `pagos`, `usuarios_piloto`, `cashback_programa`, `cashback_transacciones`, `cashback_referidos`, `blinks_pendientes`, `beneficiarios_etherfuse`, `lealtad_niveles`, `lealtad_miembros`, `lealtad_eventos`, `lealtad_beneficios_aplicados`
+
+Migración Club TIA: `db/migrations/004_lealtad_club_tia.sql` · Doc: [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md)
 
 ---
 

@@ -54,8 +54,9 @@ npm run keeper:smoke
 | Usuario escribe | Qué pasa |
 |-----------------|----------|
 | `hola` / `menú` | Menú amigable |
-| `enviar` / “quiero mandar dinero” | Flujo guiado: monto → frecuencia → WA familia → wallet destino |
-| `mis envíos` | Lista de suscripciones |
+| `enviar` / “quiero mandar dinero” | Flujo guiado |
+| `Enviar 2000 a mi amor` | One-shot: monto + nombre; pide frecuencia |
+| `mis envíos` | Lista con alias (`a mi amor`) |
 | `recompensas` / `cashback` | Estado cashback |
 | `soporte` | Contacto / ayuda |
 | `/recurrente …` | Alias técnico (evitar en pitch marketing) |
@@ -78,7 +79,7 @@ Detalle: [docs/DEMO-ENSAYO.md](./docs/DEMO-ENSAYO.md).
 
 ---
 
-## Demo Day WayLearn (~3 min) — MVP E2E + Solana visible
+## Demo Day WayLearn (~3 min / ideal &lt;60 s) — dos pilares
 
 ### Pre-requisitos (5 min antes)
 
@@ -89,21 +90,29 @@ npm run keeper:run-once   # opcional: un pago listo en logs
 ```
 
 Keeper con SOL devnet (`npm run keeper:airdrop` si hace falta).  
-USDC opcional: `npm run keeper:usdc-ata` + `npm run keeper:usdc-balance`.
+Off-ramp phone: [docs/OFFRAMP-DEMO-DAY.md](./docs/OFFRAMP-DEMO-DAY.md) — wallet **`g33Qc6g…`** (no `5Hop…`), email `remesatia@gmail.com`.
 
-### Guión Demo Day (3:00)
+### Guión corto (&lt;60 s) — preferido para inversionistas
+
+| Seg | Qué mostrar | Qué decir |
+|-----|-------------|-----------|
+| **0–15** | Problema | Cola OXXO, 4–7%, mamá rural sin saber si llegó. |
+| **15–35** | WA | `Enviar 2000 a mi amor` → **Orden confirmada** (nombre, no código). |
+| **35–50** | Aviso / Explorer | Ella recibe WhatsApp; comprobante on-chain = confianza. |
+| **50–60** | Blink pesos | **Recibir pesos** → status Etherfuse. Si **Unfunded/Processing**: Plan B — *“sandbox: orden lista / pesos en proceso”* ([OFFRAMP Plan B](./docs/OFFRAMP-DEMO-DAY.md)). Sin inventar SPEI. |
+
+### Guión Demo Day extendido (3:00)
 
 | Tiempo | Qué mostrar | Qué decir |
 |--------|-------------|-----------|
-| **0:00–0:30** | Problema | "Madre en Michoacán recibe remesa cada mes: colas OXXO, INE, comisiones. Remitente en Texas programa una vez; ella recibe aviso en WhatsApp." |
-| **0:30–1:00** | Frontend / hub | Vercel o `:3003`. Inicio → Nueva remesa / Mis remesas. **O** WA `enviar` (NLU). |
-| **1:00–1:45** | Crear remesa | Formulario web **o** bot guiado. Monto mínimo. Mostrar tx Explorer **solo aquí** (~30–45 s proof). |
-| **1:45–2:15** | Keeper | `npm run keeper:run-once`. Log: **Receipt PDA** + tx + Blink URL. |
-| **2:15–2:30** | Composabilidad | Explorer: `PagoReceipt` + `PerfilRemitente`. API: `curl localhost:3000/api/composability/perfil/<wallet>`. |
-| **2:30–2:45** | Blink pesos | Si USDC + KYC: abrir `convertir-mxn` → “pesos en tu cuenta”. Guión: [docs/OFFRAMP-DEMO-DAY.md](./docs/OFFRAMP-DEMO-DAY.md). Sin API Etherfuse: mostrar GET metadata + WA. **No** Bitso en vivo. |
-| **2:45–3:00** | Cierre | "Cada pago deja receipt on-chain = reputación portable." Stack: Anchor, Actions, keeper. |
+| **0:00–0:30** | Problema | Madre en Michoacán; remitente en Texas programa una vez. |
+| **0:30–1:00** | WA / hub | `enviar` one-shot **o** `/piloto` + `/nueva-remesa`. |
+| **1:00–1:45** | Crear remesa | Nombre `mi amor`; mask wallet; Explorer solo aquí. |
+| **1:45–2:15** | Keeper | Receipt PDA + Blink URL. |
+| **2:15–2:40** | Blink pesos | `convertir-mxn` sandbox Etherfuse. Sin API: metadata + WA. **No** Bitso live. |
+| **2:40–3:00** | Cierre + capital | Receipt = reputación. Roadmap: paymaster → SPEI mainnet → yield. Grants SF primero ([CAPITAL-PIPELINE](./docs/CAPITAL-PIPELINE.md)). |
 
-Alias técnico (si hace falta): `/recurrente 0.001 SOL diario 5215512345678 <wallet_destino>`.
+Alias técnico (evitar en pitch): `/recurrente …`.
 
 ### Atajos E2E (sin UI)
 
@@ -124,6 +133,7 @@ npm run e2e:usdc   # USDC + keeper (requiere USDC en keeper)
 - [ ] Early adopter: **1 familia real** (receptora rural + remitente EE.UU.) en `usuarios_piloto`
 - [ ] Persona: [docs/PERSONA-MX-US.md](./docs/PERSONA-MX-US.md)
 - [ ] Sprint Demo Day: [docs/SPRINT-DEMO-DAY.md](./docs/SPRINT-DEMO-DAY.md)
+- [ ] Pitch / capital: [docs/PITCH-TRUST-LAYER.md](./docs/PITCH-TRUST-LAYER.md) · [docs/CAPITAL-PIPELINE.md](./docs/CAPITAL-PIPELINE.md)
 
 ---
 
@@ -144,6 +154,8 @@ npm run e2e:usdc   # USDC + keeper (requiere USDC en keeper)
 | One-pager mentora | [docs/MENTOR-MARKETING-ONEPAGER.md](./docs/MENTOR-MARKETING-ONEPAGER.md) |
 | Growth / UTM | [docs/GROWTH-SGE.md](./docs/GROWTH-SGE.md) |
 | Off-ramp pesos (Etherfuse sandbox) | [docs/OFFRAMP-DEMO-DAY.md](./docs/OFFRAMP-DEMO-DAY.md) |
+| Capital / grants | [docs/CAPITAL-PIPELINE.md](./docs/CAPITAL-PIPELINE.md) |
+| Métricas | [docs/METRICAS-DEMO-DAY.md](./docs/METRICAS-DEMO-DAY.md) |
 | Docs composable | [docs/COMPOSABILITY.md](./docs/COMPOSABILITY.md) |
 
 **No depender de** `remesablink.com` (aún no live) ni de túnel Cloudflare Quick Tunnel para la mentora.
@@ -167,6 +179,7 @@ Tras deploy, registrar Blinks en [Dialect registry](https://www.blinks.xyz/inspe
 | Blink CORS | Backend en `:3000` con `actionCorsMiddleware` |
 | Bot no notifica | `BOT_INTERNAL_URL=http://localhost:3002` en backend `.env` |
 | `whatsappConnected: false` | Re-QR en terminal bot; **backup** `/nueva-remesa` |
-| Túnel Cloudflare muerto | Preferir local; o regenerar `npm run tunnel:quick` + `NEXT_PUBLIC_API_URL` |
+| Túnel Cloudflare muerto | Preferir local; o regenerar tunnel + `BLINKS_BASE_URL` |
+| Sumsub email `@….test` | Wallet quemada — escape hatch `g33Qc6g…` ([OFFRAMP](./docs/OFFRAMP-DEMO-DAY.md)) |
 | USDC E2E falla | `npm run keeper:usdc-balance` |
 | Matar `tsx` a ciegas | **No** — mata backend + bot a la vez |

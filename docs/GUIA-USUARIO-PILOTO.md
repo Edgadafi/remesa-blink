@@ -10,7 +10,8 @@
 
 1. Abre el chat de WhatsApp del bot Remesa Blink (número del piloto).
 2. Escribe **ayuda** (o saluda) para ver el menú.
-3. Comandos útiles: **enviar** · **mis envíos** · **recompensas** · **soporte** · **cancelar**
+3. Comandos útiles: **enviar** · **mis envíos** · **recompensas** (Club TIA) · **canjear** · **soporte** · **cancelar**  
+   Niveles: ver [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md).
 
 Soporte: `remesatia@gmail.com` o escribe **soporte** en el chat.
 
@@ -111,6 +112,25 @@ Pega la dirección completa (32–44 caracteres Base58). Si falla 2–3 veces: *
 ### Quiero cancelar a mitad
 
 Escribe **cancelar**. Luego **enviar** de nuevo.
+
+### Si ves «Unfunded» / «Selling Token» (página de seguimiento)
+
+Al recibir pesos (Blink **Recibir pesos**), a veces se abre una página de Etherfuse que dice **Selling Token** y estado **Unfunded**.
+
+**Qué significa (en simple):**
+
+- La **orden ya se creó** (paso “Order Created” con ✓).
+- Todavía **falta enviar** el dinero de prueba (token USDC sandbox `BXTou3…`) desde Phantom.
+- Si Phantom no tiene ese token, la página dirá Unfunded — **es normal**, no rompiste nada.
+
+**Qué hacer:**
+
+1. Lee el mensaje del Blink **antes** de abrir el enlace (explica exactamente esto).
+2. En Phantom, usa la misma wallet que te pidió el Blink (en ensayo Demo Day suele ser `g33Qc6g…`).
+3. Si el equipo aún no fondeó el token de prueba: basta mostrar “orden lista / pesos en proceso (sandbox)” — no hace falta pelear con el botón Connect.
+4. Si sí hay token: Connect en esa página → confirmar envío → el estado pasa a “Token Sent”.
+
+Detalle técnico para el equipo: [OFFRAMP-DEMO-DAY.md](./OFFRAMP-DEMO-DAY.md).
 
 ---
 

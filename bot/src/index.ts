@@ -37,6 +37,7 @@ import {
   buildMontoInvalido,
   buildNombreInvalido,
   buildNoEntendi,
+  buildRecompensasClubTia,
   buildRateLimitAviso,
   buildRecurrentePending,
   buildRecurrenteUso,
@@ -547,13 +548,7 @@ async function handleMisEnvios(send: (msg: string) => Promise<unknown>, wa: stri
 async function handleRecompensas(send: (msg: string) => Promise<unknown>, wa: string) {
   try {
     const res = await axios.get(`${API_BASE}/api/cashback/${wa}`);
-    const d = res.data;
-    await send(
-      `*Tus recompensas*\n` +
-        `Total: ${d.total_acumulado}\n` +
-        `Disponible: ${d.disponible}\n` +
-        `Código referido: ${d.codigo_referido || "aún no tienes — escribe *código*"}`
-    );
+    await send(buildRecompensasClubTia(res.data));
   } catch (err) {
     await send(`No pude ver recompensas: ${formatApiError(err)}`);
   }

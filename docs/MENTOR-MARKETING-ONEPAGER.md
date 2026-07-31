@@ -1,60 +1,80 @@
-# Remesa Blink — One-pager mentora marketing
+# Remesa Blink — One-pager mentora / Demo Day
 
-**Leave-behind (1 página).** Familia primero, crypto segundo.  
+**Leave-behind.** Familia primero, crypto segundo.  
 Demo Day WayLearn: **31 ago 2026**. Persona: [PERSONA-MX-US.md](./PERSONA-MX-US.md).
 
 ---
 
 ## Problema
 
-Cada mes: cola en OXXO / Western Union, comisión poco clara, INE, y una mamá en zona rural que **no sabe si ya llegó** el apoyo. El remitente en EE.UU. lo recuerda a mano por WhatsApp.
+Cada mes: cola en OXXO / Western Union, comisión 4–7%, INE, y una mamá rural que **no sabe si ya llegó** el apoyo. El remitente en EE.UU. lo recuerda a mano por WhatsApp.
 
 ## ICP (quién)
 
 | Rol | Perfil |
 |-----|--------|
-| **Receptora** | Mujer 30–50+, rural / semi-rural MX, no bancarizada; administra el hogar con remesa recurrente. |
-| **Remitente** | Diáspora EE.UU. (TX, CA…); ya vive en WhatsApp con la familia; quiere programar una vez. |
-
-No es early-adopter crypto. Confianza y canal local > jerga DeFi.
+| **Receptora** | Mujer 30–50+, rural / semi-rural MX, no bancarizada. |
+| **Remitente** | Diáspora EE.UU.; vive en WhatsApp; quiere programar una vez. |
 
 ## Solución (1 frase)
 
-**Envía dólares una vez; ella recibe aviso en WhatsApp y puede retirar pesos cerca de ti** — remesa recurrente con comprobante claro.
+**Envía desde el chat; ella recibe aviso y camino a pesos cerca de ti** — remesa recurrente con comprobante claro.
 
-## Producto que mostramos
+## Dos pilares (qué trascendemos)
 
-- Landing piloto: [frontend-bay-phi-92.vercel.app/piloto](https://frontend-bay-phi-92.vercel.app/piloto)
-- Hub brand + “Enviar a mi familia”
-- WhatsApp natural: `hola` → `enviar` → `mis envíos` (backup web `/nueva-remesa`)
+| Envío (EE.UU.) | Recepción (MX) |
+|----------------|----------------|
+| WhatsApp + Blinks — sin seed phrase en el pitch | SPEI sandbox hoy → pesos usables |
+| Roadmap: paymasters (gas invisible) | Roadmap: yield + microcrédito |
 
-Solana aparece solo como **comprobante / confianza**, no como el pitch.
+## Producto que mostramos (&lt;60 s)
+
+1. WA: `Enviar 2000 a mi amor` → orden confirmada  
+2. Keeper → aviso + comprobante  
+3. Blink → Recibir pesos (sandbox)  
+Detalle: [PITCH-TRUST-LAYER.md](./PITCH-TRUST-LAYER.md) · [DEMO.md](../DEMO.md)
+
+- Landing: [frontend-bay-phi-92.vercel.app/piloto](https://frontend-bay-phi-92.vercel.app/piloto)
+- Backup web: `/nueva-remesa`
+
+## Checklist inversionista (honesto)
+
+| Piden | Tenemos |
+|-------|---------|
+| Métricas prueba | [METRICAS-DEMO-DAY.md](./METRICAS-DEMO-DAY.md) — solo reales |
+| UX no-crypto | Demo chat &lt;60 s |
+| Off-ramp MX | Etherfuse SPEI **sandbox** ([OFFRAMP](./OFFRAMP-DEMO-DAY.md)) |
+| Compliance | KYC Sumsub / Etherfuse + visión legal |
+
+## Ruta de capital (post 31 ago)
+
+1. Grants Solana Foundation (no dilutivo)  
+2. Bridge / Alliance / Superteam  
+3. Pre-seed / ángeles LATAM  
+
+Ver [CAPITAL-PIPELINE.md](./CAPITAL-PIPELINE.md). Hasta Demo Day: **evidencia**, no pitch VC paralelo.
 
 ## Meta piloto
 
-**10 familias** MX ↔ EE.UU. antes del Demo Day.  
-Registrar en `usuarios_piloto` vía form `/piloto` (`POST /api/pilotos`).
+**10 familias** MX ↔ EE.UU. · Registrar en `/piloto` (`POST /api/pilotos`).
 
-## Link para compartir (UTM)
+## Link UTM
 
 ```
 https://frontend-bay-phi-92.vercel.app/piloto?utm_source=instagram&utm_medium=reel&utm_campaign=remesa_sge_w1
 ```
 
-Más variantes: [GROWTH-SGE.md](./GROWTH-SGE.md).
+## Ask
 
-## Ask a la mentora
+1. ¿Resuena ICP + “familia primero”?  
+2. **1 intro** a familia piloto o tiendita.  
+3. Feedback funnel reel → `/piloto`.
 
-1. ¿El ICP y el mensaje “familia primero” resuenan?
-2. **1 intro** a familia piloto o tiendita / corredor MX–US.
-3. Feedback de funnel: reel → bio → `/piloto`.
+## Contacto
 
-## Contacto / next
-
-- Form: `/piloto` · Growth: SGE hooks en `GROWTH-SGE.md`
-- Guion vivo: [DEMO.md](../DEMO.md) § Mentora marketing
-- Sprint post-call: [SPRINT-DEMO-DAY.md](./SPRINT-DEMO-DAY.md)
+- Form `/piloto` · Growth [GROWTH-SGE.md](./GROWTH-SGE.md)  
+- Sprint [SPRINT-DEMO-DAY.md](./SPRINT-DEMO-DAY.md) · Guion [DEMO.md](../DEMO.md)
 
 ---
 
-*No incluir arquitectura on-chain ni Explorer en el leave-behind de marketing.*
+*En leave-behind marketing: no abrir jerga DeFi. Explorer solo si preguntan “¿dónde está la prueba?”.*

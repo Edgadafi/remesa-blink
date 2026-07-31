@@ -1,15 +1,26 @@
 # Sprint Demo Day — backlog P0 / P1 / P2
 
-**Horizon:** post-mentora marketing → Demo Day WayLearn **31 ago 2026**.  
+**Horizon:** Demo Day WayLearn **31 ago 2026** → evidencia capital (grants primero).  
 **Orden estricto (reglas WayLearn):**
 
 ```text
 1 familia piloto real → E2E estable (SOL) → UX WA simple → 5+ entrevistas → polish
 ```
 
-Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refactors amplios.
+Fuera de scope explícito hasta Demo Day: mainnet, paymasters/yield/crédito en código, Bitso MXNB live, fundraising VC activo.
 
-**In scope Demo Day (sandbox):** Etherfuse `convertir-mxn` / onboarding → pesos SPEI — ver [OFFRAMP-DEMO-DAY.md](./OFFRAMP-DEMO-DAY.md).
+**In scope Demo Day (sandbox):** Etherfuse `convertir-mxn` / onboarding → pesos SPEI — [OFFRAMP-DEMO-DAY.md](./OFFRAMP-DEMO-DAY.md).  
+**Narrativa trascendencia + capital:** [PITCH-TRUST-LAYER.md](./PITCH-TRUST-LAYER.md) · [CAPITAL-PIPELINE.md](./CAPITAL-PIPELINE.md) · [METRICAS-DEMO-DAY.md](./METRICAS-DEMO-DAY.md).
+
+### Mapa criterios LATAM → RemesaBlink
+
+| Criterio | Demo Day | Post |
+|----------|----------|------|
+| UX invisible (&lt;30–60 s) | WA + Blink + nombres | Paymasters |
+| Fricción remesa real | Recurrente + SPEI sandbox | SPEI mainnet |
+| Cuenta dinero real MX | Off-ramp path | Yield + microcrédito |
+| Infra composable | Actions + Receipt | Kit open |
+| Métricas / capital | Pilotos + txs testnet honestas | Grants SF → accel → ángeles |
 
 ---
 
@@ -17,24 +28,26 @@ Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refact
 
 | Entregable | Due | Notas |
 |------------|-----|--------|
-| Checklist E2E noche previa: `npm run demo:preflight` + opcional `keeper:run-once` | Antes de **cada** demo | Preferir local sobre `trycloudflare` |
-| Registrar **≥1 familia** en `usuarios_piloto` (form `/piloto`) | Esta semana | ICP: [PERSONA-MX-US.md](./PERSONA-MX-US.md) |
-| Guion mentora ensayado + backup web si WA sin QR | Continuo | [DEMO.md](../DEMO.md), [DEMO-ENSAYO.md](./DEMO-ENSAYO.md) |
+| **Phone path `convertir-mxn`** — wallet demo `g33Qc6g…` (no `5Hop…`) + T&Cs + BXTou3 | Day 1 | [OFFRAMP § Ensayo](./OFFRAMP-DEMO-DAY.md#ensayo-phone--checklist-hoy-2026-07-30) |
+| Checklist E2E: `npm run demo:preflight` + opcional `keeper:run-once` | Cada demo | Preferir local sobre `trycloudflare` |
+| Registrar **≥1 familia** en `usuarios_piloto` | Esta semana | [PERSONA-MX-US.md](./PERSONA-MX-US.md) |
+| Guion &lt;60 s ensayado + backup web | Continuo | [DEMO.md](../DEMO.md) |
 
 ## P1 — pre Demo Day
 
 | Entregable | Due | Notas |
 |------------|-----|--------|
-| Sustituir dependencia `*.trycloudflare.com` por host API estable (VPS barato o named tunnel cuando haya dominio) | Pre Demo Day | `remesablink.com` aún no live |
-| Guion Demo Day **3 min** actualizado (NLU `enviar`, no solo `/recurrente`) | Semana próxima | Ya en [DEMO.md](../DEMO.md) § Demo Day — ensayar en vivo |
-| Keeper con saldo mínimo + smoke verde | Continuo | `npm run keeper:smoke` / airdrop |
+| Host API estable (vs quick tunnel) | Pre Demo Day | `remesablink.com` pendiente |
+| Guion 3 min NLU `enviar … a mi amor` | Continuo | [DEMO.md](../DEMO.md) |
+| Keeper saldo + smoke | Continuo | `keeper:smoke` |
 
 ## P2 — evidencia y polish
 
 | Entregable | Due | Notas |
 |------------|-----|--------|
-| 5+ entrevistas M4 + evidencia en `docs/M4-evidencias/` | Antes Demo Day | Plantilla en README de esa carpeta |
-| Dominio `remesablink.com` (+ `api.`) | Cuando haya presupuesto | No bloquear demo con NXDOMAIN |
+| 5+ entrevistas M4 | Antes Demo Day | [M4-evidencias/notas](./M4-evidencias/notas/README.md) |
+| Dossier grant SF (borrador) | Post Demo Day | [CAPITAL-PIPELINE.md](./CAPITAL-PIPELINE.md) |
+| Dominio `remesablink.com` | Presupuesto | No bloquear con NXDOMAIN |
 
 ---
 
@@ -43,8 +56,9 @@ Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refact
 - [ ] ≥1 familia piloto real registrada
 - [ ] E2E SOL estable (suscripción → keeper → Receipt / Blink)
 - [ ] WA `enviar` **o** web `/nueva-remesa` ensayados &lt; 24 h antes
-- [ ] API alcanzable desde frontend prod sin túnel efímero (ideal) **o** plan B documentado
-- [ ] Guion 3 min &lt; 3:15 en ensayo
+- [ ] API alcanzable sin túnel **o** plan B documentado
+- [ ] Guion &lt; 60 s (ideal) / 3 min &lt; 3:15
+- [ ] Off-ramp: T&Cs wallet demo + runbook BXTou3 (o plan B status page)
 
 ## Links rápidos
 
@@ -53,6 +67,9 @@ Fuera de scope explícito: mainnet, Fase E no-custodial, Bitso MXNB live, refact
 | Piloto | https://frontend-bay-phi-92.vercel.app/piloto |
 | Preflight | `npm run demo:preflight` |
 | One-pager | [MENTOR-MARKETING-ONEPAGER.md](./MENTOR-MARKETING-ONEPAGER.md) |
+| Capital | [CAPITAL-PIPELINE.md](./CAPITAL-PIPELINE.md) |
+| Métricas | [METRICAS-DEMO-DAY.md](./METRICAS-DEMO-DAY.md) |
 | Growth UTM | [GROWTH-SGE.md](./GROWTH-SGE.md) |
-| Guía piloto WA | [GUIA-USUARIO-PILOTO.md](./GUIA-USUARIO-PILOTO.md) |
-| UX bot (nombres / reuse) | [UX-BOT-MEJORAS.md](./UX-BOT-MEJORAS.md) |
+| Guía piloto | [GUIA-USUARIO-PILOTO.md](./GUIA-USUARIO-PILOTO.md) |
+| UX bot | [UX-BOT-MEJORAS.md](./UX-BOT-MEJORAS.md) |
+| Roadmap post | [FASE-E-NO-CUSTODIAL.md](./FASE-E-NO-CUSTODIAL.md) |

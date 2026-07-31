@@ -25,12 +25,17 @@ Incluidos en los docs anteriores:
 
 Regenerar PNG en PDF M3 (opcional): añadir bloques Mermaid a `ARCHITECTURE-M3.md` y `npm run docs:pdf:m3`.
 
+## Notas de campo (entrevistas)
+
+Plantilla + entradas: [notas/README.md](./notas/README.md). Meta: **5+** antes de Demo Day.
+
 ## Subir a Drive
 
 Carpeta equipo: [Drive WayLearn](https://drive.google.com/drive/folders/1whLI4EutUbPz4OCVkwMFdeH5TZxkoQ8o?usp=sharing)
 
-Sugerencia: subcarpeta `M4-Diseno-PDA-Trust-jul-2026/`
+Sugerencia: subcarpeta `M4-Diseno-PDA-Trust-jul-2026/` + `M4-entrevistas/`
 
 ## Sprint siguiente (implementación)
 
-Ver backlog en `PDA-ACCOUNTS.md` §10–11: cancel on-chain, sync PG, migración columnas.
+Ver backlog en `PDA-ACCOUNTS.md` §10–11: cancel on-chain, sync PG, migración columnas.  
+Capital post Demo Day: [CAPITAL-PIPELINE.md](../CAPITAL-PIPELINE.md).

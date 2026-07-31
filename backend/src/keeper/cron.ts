@@ -9,6 +9,10 @@ import {
   actualizarSuscripcionDespuesPago,
 } from "../services/suscripciones.js";
 import { registrarCashbackPorRemesa } from "../services/cashback.js";
+import {
+  onPagoConfirmado,
+  buildMensajeUpgradeLealtad,
+} from "../services/lealtad.js";
 import { registrarPagoEnDb } from "../services/pagos.js";
 import {
   ejecutarPagoOnChain,
@@ -59,7 +63,7 @@ export async function ejecutarPagos() {
           : Number(susc.monto) / 1e9;
       await registrarCashbackPorRemesa(susc.remitente_wa, montoHuman, susc.id);
 
-      await registrarPagoEnDb({
+      const pagoRow = await registrarPagoEnDb({
         suscripcion_id: susc.id,
         receipt_pda: pagoResult.receiptPda,
         tx_signature: txSig,
@@ -69,6 +73,24 @@ export async function ejecutarPagos() {
         usuario_remitente_solana: susc.usuario_remitente_solana ?? null,
         destinatario_solana: susc.destinatario_solana,
       });
+
+      try {
+        const lealtad = await onPagoConfirmado({
+          usuario_wa: susc.remitente_wa,
+          pago_id: pagoRow.id,
+          suscripcion_id: susc.id,
+          monto_usd: montoHuman,
+          tipo_activo: susc.tipo_activo || "SOL",
+        });
+        if (lealtad?.upgraded && susc.remitente_wa) {
+          await enviarMensaje(susc.remitente_wa, buildMensajeUpgradeLealtad(lealtad));
+        }
+      } catch (lealtadErr) {
+        console.warn(
+          "[Keeper] Club TIA:",
+          lealtadErr instanceof Error ? lealtadErr.message : lealtadErr
+        );
+      }
 
       const baseUrl = process.env.BLINKS_BASE_URL || process.env.BASE_URL;
       let blinkUrl: string | null = null;

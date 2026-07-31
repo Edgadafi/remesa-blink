@@ -14,12 +14,13 @@ export interface RegistrarPagoParams {
   destinatario_solana: string;
 }
 
-export async function registrarPagoEnDb(params: RegistrarPagoParams) {
-  await pool.query(
+export async function registrarPagoEnDb(params: RegistrarPagoParams): Promise<{ id: string }> {
+  const res = await pool.query(
     `INSERT INTO pagos (
       suscripcion_id, receipt_pda, tx_signature, nonce, monto, tipo_activo,
       usuario_remitente_solana, destinatario_solana
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING id`,
     [
       params.suscripcion_id,
       params.receipt_pda,
@@ -31,6 +32,7 @@ export async function registrarPagoEnDb(params: RegistrarPagoParams) {
       params.destinatario_solana,
     ]
   );
+  return { id: res.rows[0].id as string };
 }
 
 export async function listarPagosPorSuscripcion(suscripcionId: string) {
