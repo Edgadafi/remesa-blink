@@ -13,7 +13,7 @@
 3. Comandos útiles: **enviar** · **mis envíos** · **recompensas** (Club TIA) · **canjear** · **soporte** · **cancelar**  
    Niveles: ver [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md).
 
-Soporte: `remesatia@gmail.com` o escribe **soporte** en el chat.
+Soporte: escribe *soporte* en el **mismo chat** del bot (menú de motivos). Email: `remesatia@gmail.com`.
 
 ---
 

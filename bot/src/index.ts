@@ -42,6 +42,9 @@ import {
   buildRecurrentePending,
   buildRecurrenteUso,
   buildSoporte,
+  buildSoporteMenu,
+  buildSoporteMotivoInvalido,
+  buildSoporteRecibido,
   buildSuscripcionConfirmada,
   buildSuscripcionError,
   buildWaInvalido,
@@ -59,6 +62,7 @@ import {
   parseFrecuencia,
   parseMonto,
   parseNombreContacto,
+  parseSoporteMotivo,
   parseTipoActivo,
   parseWhatsAppDigits,
   type EnviarParsed,
@@ -621,7 +625,8 @@ async function handleEnviarFlow(
   }
   if (intent === "soporte") {
     clearSession(wa);
-    await send(buildSoporte());
+    setStep(wa, "soporte_motivo");
+    await send(buildSoporteMenu());
     return true;
   }
   if (intent === "ayuda") {
@@ -632,7 +637,8 @@ async function handleEnviarFlow(
   // Typo frecuente visto en piloto: "Soprte"
   if (/^sop+o?rte$/i.test(text.trim().normalize("NFD").replace(/\p{M}/gu, ""))) {
     clearSession(wa);
-    await send(buildSoporte());
+    setStep(wa, "soporte_motivo");
+    await send(buildSoporteMenu());
     return true;
   }
 
@@ -734,6 +740,72 @@ async function handleEnviarFlow(
   return false;
 }
 
+/** Flujo menú *soporte* — mismo chat; log ticket en backend. */
+async function handleSoporteFlow(
+  send: (msg: string) => Promise<unknown>,
+  wa: string,
+  text: string
+): Promise<boolean> {
+  const session = getSession(wa);
+  if (session.step !== "soporte_motivo") return false;
+
+  const intent = detectIntent(text);
+
+  if (intent === "cancelar") {
+    clearSession(wa);
+    await send(buildCancelado());
+    return true;
+  }
+
+  // 1–4 / frases del menú antes de que NLU mapee dígitos a otros intents
+  const motivo = parseSoporteMotivo(text);
+  if (motivo) {
+    const trimmed = text.trim();
+    const eligioNumero = /^[1-4]/.test(trimmed) || /^[1-4]\uFE0F?\u20E3/.test(trimmed);
+    const detalle =
+      motivo === "otra" && !eligioNumero && !/^(cuatro|otra|otro)\b/i.test(trimmed)
+        ? trimmed.slice(0, 2000)
+        : null;
+
+    let ticketId: string | null = null;
+    try {
+      const res = await axios.post(`${API_BASE}/api/soporte`, {
+        usuario_wa: wa,
+        motivo,
+        detalle,
+        canal: "whatsapp",
+      });
+      ticketId = res.data?.id ?? null;
+    } catch (err) {
+      console.warn("[Bot] No se pudo registrar ticket soporte:", formatApiError(err));
+    }
+
+    clearSession(wa);
+    await send(buildSoporteRecibido(motivo, ticketId));
+    return true;
+  }
+
+  if (intent === "ayuda" || intent === "soporte") {
+    await send(buildSoporteMenu());
+    return true;
+  }
+
+  if (
+    intent === "enviar" ||
+    intent === "mis_envios" ||
+    intent === "recompensas" ||
+    intent === "codigo" ||
+    intent === "canjear" ||
+    intent === "piloto"
+  ) {
+    clearSession(wa);
+    return false;
+  }
+
+  await send(buildSoporteMotivoInvalido());
+  return true;
+}
+
 async function handleCommand(
   sock: WASocket,
   replyJid: string,
@@ -743,6 +815,9 @@ async function handleCommand(
 ) {
   const wa = waId;
   const send = (msg: string) => sock.sendMessage(replyJid, { text: msg });
+
+  // Soporte (menú motivos) antes de enviar — "1" no debe abrir remesa
+  if (await handleSoporteFlow(send, wa, text)) return;
 
   // Flujo guiado "enviar" (prioridad sobre menú)
   if (await handleEnviarFlow(send, wa, text)) return;
@@ -815,7 +890,9 @@ async function handleCommand(
   }
 
   if (intent === "soporte" || text.trim() === "/soporte") {
-    await send(buildSoporte());
+    clearSession(wa);
+    setStep(wa, "soporte_motivo");
+    await send(buildSoporteMenu());
     return;
   }
 

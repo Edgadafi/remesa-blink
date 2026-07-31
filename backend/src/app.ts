@@ -10,6 +10,7 @@ import composabilityRouter from "./routes/composability.js";
 import pilotosRouter from "./routes/pilotos.js";
 import cashbackRouter from "./routes/cashback.js";
 import lealtadRouter from "./routes/lealtad.js";
+import soporteRouter from "./routes/soporte.js";
 import etherfuseRouter from "./routes/etherfuse.js";
 import webhooksRouter from "./routes/webhooks.js";
 import blinksRouter from "./routes/blinks.js";
@@ -53,6 +54,7 @@ app.get("/", (_req, res) => {
       pilotos: "/api/pilotos",
       cashback: "/api/cashback",
       lealtad: "/api/lealtad",
+      soporte: "/api/soporte",
       actions: "/api/actions/*",
     },
   });
@@ -95,6 +97,7 @@ app.use("/api/composability", composabilityRouter);
 app.use("/api/pilotos", pilotosRouter);
 app.use("/api/cashback", cashbackRouter);
 app.use("/api/lealtad", lealtadRouter);
+app.use("/api/soporte", soporteRouter);
 app.use("/api/etherfuse", etherfuseRouter);
 app.use("/api/webhooks", webhooksRouter);
 app.use("/", blinksRouter);

@@ -50,7 +50,7 @@ export function buildAyuda(): string {
     "1️⃣ *enviar* — programar remesa a México\n" +
     "2️⃣ *mis envíos* — ver lo que ya tienes\n" +
     "3️⃣ *recompensas* — saldo y referidos\n" +
-    "4️⃣ *soporte* — hablar con el equipo\n\n" +
+    "4️⃣ *soporte* — ayuda en este mismo chat\n\n" +
     "Ejemplo: *enviar 2000 a mi mujer* — o solo *enviar* y te guío paso a paso.\n" +
     "Sin filas en la tiendita: tu familia recibe aviso por WhatsApp."
   );
@@ -311,6 +311,7 @@ export function labelPasoEnviar(step: string): string {
     enviar_nombre: "nombre del familiar",
     enviar_familia: "WhatsApp de tu familiar",
     enviar_wallet: "cuenta de su app de dinero",
+    soporte_motivo: "elegir motivo de soporte",
   };
   return map[step] ?? "programar remesa";
 }
@@ -320,11 +321,51 @@ export function buildRateLimitAviso(): string {
 }
 
 export function buildSoporte(): string {
+  return buildSoporteMenu();
+}
+
+/**
+ * Menú corto de motivos — mismo chat / mismo número que remesas (sin otro wa.me).
+ */
+export function buildSoporteMenu(): string {
   return (
-    "*Aquí estamos*\n\n" +
-    `Escríbenos a ${SUPPORT_EMAIL}\n\n` +
-    "O pregunta en la tiendita de confianza que te refirió.\n\n" +
-    "Menú: escribe *ayuda*"
+    "*Soporte Remesa Blink*\n\n" +
+    "Estás en el *mismo chat* donde programas tus envíos. El equipo te responde *aquí*.\n\n" +
+    "¿Qué pasó? Responde con el *número*:\n\n" +
+    "1️⃣ No me llegó el aviso (o el dinero)\n" +
+    "2️⃣ Quiero cambiar o cancelar un envío\n" +
+    "3️⃣ No tengo el código de la app de mi familia\n" +
+    "4️⃣ Otra cosa\n\n" +
+    `También puedes escribir a ${SUPPORT_EMAIL}\n` +
+    "O *cancelar* para salir."
+  );
+}
+
+export function buildSoporteMotivoInvalido(): string {
+  return (
+    "Responde *1*, *2*, *3* o *4* según tu caso.\n\n" +
+    "O escribe con tus palabras qué pasó (una frase).\n" +
+    "*cancelar* para salir."
+  );
+}
+
+const MOTIVO_LABEL: Record<string, string> = {
+  no_aviso: "no llegó el aviso o el dinero",
+  cambiar_envio: "cambiar o cancelar un envío",
+  sin_codigo: "no tienes el código de la app",
+  otra: "otra consulta",
+};
+
+export function buildSoporteRecibido(motivo: string, ticketId?: string | null): string {
+  const label = MOTIVO_LABEL[motivo] || "tu consulta";
+  const ref = ticketId ? `\n\nReferencia: *${ticketId.slice(0, 8)}*` : "";
+  return (
+    `*Listo — te escuchamos*\n\n` +
+    `Anotamos: ${label}.\n\n` +
+    "Un humano del equipo te responde *en este mismo chat* (no cambies de número).\n" +
+    "Si puedes, deja una frase más con detalles." +
+    ref +
+    `\n\nMientras: *mis envíos* · *ayuda* · ${SUPPORT_EMAIL}`
   );
 }
 

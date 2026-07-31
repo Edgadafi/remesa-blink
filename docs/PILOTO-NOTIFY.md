@@ -38,7 +38,7 @@ En Vercel → proyecto **frontend** → **Settings → Environment Variables** �
 | `RESEND_FROM` | Remitente Resend | Recomendado |
 | `SUPABASE_SERVICE_ROLE_KEY` | Alternativa REST con RETURNING id | Opcional |
 | `SUPABASE_URL` / `SUPABASE_ANON_KEY` | Fallback RPC/REST | Opcional |
-| `NEXT_PUBLIC_WA_SUPPORT` | Botón WA en éxito | Opcional |
+| `NEXT_PUBLIC_WA_SUPPORT` | Botón WA en éxito (landing `/piloto`) | **Mismo número del bot** de remesas. Actual: `5215665269591` |
 
 ### Activar Resend (5 min)
 

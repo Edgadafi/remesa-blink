@@ -12,13 +12,15 @@ export function getBlinksBase(): string {
   return getApiBase();
 }
 
-/** Link wa.me para soporte piloto (solo dígitos, sin +) */
+/** Link wa.me para soporte piloto (solo dígitos, sin +).
+ * Debe ser el **mismo número del bot** de remesas (no un segundo WhatsApp).
+ */
 export function getWaSupportUrl(): string | null {
   const raw = process.env.NEXT_PUBLIC_WA_SUPPORT?.trim();
   if (!raw) return null;
   const digits = raw.replace(/\D/g, "");
   if (digits.length < 10) return null;
   return `https://wa.me/${digits}?text=${encodeURIComponent(
-    "Hola RemesaBlink — me registré en el programa piloto."
+    "Hola — necesito soporte (piloto Remesa Blink)."
   )}`;
 }

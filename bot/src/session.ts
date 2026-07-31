@@ -8,7 +8,8 @@ export type FlowStep =
   | "enviar_frecuencia"
   | "enviar_nombre"
   | "enviar_familia"
-  | "enviar_wallet";
+  | "enviar_wallet"
+  | "soporte_motivo";
 
 export type EnviarDraft = {
   monto?: number;
@@ -20,6 +21,13 @@ export type EnviarDraft = {
   /** Intentos fallidos en paso wallet (anti-loop). */
   walletFails?: number;
 };
+
+/** Motivo de soporte (alineado a POST /api/soporte). */
+export type SoporteMotivo =
+  | "no_aviso"
+  | "cambiar_envio"
+  | "sin_codigo"
+  | "otra";
 
 type Session = {
   step: FlowStep;

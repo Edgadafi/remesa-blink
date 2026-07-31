@@ -224,3 +224,44 @@ export function looksLikeSolanaAddress(raw: string): boolean {
   const s = raw.trim();
   return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s);
 }
+
+/** Motivos del menú *soporte* (1–4 o texto coloquial). */
+export type SoporteMotivoParsed =
+  | "no_aviso"
+  | "cambiar_envio"
+  | "sin_codigo"
+  | "otra";
+
+/**
+ * Parsea elección del menú de soporte.
+ * `null` = no se entiende (pedir de nuevo).
+ * Texto libre ≥8 chars → `otra` (detalle lo manda el caller).
+ */
+export function parseSoporteMotivo(raw: string): SoporteMotivoParsed | null {
+  const t = normalizeText(raw);
+  if (!t) return null;
+
+  if (/^(1|1️⃣|uno)$/.test(t) || /\b(no (me )?lleg|aviso|dinero|pago|familia no recib)/.test(t)) {
+    return "no_aviso";
+  }
+  if (
+    /^(2|2️⃣|dos)$/.test(t) ||
+    /\b(cambiar|cancelar envio|cancelar remesa|otro monto|modificar)\b/.test(t)
+  ) {
+    return "cambiar_envio";
+  }
+  if (
+    /^(3|3️⃣|tres)$/.test(t) ||
+    /\b(no tengo (el )?codigo|sin codigo|codigo de (la )?app|cuenta de (su|la) app)\b/.test(t)
+  ) {
+    return "sin_codigo";
+  }
+  if (/^(4|4️⃣|cuatro)$/.test(t) || /\b(otra|otro|diferente)\b/.test(t)) {
+    return "otra";
+  }
+  // Frase libre: tratar como “otra” con detalle
+  if (t.length >= 8 && !/^(hola|ayuda|menu|enviar|soporte)$/.test(t)) {
+    return "otra";
+  }
+  return null;
+}
