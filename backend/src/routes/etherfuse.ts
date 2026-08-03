@@ -154,10 +154,15 @@ router.post("/onboarding-url", async (req, res) => {
     }
     const { destinatario_solana, destinatario_wa, email, displayName } =
       parsed.data;
+    // Always pass real defaults from service if client omits email —
+    // never invent @….test aliases (Sumsub locks them read-only).
     const result = await getOnboardingPresignedUrl(
       destinatario_solana,
       destinatario_wa || null,
-      email && displayName ? { email, displayName } : undefined
+      {
+        email: email || process.env.ETHERFUSE_ONBOARDING_EMAIL || "remesatia@gmail.com",
+        displayName: displayName || process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink",
+      }
     );
     res.json(result);
   } catch (err) {

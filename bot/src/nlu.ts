@@ -220,9 +220,41 @@ export function parseNombreContacto(raw: string): string | null {
   return s;
 }
 
+/**
+ * Direcciones que parecen pubkey base58 pero NO son wallet de destinatario
+ * (program ids / system programs). Incluye Remesa Blink PROGRAM_ID de /health.
+ */
+const BLOCKED_SOLANA_ADDRESSES = new Set(
+  [
+    process.env.PROGRAM_ID,
+    // Remesa Blink (devnet default en backend/solana.ts)
+    "B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2",
+    "11111111111111111111111111111111",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "ComputeBudget111111111111111111111111111111",
+    "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+    "SysvarRent111111111111111111111111111111111",
+    "SysvarC1ock11111111111111111111111111111111",
+  ].filter((x): x is string => typeof x === "string" && x.length >= 32)
+);
+
+/** true = es un program id / cuenta de sistema, no la wallet de la familia. */
+export function isBlockedSolanaAddress(raw: string): boolean {
+  return BLOCKED_SOLANA_ADDRESSES.has(raw.trim());
+}
+
+/**
+ * Parece dirección Solana de usuario (base58 32–44).
+ * Rechaza program ids conocidos (ej. el de /health).
+ */
 export function looksLikeSolanaAddress(raw: string): boolean {
   const s = raw.trim();
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s);
+  if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s)) return false;
+  if (isBlockedSolanaAddress(s)) return false;
+  return true;
 }
 
 /** Motivos del menú *soporte* (1–4 o texto coloquial). */

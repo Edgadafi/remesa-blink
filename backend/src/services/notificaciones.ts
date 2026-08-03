@@ -1,7 +1,7 @@
 /**
  * Servicio de notificaciones - Envía mensajes al bot WhatsApp
  */
-const BOT_INTERNAL_URL = process.env.BOT_INTERNAL_URL || "http://localhost:3002";
+const BOT_INTERNAL_URL = process.env.BOT_INTERNAL_URL || "http://127.0.0.1:3002";
 const BOT_INTERNAL_SECRET = process.env.BOT_INTERNAL_SECRET || "";
 
 const SUPPORT_EMAIL = "remesatia@gmail.com";

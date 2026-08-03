@@ -6,8 +6,14 @@ import assert from "node:assert/strict";
 import {
   buildRecurrentePending,
   buildSuscripcionConfirmada,
+  buildMontoNoCambiable,
+  buildWalletProgramaRechazada,
 } from "../src/copy.js";
-import { parseEnviarOneshoot } from "../src/nlu.js";
+import {
+  isBlockedSolanaAddress,
+  looksLikeSolanaAddress,
+  parseEnviarOneshoot,
+} from "../src/nlu.js";
 import { nextEnviarStep } from "../src/session.js";
 
 function check(name: string, fn: () => void) {
@@ -93,7 +99,7 @@ check("orden confirmada (nueva)", () => {
   assert.match(t, /mis envíos/);
 });
 
-check("orden registrada (reuse monto distinto)", () => {
+check("monto no cambiable (reuse monto distinto)", () => {
   const t = buildSuscripcionConfirmada({
     monto: 10,
     tipo_activo: "USDC",
@@ -103,10 +109,33 @@ check("orden registrada (reuse monto distinto)", () => {
     montoPedido: 2000,
     reused: true,
   });
-  assert.match(t, /Orden registrada/);
+  assert.match(t, /No pude cambiar el monto/i);
   assert.match(t, /\$10/);
   assert.match(t, /\$2000/);
-  assert.match(t, /no se cambió/i);
+  assert.match(t, /no se cambia/i);
+  assert.doesNotMatch(t, /Programando/);
+  assert.doesNotMatch(t, /Orden registrada/);
+});
+
+check("buildMontoNoCambiable upfront", () => {
+  const t = buildMontoNoCambiable({
+    montoActivo: 10,
+    montoPedido: 1000,
+    tipo_activo: "USDC",
+    frecuencia: "semanal",
+    destinatario_wa: "5215559607277",
+    nombre_contacto: "mi amor",
+  });
+  assert.match(t, /\$10/);
+  assert.match(t, /\$1000/);
+  assert.match(t, /otra.*cuenta/i);
+});
+
+check("rechaza program id como wallet", () => {
+  const pid = "B1G72CcRGHYc1UpG4o51VrJySLiwm3d7tCHbQiSb5vZ2";
+  assert.equal(isBlockedSolanaAddress(pid), true);
+  assert.equal(looksLikeSolanaAddress(pid), false);
+  assert.match(buildWalletProgramaRechazada(), /sistema/i);
 });
 
 console.log("=== all smoke passed ===");

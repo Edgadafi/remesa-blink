@@ -44,6 +44,19 @@ export const ETHERFUSE_DEMO_BANK_ACCOUNT_ID =
   process.env.ETHERFUSE_DEMO_BANK_ACCOUNT_ID ||
   "9274aa72-7227-47ce-bbd4-49889e35edad";
 
+/**
+ * Demo Day: si el customer personal no tiene bank en Etherfuse, usar partner org bank.
+ * Activo con ETHERFUSE_DEMO_USE_ORG_BANK=1 o siempre en sandbox.
+ * Ver docs/OFFRAMP-DEMO-DAY.md
+ */
+export function shouldUseEtherfuseOrgBankFallback(): boolean {
+  return (
+    process.env.ETHERFUSE_DEMO_USE_ORG_BANK === "1" ||
+    process.env.ETHERFUSE_DEMO_USE_ORG_BANK === "true" ||
+    IS_SANDBOX
+  );
+}
+
 /** Real inbox for Sumsub OTP — never use .test / fake TLDs (Sumsub rejects them). */
 const DEFAULT_USER_EMAIL =
   process.env.ETHERFUSE_ONBOARDING_EMAIL ||
@@ -51,6 +64,26 @@ const DEFAULT_USER_EMAIL =
   "remesatia@gmail.com";
 const DEFAULT_USER_NAME =
   process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink";
+
+/** Reject fake TLDs / placeholders that lock Sumsub to a read-only bad email. */
+export function assertOnboardingEmail(email: string): string {
+  const e = email.trim().toLowerCase();
+  if (
+    !e ||
+    !e.includes("@") ||
+    e.endsWith(".test") ||
+    e.endsWith(".invalid") ||
+    e.endsWith(".localhost") ||
+    e.includes("@example.") ||
+    /@(remesatia\.test)$/i.test(e)
+  ) {
+    throw new EtherfuseUserError(
+      "Email de registro inválido para KYC. Usa un correo real (ej. remesatia@gmail.com).",
+      "CONFIG"
+    );
+  }
+  return e;
+}
 
 interface QuoteResponse {
   quoteId: string;
@@ -64,14 +97,91 @@ interface QuoteResponse {
 interface OrderResponse {
   offramp?: {
     orderId: string;
-    burnTransaction?: string;
-    statusPage?: string;
+    burnTransaction?: string | null;
+    statusPage?: string | null;
+    transactions?: unknown;
+    burn?: unknown;
   };
   onramp?: {
     orderId: string;
     depositClabe?: string;
     depositAmount?: number;
   };
+  /** Algunos clientes reciben campos en raíz (raro en create; común en GET). */
+  orderId?: string;
+  burnTransaction?: string | null;
+  statusPage?: string | null;
+}
+
+/** Order GET — shape completo (statusPage requerido en docs). */
+interface OrderGetResponse {
+  orderId: string;
+  status?: string;
+  burnTransaction?: string | null;
+  statusPage?: string;
+  orderType?: string;
+}
+
+export type CreateOrderResult = {
+  orderId: string;
+  /** Ausente si Etherfuse aún no construyó el burn (p. ej. balance BXTou3 = 0). */
+  burnTransaction?: string;
+  statusPage: string;
+};
+
+/** Status page sandbox/prod cuando create no la incluye. */
+export function etherfuseStatusPageUrl(orderId: string): string {
+  if (IS_SANDBOX) {
+    return `https://sandbox.etherfuse.com/ramp/order/${orderId}`;
+  }
+  return `https://pay.etherfuse.com/order/${orderId}`;
+}
+
+function extractBurnAndStatus(
+  createResp: OrderResponse,
+  getResp?: OrderGetResponse | null
+): { orderId: string; burnTransaction?: string; statusPage: string } {
+  const orderId =
+    getResp?.orderId ||
+    createResp.offramp?.orderId ||
+    createResp.orderId ||
+    "";
+  const burnRaw =
+    getResp?.burnTransaction ||
+    createResp.offramp?.burnTransaction ||
+    createResp.burnTransaction ||
+    null;
+  const burnTransaction =
+    typeof burnRaw === "string" && burnRaw.length > 0 ? burnRaw : undefined;
+  const statusPage =
+    (typeof getResp?.statusPage === "string" && getResp.statusPage) ||
+    (typeof createResp.offramp?.statusPage === "string" &&
+      createResp.offramp.statusPage) ||
+    (typeof createResp.statusPage === "string" && createResp.statusPage) ||
+    etherfuseStatusPageUrl(orderId);
+  return { orderId, burnTransaction, statusPage };
+}
+
+/** Log seguro: claves + longitudes, sin secretos ni tx completa. */
+function logOrderShape(label: string, body: Record<string, unknown>): void {
+  const offramp = body.offramp;
+  const offrampKeys =
+    offramp && typeof offramp === "object"
+      ? Object.keys(offramp as object)
+      : [];
+  const burn =
+    (offramp as { burnTransaction?: string } | undefined)?.burnTransaction ??
+    (body.burnTransaction as string | undefined);
+  console.warn(`[etherfuse] ${label}`, {
+    topKeys: Object.keys(body),
+    offrampKeys,
+    burnLen: typeof burn === "string" ? burn.length : 0,
+    hasStatusPage: Boolean(
+      (offramp as { statusPage?: string } | undefined)?.statusPage ||
+        body.statusPage
+    ),
+    status: body.status,
+  });
 }
 
 interface OnboardingUrlResponse {
@@ -97,6 +207,7 @@ export class EtherfuseUserError extends Error {
       | "NON_STABLE"
       | "TERMS"
       | "CONFIG"
+      | "NO_BURN"
       | "API" = "API"
   ) {
     super(message);
@@ -212,13 +323,22 @@ export async function createQuote(
 }
 
 /**
- * Crear order off-ramp. Devuelve burnTransaction para que el usuario firme.
+ * GET order completo (create sandbox a menudo solo devuelve offramp.orderId).
+ */
+export async function getOrder(orderId: string): Promise<OrderGetResponse> {
+  return etherfuseFetch<OrderGetResponse>(`/ramp/order/${orderId}`);
+}
+
+/**
+ * Crear order off-ramp.
+ * Sandbox create suele omitir burn/statusPage → enriquecemos con GET.
+ * burnTransaction puede faltar si no hay fondos del mint sandbox (BXTou3).
  */
 export async function createOrder(
   quoteId: string,
   bankAccountId: string,
   publicKey: string
-): Promise<{ orderId: string; burnTransaction: string; statusPage?: string }> {
+): Promise<CreateOrderResult> {
   const orderId = randomUUID();
   const body = {
     orderId,
@@ -231,22 +351,32 @@ export async function createOrder(
       method: "POST",
       body: JSON.stringify(body),
     });
-    if (!resp.offramp) {
+    logOrderShape("order create", resp as unknown as Record<string, unknown>);
+
+    if (!resp.offramp?.orderId && !resp.orderId) {
       throw new EtherfuseUserError(
         "No pudimos convertir a pesos. Intenta más tarde.",
         "API"
       );
     }
-    if (!resp.offramp.burnTransaction) {
-      throw new EtherfuseUserError(
-        "No pudimos preparar la transacción. Completa el registro de pesos e intenta de nuevo.",
-        "API"
+
+    const createdId = resp.offramp?.orderId || resp.orderId || orderId;
+    let getResp: OrderGetResponse | null = null;
+    try {
+      getResp = await getOrder(createdId);
+      logOrderShape("order get", getResp as unknown as Record<string, unknown>);
+    } catch (getErr) {
+      console.warn(
+        "[etherfuse] order GET enrich failed",
+        getErr instanceof Error ? getErr.message : getErr
       );
     }
+
+    const extracted = extractBurnAndStatus(resp, getResp);
     return {
-      orderId: resp.offramp.orderId,
-      burnTransaction: resp.offramp.burnTransaction,
-      statusPage: resp.offramp.statusPage,
+      orderId: extracted.orderId || createdId,
+      burnTransaction: extracted.burnTransaction,
+      statusPage: extracted.statusPage,
     };
   } catch (err) {
     if (err instanceof EtherfuseUserError) throw err;
@@ -255,6 +385,12 @@ export async function createOrder(
       throw new EtherfuseUserError(
         "Falta aceptar términos en el registro de pesos. Abre el enlace de registro.",
         "TERMS"
+      );
+    }
+    if (/Proxy account not found/i.test(msg)) {
+      throw new EtherfuseUserError(
+        "Cuenta bancaria no lista en Etherfuse. Completa CLABE en el registro o reintenta.",
+        "FORBIDDEN"
       );
     }
     if (/\b403\b|\b404\b|Forbidden|Bank account not found/i.test(msg)) {
@@ -282,13 +418,14 @@ export async function createOnboardingUrl(
   publicKey: string,
   userInfo?: OnboardingUserInfo
 ): Promise<string> {
+  const email = assertOnboardingEmail(userInfo?.email || DEFAULT_USER_EMAIL);
   const body = {
     customerId,
     bankAccountId,
     publicKey,
     blockchain: "solana",
     userInfo: {
-      email: userInfo?.email || DEFAULT_USER_EMAIL,
+      email,
       displayName: userInfo?.displayName || DEFAULT_USER_NAME,
     },
   };
@@ -315,19 +452,37 @@ export async function getCustomerBankAccounts(
 }
 
 /**
- * Valida que customer/bank existan en Etherfuse antes de quote/order.
- * IDs inventados (demo-mark-kyc-verified) → 403/404.
+ * Resuelve customer/bank usables para quote/order.
+ * Si el personal tiene 0 banks (o IDs stale) y hay fallback Demo Day → partner org bank.
  */
-export async function assertEtherfuseIdsUsable(
+export async function resolveOfframpIds(
   customerId: string,
   bankAccountId: string
-): Promise<void> {
+): Promise<{
+  customerId: string;
+  bankAccountId: string;
+  usedOrgFallback: boolean;
+}> {
+  const fallback = () => {
+    console.warn(
+      "[etherfuse] Demo Day fallback → partner org bank",
+      ETHERFUSE_DEMO_CUSTOMER_ID,
+      ETHERFUSE_DEMO_BANK_ACCOUNT_ID
+    );
+    return {
+      customerId: ETHERFUSE_DEMO_CUSTOMER_ID,
+      bankAccountId: ETHERFUSE_DEMO_BANK_ACCOUNT_ID,
+      usedOrgFallback: true,
+    };
+  };
+
   let banks: { bankAccountId: string; status?: string }[];
   try {
     banks = await getCustomerBankAccounts(customerId);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     if (/\b403\b|\b404\b|Forbidden/i.test(msg)) {
+      if (shouldUseEtherfuseOrgBankFallback()) return fallback();
       throw new EtherfuseUserError(
         "No pudimos convertir a pesos. Revisa cuenta SPEI / KYC.",
         "STALE_IDS"
@@ -335,13 +490,39 @@ export async function assertEtherfuseIdsUsable(
     }
     throw err;
   }
+
   const match = banks.find((b) => b.bankAccountId === bankAccountId);
-  if (!match) {
-    throw new EtherfuseUserError(
-      "No pudimos convertir a pesos. Revisa cuenta SPEI / KYC.",
-      "STALE_IDS"
-    );
+  if (match) {
+    return { customerId, bankAccountId, usedOrgFallback: false };
   }
+  if (banks.length > 0) {
+    console.warn(
+      "[etherfuse] DB bank missing in Etherfuse list; using first bank",
+      banks[0].bankAccountId
+    );
+    return {
+      customerId,
+      bankAccountId: banks[0].bankAccountId,
+      usedOrgFallback: false,
+    };
+  }
+  // 0 banks (caso g33…: kyc=verified en DB, Etherfuse vacío)
+  if (shouldUseEtherfuseOrgBankFallback()) return fallback();
+  throw new EtherfuseUserError(
+    "No pudimos convertir a pesos. Revisa cuenta SPEI / KYC.",
+    "STALE_IDS"
+  );
+}
+
+/**
+ * Valida que customer/bank existan en Etherfuse antes de quote/order.
+ * En sandbox / ETHERFUSE_DEMO_USE_ORG_BANK=1 permite partner fallback (no lanza).
+ */
+export async function assertEtherfuseIdsUsable(
+  customerId: string,
+  bankAccountId: string
+): Promise<void> {
+  await resolveOfframpIds(customerId, bankAccountId);
 }
 
 /** Extrae org/customer_id del error 409 "see org: <uuid>" */

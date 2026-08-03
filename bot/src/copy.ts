@@ -175,16 +175,20 @@ export function buildSuscripcionConfirmada(params: {
     Math.abs(montoPedido - params.monto) > 1e-9;
 
   if (params.reused && montoDifiere) {
+    // Fallback si el prefetch no corrió: nunca digas que programamos el pedido.
     const pedidoStr = formatMontoDisplay(montoPedido!, params.tipo_activo);
-    return [
-      "✅ *Orden registrada*",
-      "",
-      `A ${dest}`,
-      `*${montoStr}* · ${freq}`,
-      `Pediste *${pedidoStr}*; el monto activo sigue en *${montoStr}* (no se cambió).`,
-      "",
-      "Escribe *mis envíos* para verla · *soporte* si quieres otro monto.",
-    ].join("\n");
+    return buildMontoNoCambiable({
+      montoActivo: params.monto,
+      montoPedido: montoPedido!,
+      tipo_activo: params.tipo_activo,
+      frecuencia: params.frecuencia,
+      destinatario_wa: params.destinatario_wa,
+      nombre_contacto: params.nombre_contacto,
+      pedidoStr,
+      montoStr,
+      freq,
+      dest,
+    });
   }
 
   const lines = [
@@ -263,9 +267,58 @@ export function buildWaInvalido(): string {
 
 export function buildWalletInvalida(): string {
   return (
-    "Ese código no se ve válido. Cópialo completo desde la app de dinero de tu familia " +
-    "y pégalo aquí (es largo)."
+    "Ese código no se ve válido. Necesito la *cuenta de la app de dinero de quien recibe* " +
+    "(un código largo de letras y números). Cópialo completo y pégalo aquí."
   );
+}
+
+/** Usuario pegó el program id (/health) u otra cuenta de sistema. */
+export function buildWalletProgramaRechazada(): string {
+  return (
+    "Ese código es del *sistema*, no la cuenta de tu familia.\n\n" +
+    "Pídele a quien recibe (ej. *mi amor*) el código de *su* app de dinero " +
+    "y pégalo aquí — es largo, solo letras y números."
+  );
+}
+
+/**
+ * Hard rule piloto: PDA keeper+destinatario no cambia monto on-chain.
+ * Se muestra *antes* de “Programando $X…” (prefetch) o como fallback.
+ */
+export function buildMontoNoCambiable(params: {
+  montoActivo: number;
+  montoPedido: number;
+  tipo_activo: "SOL" | "USDC";
+  frecuencia: string;
+  destinatario_wa: string;
+  nombre_contacto?: string | null;
+  /** Precomputados opcionales (fallback desde confirmación). */
+  pedidoStr?: string;
+  montoStr?: string;
+  freq?: string;
+  dest?: string;
+}): string {
+  const montoStr =
+    params.montoStr ??
+    formatMontoDisplay(params.montoActivo, params.tipo_activo);
+  const pedidoStr =
+    params.pedidoStr ??
+    formatMontoDisplay(params.montoPedido, params.tipo_activo);
+  const freq = params.freq ?? labelFrecuencia(params.frecuencia);
+  const dest =
+    params.dest ??
+    formatDestinatarioLabel(params.nombre_contacto, params.destinatario_wa);
+
+  return [
+    "No pude cambiar el monto de este envío.",
+    "",
+    `Ya tienes *${montoStr}* · ${freq} a ${dest}.`,
+    `Pediste *${pedidoStr}*, pero en el piloto el monto de un envío ya activo *no se cambia*.`,
+    "",
+    "• Escribe *mis envíos* para verlo",
+    "• Para otro monto: usa *otra* cuenta de la app de dinero de tu familia",
+    "• O escribe *soporte*",
+  ].join("\n");
 }
 
 export function buildMisRemesasVacio(): string {

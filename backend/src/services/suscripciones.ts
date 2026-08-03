@@ -272,7 +272,7 @@ export async function crearSuscripcion(data: NuevaSuscripcion) {
     }
   }
 
-  return upsertSuscripcionDb({
+  const row = await upsertSuscripcionDb({
     remitente_wa: data.remitente_wa,
     destinatario_wa: data.destinatario_wa,
     destinatario_solana: data.destinatario_solana,
@@ -286,6 +286,18 @@ export async function crearSuscripcion(data: NuevaSuscripcion) {
     reused,
     nombre_contacto: data.nombre_contacto,
   });
+
+  const pedidoRaw =
+    tipo_activo === "USDC"
+      ? Number(BigInt(Math.round(data.monto * 1e6)))
+      : Number(BigInt(Math.round(data.monto * 1e9)));
+
+  return {
+    ...row,
+    monto_pedido: data.monto,
+    /** true = PDA reused and pedido ≠ monto activo (on-chain/DB). */
+    monto_no_actualizable: reused && Math.abs(pedidoRaw - Number(montoDb)) > 0,
+  };
 }
 
 export async function listarSuscripcionesPorUsuario(wa: string) {

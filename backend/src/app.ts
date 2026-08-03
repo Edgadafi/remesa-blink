@@ -76,10 +76,12 @@ app.get("/health", async (_req, res) => {
     payload.status = "degraded";
   }
 
-  const botUrl = process.env.BOT_INTERNAL_URL;
-  if (botUrl) {
+  const botUrlRaw = process.env.BOT_INTERNAL_URL;
+  if (botUrlRaw) {
+    // Prefer IPv4 loopback: undici/fetch often resolves "localhost" to ::1 first.
+    const botUrl = botUrlRaw.replace(/\/$/, "").replace("://localhost", "://127.0.0.1");
     try {
-      const r = await fetch(`${botUrl.replace(/\/$/, "")}/health`, {
+      const r = await fetch(`${botUrl}/health`, {
         signal: AbortSignal.timeout(3000),
       });
       payload.bot = r.ok ? "ok" : "error";

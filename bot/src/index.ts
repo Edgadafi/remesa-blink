@@ -49,6 +49,8 @@ import {
   buildSuscripcionError,
   buildWaInvalido,
   buildWalletInvalida,
+  buildWalletProgramaRechazada,
+  buildMontoNoCambiable,
   buildExplorerTxUrl,
   formatDestinatarioLabel,
   formatFechaCorta,
@@ -57,6 +59,7 @@ import {
 } from "./copy.js";
 import {
   detectIntent,
+  isBlockedSolanaAddress,
   looksLikeSolanaAddress,
   parseEnviarOneshoot,
   parseFrecuencia,
@@ -213,6 +216,12 @@ function formatApiError(err: unknown): string {
   if (/already in use/i.test(raw) || /Allocate:/i.test(raw)) {
     return "Ya tienes una remesa activa a esa cuenta. Escribe *mis envíos*.";
   }
+  if (/WALLET_INVALIDA|program id|destinatario_solana inválido/i.test(raw)) {
+    return (
+      "Ese código no es la cuenta de tu familia. " +
+      "Pega el código de *su* app de dinero (no el del sistema)."
+    );
+  }
   if (/Simulation failed|custom program error|Transaction simulation/i.test(raw)) {
     return "No se pudo registrar ahora. Revisa los datos o escribe *soporte*.";
   }
@@ -237,6 +246,16 @@ function formatMontoSuscripcion(s: {
     return Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`;
   }
   return `${Number(raw) / 1e9} SOL`;
+}
+
+/** Raw DB/on-chain units → human (USDC dollars / SOL). */
+function humanMontoFromRaw(
+  monto: number | string,
+  tipo_activo?: string
+): number {
+  const tipo = (tipo_activo || "SOL").toUpperCase();
+  const raw = Number(BigInt(String(monto).replace(/\..*$/, "")));
+  return tipo === "USDC" ? raw / 1e6 : raw / 1e9;
 }
 
 async function connect() {
@@ -402,8 +421,10 @@ function startInternalServer() {
     }
   });
 
-  app.listen(BOT_INTERNAL_PORT, () => {
-    log(`[Bot] Internal API en :${BOT_INTERNAL_PORT}`, "\x1b[36m");
+  // Bind IPv4 explicitly — Node fetch("http://localhost:…") often hits ::1 first
+  // and reports unreachable when the server is IPv4-only.
+  app.listen(BOT_INTERNAL_PORT, "127.0.0.1", () => {
+    log(`[Bot] Internal API en 127.0.0.1:${BOT_INTERNAL_PORT}`, "\x1b[36m");
   });
 }
 
@@ -419,6 +440,47 @@ async function crearSuscripcion(
     nombre_contacto?: string;
   }
 ) {
+  // Prefetch: same wallet already active with a different monto → honest UPFRONT
+  // (do NOT say "Programando $1000" then register $10).
+  try {
+    const listRes = await axios.get(`${API_BASE}/api/suscripciones/${remitente_wa}`);
+    const list = Array.isArray(listRes.data) ? listRes.data : [];
+    const same = list.find(
+      (s: { destinatario_solana?: string; activa?: boolean }) =>
+        s.destinatario_solana === params.wallet && s.activa !== false
+    ) as
+      | {
+          monto: number | string;
+          tipo_activo?: string;
+          frecuencia?: string;
+          destinatario_wa?: string;
+          nombre_contacto?: string | null;
+        }
+      | undefined;
+    if (same) {
+      const activo = humanMontoFromRaw(
+        same.monto,
+        same.tipo_activo || params.tipo_activo
+      );
+      if (Number.isFinite(activo) && Math.abs(activo - params.monto) > 1e-9) {
+        await send(
+          buildMontoNoCambiable({
+            montoActivo: activo,
+            montoPedido: params.monto,
+            tipo_activo: params.tipo_activo,
+            frecuencia: same.frecuencia || params.frecuencia,
+            destinatario_wa: same.destinatario_wa || params.destinatario_wa,
+            nombre_contacto:
+              same.nombre_contacto || params.nombre_contacto || null,
+          })
+        );
+        return;
+      }
+    }
+  } catch {
+    // If list fails, continue — API response still drives confirmation copy.
+  }
+
   await send(
     buildRecurrentePending({
       monto: params.monto,
@@ -442,6 +504,7 @@ async function crearSuscripcion(
     const txSig =
       typeof res.data?.tx_signature === "string" ? res.data.tx_signature : null;
     const reused = Boolean(res.data?.reused);
+    const montoNoActualizable = Boolean(res.data?.monto_no_actualizable);
     const cluster =
       (process.env.SOLANA_CLUSTER || "devnet").includes("mainnet")
         ? "mainnet-beta"
@@ -458,6 +521,25 @@ async function crearSuscripcion(
       (typeof res.data?.nombre_contacto === "string" && res.data.nombre_contacto) ||
       params.nombre_contacto ||
       null;
+
+    // Safety net if prefetch missed (e.g. same PDA, different remitente_wa key)
+    if (
+      montoNoActualizable ||
+      (reused && Math.abs(montoConfirm - params.monto) > 1e-9)
+    ) {
+      await send(
+        buildMontoNoCambiable({
+          montoActivo: montoConfirm,
+          montoPedido: params.monto,
+          tipo_activo: params.tipo_activo,
+          frecuencia: params.frecuencia,
+          destinatario_wa: params.destinatario_wa,
+          nombre_contacto: nombreConfirm,
+        })
+      );
+      return;
+    }
+
     await send(
       buildSuscripcionConfirmada({
         monto: montoConfirm,
@@ -704,7 +786,10 @@ async function handleEnviarFlow(
   }
 
   if (session.step === "enviar_wallet") {
-    if (!looksLikeSolanaAddress(text)) {
+    const walletRaw = text.trim();
+    const blocked = isBlockedSolanaAddress(walletRaw);
+    const invalid = blocked || !looksLikeSolanaAddress(walletRaw);
+    if (invalid) {
       const fails = (session.draft.walletFails ?? 0) + 1;
       if (fails >= 3) {
         clearSession(wa);
@@ -714,8 +799,11 @@ async function handleEnviarFlow(
         return true;
       }
       setStep(wa, "enviar_wallet", { walletFails: fails });
+      const tip = blocked
+        ? buildWalletProgramaRechazada()
+        : buildWalletInvalida();
       await send(
-        buildWalletInvalida() +
+        tip +
           "\n\nSi no tienes el código a la mano, escribe *soporte* o *cancelar*."
       );
       return true;

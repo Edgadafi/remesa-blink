@@ -2,7 +2,7 @@
 
 **Regla:** no inventar TVL, mainnet volume ni “% retención”. Actualizar tras cada ensayo.
 
-Última revisión: **2026-07-30**.
+Última revisión: **2026-08-02**.
 
 ---
 
@@ -10,13 +10,14 @@
 
 | Métrica | Valor | Fuente / cómo medir |
 |---------|-------|---------------------|
-| Familias / usuarios en `usuarios_piloto` | **5** (incl. receptora rural Demo Day `5215559607277`) | `GET /api/pilotos` 2026-07-30 |
+| Familias / usuarios en `usuarios_piloto` | **7** (2 receptora, 3 remitente, 2 tiendita; 1 rural Michoacán) | Export 2026-08-02 · `docs/M4-evidencias/usuarios_piloto-export-REDACTED.csv` |
 | Suscripciones activas (DB) | _contar_ `suscripciones` | Postgres |
 | Pagos keeper ejecutados (devnet) | _contar_ `pagos` + Explorer | DB + cluster |
 | Tiempo liquidación percibido | &lt;1 s (Solana finality demo) | Narrativa + Explorer timestamp |
 | Costo fee medio (SOL transfer / ix) | orden &lt;$0.001 USD | Fee en Explorer (anotar 1 tx ejemplo) |
 | Off-ramp SPEI sandbox | Path integrado; **Plan B** (Processing/Unfunded) — burn BXTou3 pendiente sandbox Etherfuse | [OFFRAMP-DEMO-DAY.md](./OFFRAMP-DEMO-DAY.md) § Plan B |
-| Entrevistas M4 documentadas | ver `docs/M4-evidencias/notas/` | Notas de campo |
+| Entrevistas M4 documentadas | **2 señales + 1 QA** (gap: 4+ ICP profundas) | `docs/M4-evidencias/notas/` · [ENTREGA-M4](./M4-evidencias/ENTREGA-M4-VALIDACION.md) |
+| Pack M4 Drive | Empaquetado 2026-08-02 — subir manual | [M4-UPLOAD-DRIVE.md](./M4-UPLOAD-DRIVE.md) |
 | WA bot connected | ver `curl :3002/health` | Ensayo |
 | Club TIA — miembros ≥ Nopal | _contar_ tras migración 004 | `SELECT COUNT(*) FROM lealtad_miembros WHERE nivel NOT IN ('semilla')` |
 | Club TIA — volumen_usd_90d p50 | _medir tras volumen real_ | `lealtad_miembros` (no inventar) |

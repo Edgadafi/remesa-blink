@@ -11,9 +11,10 @@ import pool from "../db/pool.js";
 import {
   createQuote,
   createOrder,
-  assertEtherfuseIdsUsable,
+  resolveOfframpIds,
   mapEtherfuseError,
   EtherfuseUserError,
+  ETHERFUSE_USDC_MINT,
 } from "../services/etherfuse.js";
 import { getOnboardingPresignedUrl, AlreadyOnboardedError } from "./etherfuse.js";
 import {
@@ -228,7 +229,14 @@ router.post("/api/actions/onboarding-mxn", async (req, res) => {
     if (!account) {
       return res.status(400).json({ message: "account (wallet) requerido" });
     }
-    const { presignedUrl } = await getOnboardingPresignedUrl(account, null);
+    const { presignedUrl } = await getOnboardingPresignedUrl(account, null, {
+      email:
+        process.env.ETHERFUSE_ONBOARDING_EMAIL ||
+        process.env.ETHERFUSE_DEMO_EMAIL ||
+        "remesatia@gmail.com",
+      displayName:
+        process.env.ETHERFUSE_DEMO_DISPLAY_NAME || "Remesa Blink",
+    });
     res.json({
       link: presignedUrl,
       message: "Abre el enlace para registrar tu INE y CLABE. Válido 15 min. Después podrás recibir pesos en tu banco.",
@@ -315,12 +323,16 @@ router.post("/api/actions/convertir-mxn", async (req, res) => {
       });
     }
 
-    await assertEtherfuseIdsUsable(etherfuse_customer_id, etherfuse_bank_account_id);
+    // Sandbox / ETHERFUSE_DEMO_USE_ORG_BANK: si personal bank vacío → partner org bank
+    const resolved = await resolveOfframpIds(
+      etherfuse_customer_id,
+      etherfuse_bank_account_id
+    );
 
-    const quote = await createQuote(etherfuse_customer_id, sourceAmount);
+    const quote = await createQuote(resolved.customerId, sourceAmount);
     const { orderId, burnTransaction, statusPage } = await createOrder(
       quote.quoteId,
-      etherfuse_bank_account_id,
+      resolved.bankAccountId,
       account
     );
 
@@ -342,10 +354,73 @@ router.post("/api/actions/convertir-mxn", async (req, res) => {
       );
     }
 
-    const statusHint = statusPage ? ` Seguimiento: ${statusPage}` : "";
+    // Sin burn: sandbox a menudo omite tx hasta haber USDC Etherfuse (BXTou3) en la wallet.
+    // Devolver link + completed (como onboarding) para que Phantom/interstitial abran status page.
+    if (!burnTransaction) {
+      const mintShort = `${ETHERFUSE_USDC_MINT.slice(0, 6)}…`;
+      const walletShort = `${account.slice(0, 6)}…${account.slice(-4)}`;
+      // 2–3 líneas ANTES de abrir Etherfuse: Unfunded / Selling Token es esperado sin BXTou3.
+      const msg =
+        `Orden lista; falta enviar el USDC sandbox (${mintShort}) desde Phantom. ` +
+        `Phantom debe tener importada/conectada la wallet ${walletShort}. ` +
+        `Si no hay token, la página dirá Unfunded / Selling Token — es normal (no es un error tuyo).`;
+      const title = "Orden lista — lee antes de abrir";
+      return res.json({
+        type: "completed",
+        icon: blinkIconUrl(),
+        title,
+        description: msg,
+        label: "Ver seguimiento",
+        link: statusPage,
+        message: msg,
+        links: {
+          next: {
+            type: "inline",
+            action: {
+              type: "completed",
+              icon: blinkIconUrl(),
+              title,
+              description: msg,
+              label: "Ver seguimiento",
+              links: {
+                actions: [
+                  {
+                    type: "external-link",
+                    href: statusPage,
+                    label: "Abrir seguimiento (después de leer)",
+                  },
+                ],
+              },
+            },
+          },
+        },
+      });
+    }
+
     res.json({
       transaction: burnTransaction,
-      message: `$${amt} → pesos en tu cuenta bancaria (~15 min).${statusHint}`,
+      message: `$${amt} → pesos en tu cuenta bancaria (~15 min). Seguimiento: ${statusPage}`,
+      links: {
+        next: {
+          type: "inline",
+          action: {
+            type: "completed",
+            icon: blinkIconUrl(),
+            title: "Burn listo para firmar",
+            description: `Tras firmar, sigue el estatus en Etherfuse.`,
+            label: "Ver seguimiento",
+            links: {
+              actions: [
+                {
+                  type: "external-link",
+                  href: statusPage,
+                  label: "Abrir seguimiento Etherfuse",
+                },
+              ],
+            },
+          },
+        },
+      },
     });
   } catch (err) {
     console.error("Error convertir-mxn:", err);
@@ -355,7 +430,8 @@ router.post("/api/actions/convertir-mxn", async (req, res) => {
       (err.code === "FORBIDDEN" ||
         err.code === "STALE_IDS" ||
         err.code === "TERMS" ||
-        err.code === "NON_STABLE")
+        err.code === "NON_STABLE" ||
+        err.code === "NO_BURN")
         ? 400
         : 500;
     res.status(status).json({ message: friendly });
