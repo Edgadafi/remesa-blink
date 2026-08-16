@@ -1,4 +1,5 @@
 import { FormNuevaRemesa } from "@/components/FormNuevaRemesa";
+import { Providers } from "@/app/providers";
 import Link from "next/link";
 
 export default function NuevaRemesaPage() {
@@ -10,7 +11,9 @@ export default function NuevaRemesaPage() {
         Define monto, frecuencia y WhatsApp. Tu familia recibe el aviso cuando toca el envío — sin
         jerga de blockchain en el camino.
       </p>
-      <FormNuevaRemesa />
+      <Providers>
+        <FormNuevaRemesa />
+      </Providers>
       <p className="muted" style={{ marginTop: "1.5rem" }}>
         <Link href="/">← Volver al inicio</Link>
       </p>

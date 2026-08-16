@@ -24,15 +24,15 @@ export default function Home() {
           tiendita.
         </p>
         <div className="hub-cta-row">
-          <Link href="/nueva-remesa" className="btn-primary">
-            Enviar a mi familia
+          <Link href="/empezar" className="btn-primary">
+            Empezar con QR
           </Link>
-          <Link href="/mis-remesas" className="btn-secondary">
-            Ver mis envíos
+          <Link href="/demo" className="btn-secondary">
+            Demo MVP Devnet
           </Link>
         </div>
         <p className="hub-reassure">
-          Claridad primero: monto, frecuencia y contacto. La wallet es opcional y va en segundo plano.
+          Escanea el código, saluda a TIA en WhatsApp y programa tu remesa. La wallet va en segundo plano.
         </p>
       </section>
 

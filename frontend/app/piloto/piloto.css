@@ -61,7 +61,8 @@
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.06em;
-  padding: 0.28rem 0.55rem;
+  padding: 0.45rem 0.7rem;
+  min-height: 44px;
   border: none;
   background: transparent;
   color: var(--color-verde-cenote);
@@ -171,6 +172,7 @@
   font-family: var(--font-display);
   font-weight: 700;
   padding: 0.85rem 1.5rem;
+  min-height: 44px;
   border: 2px solid var(--color-dorado-tia);
   border-radius: 4px;
   background: linear-gradient(180deg, var(--color-verde-nopal) 0%, #243f12 100%);
@@ -258,15 +260,19 @@
 .piloto-field textarea {
   font-family: inherit;
   padding: 0.65rem 0.75rem;
+  min-height: 44px;
   border: 1px solid rgba(44, 36, 22, 0.25);
   border-radius: 4px;
   background: var(--color-papel);
 }
-.piloto-field input:focus,
-.piloto-field select:focus,
-.piloto-field textarea:focus {
-  outline: 2px solid rgba(201, 162, 39, 0.45);
-  outline-offset: 1px;
+.piloto-field input:focus-visible,
+.piloto-field select:focus-visible,
+.piloto-field textarea:focus-visible,
+.piloto-btn-primary:focus-visible,
+.piloto-btn-secondary:focus-visible,
+.piloto-lang-switch button:focus-visible {
+  outline: 2px solid var(--color-verde-nopal);
+  outline-offset: 2px;
 }
 .piloto-field-row {
   display: grid;
@@ -303,7 +309,10 @@
   margin-bottom: 1rem;
 }
 .piloto-btn-secondary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: 0.75rem 1.25rem;
   border: 2px solid var(--color-verde-nopal);
   border-radius: 4px;
@@ -319,4 +328,13 @@
   border-top: 2px solid var(--color-dorado-tia);
   font-size: 0.82rem;
   color: var(--color-verde-cenote);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piloto-page *,
+  .piloto-page *::before,
+  .piloto-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

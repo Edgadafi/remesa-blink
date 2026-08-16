@@ -1,21 +1,30 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
-import { EB_Garamond, IBM_Plex_Mono } from "next/font/google";
+import { EB_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/SiteShell";
-import { Providers } from "@/app/providers";
 
 const body = EB_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   variable: "--font-body",
-  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const ui = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-ui",
+  display: "swap",
+  preload: false,
 });
 
 const mono = IBM_Plex_Mono({
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
+  preload: false,
 });
 
 const displayFontStyle = {
@@ -35,10 +44,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${body.variable} ${mono.variable}`} style={displayFontStyle}>
-        <Providers>
-          <SiteShell>{children}</SiteShell>
-        </Providers>
+      <body className={`${body.variable} ${ui.variable} ${mono.variable}`} style={displayFontStyle}>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

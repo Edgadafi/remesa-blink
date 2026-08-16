@@ -1,0 +1,393 @@
+/* Escenario Demo Day — /demo (Manera A)
+   Brand kit: Papel / Nopal / Cenote / Terracotta / Dorado TIA */
+
+.demo-root {
+  min-height: 100vh;
+  color: var(--color-tierra);
+  background: var(--color-papel);
+}
+
+.demo-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.demo-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(
+      165deg,
+      rgba(44, 36, 22, 0.55) 0%,
+      rgba(45, 80, 22, 0.35) 42%,
+      rgba(245, 240, 232, 0.92) 78%
+    ),
+    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(201, 162, 39, 0.35), transparent 55%),
+    url("/piloto/hero-banner.png") center / cover no-repeat;
+  transform: scale(1.02);
+  animation: demo-bg-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes demo-bg-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.06) translate3d(-1.5%, 1%, 0);
+  }
+}
+
+.demo-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: min(40rem, 100%);
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2.5rem, 7vw, 4.5rem);
+  animation: demo-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-hero-inner--qr {
+  width: min(28rem, 100%);
+}
+
+.demo-cta-row--secondary {
+  margin-top: 1.25rem;
+}
+
+@keyframes demo-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.demo-brand {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #f5f0e8;
+  text-shadow: 0 2px 24px rgba(44, 36, 22, 0.45);
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+}
+
+.demo-brand-tia {
+  color: var(--color-dorado-tia);
+}
+
+.demo-headline {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: clamp(1.35rem, 3.8vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: #fffdf8;
+  max-width: 18ch;
+  margin-bottom: 0.85rem;
+  text-shadow: 0 2px 18px rgba(44, 36, 22, 0.4);
+}
+
+.demo-lede {
+  font-size: 1.125rem;
+  line-height: 1.45;
+  color: rgba(245, 240, 232, 0.92);
+  max-width: 32ch;
+  margin-bottom: 1.5rem;
+}
+
+.demo-lede strong {
+  color: var(--color-dorado-tia);
+  font-weight: 600;
+}
+
+.demo-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.demo-cta-primary,
+.demo-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.7rem 1.35rem;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.demo-cta-primary {
+  background: var(--color-dorado-tia);
+  color: var(--color-tierra);
+  border: 2px solid var(--color-dorado-tia);
+}
+
+.demo-cta-primary:hover {
+  background: #d4b03a;
+  color: var(--color-tierra);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.demo-cta-secondary {
+  background: transparent;
+  color: #f5f0e8;
+  border: 2px solid rgba(245, 240, 232, 0.65);
+}
+
+.demo-cta-secondary:hover {
+  border-color: #f5f0e8;
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.demo-cta-hint {
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.7);
+}
+
+/* Below fold — evidence */
+.demo-stage {
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem) 4rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  animation: demo-rise 1s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-stage-title {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.65rem;
+  color: var(--color-verde-nopal);
+  margin-bottom: 0.5rem;
+}
+
+.demo-stage-copy {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+}
+
+.demo-meta {
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  padding: 0;
+}
+
+.demo-meta li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.demo-meta-k {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.demo-meta-v {
+  font-size: 0.95rem;
+  color: var(--color-tierra);
+}
+
+.demo-meta-v.mono,
+.mono {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.75rem;
+}
+
+.demo-links a {
+  font-weight: 600;
+  color: var(--color-verde-cenote);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.demo-planb {
+  border-left: 3px solid var(--color-terracotta);
+  padding: 0.85rem 0 0.85rem 1rem;
+  margin-bottom: 2rem;
+  background: transparent;
+}
+
+.demo-planb strong {
+  display: block;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  color: var(--color-terracotta);
+  margin-bottom: 0.35rem;
+}
+
+.demo-planb p {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.demo-footer-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+.demo-piloto-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.65rem 1.25rem;
+  background: var(--color-verde-nopal);
+  color: #f5f0e8 !important;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-weight: 600;
+  text-decoration: none !important;
+  border-radius: 2px;
+}
+
+.demo-piloto-link:hover {
+  background: var(--color-verde-cenote);
+  color: #fff !important;
+}
+
+.demo-backup-link {
+  font-weight: 600;
+  color: var(--color-tierra);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-hero-bg,
+  .demo-hero-inner,
+  .demo-stage {
+    animation: none;
+  }
+
+  .wa-qr--hero .wa-qr-frame:hover {
+    transform: none;
+  }
+}
+
+/* WhatsApp start QR */
+.wa-qr {
+  margin: 0 0 0.5rem;
+  max-width: 17.5rem;
+}
+
+.wa-qr--hero .wa-qr-frame {
+  display: block;
+  padding: 0.65rem;
+  background: rgba(245, 240, 232, 0.94);
+  border: 2px solid var(--color-dorado-tia);
+  border-radius: 2px;
+  box-shadow: 0 12px 40px rgba(44, 36, 22, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wa-qr--hero .wa-qr-frame:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(44, 36, 22, 0.4);
+  text-decoration: none;
+}
+
+.wa-qr--hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1px;
+}
+
+.wa-qr-caption {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(245, 240, 232, 0.9);
+  line-height: 1.35;
+}
+
+.wa-qr-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  align-items: center;
+  margin: 0.55rem 0 0.65rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.75);
+}
+
+.wa-qr-steps em {
+  font-style: normal;
+  color: var(--color-dorado-tia);
+  font-weight: 600;
+}
+
+.wa-qr-fallback {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f5f0e8 !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wa-qr-fallback:hover {
+  color: var(--color-dorado-tia) !important;
+}
+
+.wa-qr--stage .wa-qr-frame {
+  display: inline-block;
+  padding: 0.5rem;
+  background: var(--color-papel);
+  border: 1px solid var(--border);
+}
+
+.wa-qr--stage .wa-qr-caption,
+.wa-qr--stage .wa-qr-steps,
+.wa-qr--stage .wa-qr-fallback {
+  color: var(--muted);
+}
+
+.wa-qr--stage .wa-qr-fallback {
+  color: var(--color-verde-cenote) !important;
+}
+

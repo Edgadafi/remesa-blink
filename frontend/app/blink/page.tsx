@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BlinkInterstitial } from "@/components/BlinkInterstitial";
+import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
   title: "Confirmar remesa — Remesa Blink",
@@ -34,7 +35,9 @@ export default function BlinkPage({ searchParams }: Props) {
           </p>
         </div>
       ) : (
-        <BlinkInterstitial actionUrl={actionUrl} />
+        <Providers>
+          <BlinkInterstitial actionUrl={actionUrl} />
+        </Providers>
       )}
     </main>
   );

@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "db:schema": "node run-schema.mjs",
-    "dev": "tsx src/index.ts",
-    "start": "tsx src/index.ts",
+    "dev": "npx tsx src/index.ts",
+    "start": "npx tsx src/index.ts",
     "keeper": "tsx src/keeper/cron.ts",
     "keeper:airdrop": "node run-keeper-airdrop.mjs",
     "keeper:usdc-ata": "node run-keeper-usdc-ata.mjs",
@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "mcp": "npx tsx mcp-solana-minimal.ts",
-    "mcp:agent": "npx tsx mcp-solana-agent.ts"
+    "mcp:agent": "npx tsx mcp-solana-agent.ts",
+    "rebuild:native": "npm rebuild bigint-buffer"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",

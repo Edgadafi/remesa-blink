@@ -26,7 +26,13 @@ app.use((req, res, next) => {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  if (origin && (allowed.includes(origin) || allowed.includes("*"))) {
+  const isDevLan =
+    process.env.NODE_ENV !== "production" &&
+    !!origin &&
+    /^http:\/\/(localhost|127\.0\.0\.1|172\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+)(:\d+)?$/.test(
+      origin
+    );
+  if (origin && (allowed.includes(origin) || allowed.includes("*") || isDevLan)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Vary", "Origin");
   }

@@ -48,9 +48,11 @@ export function WalletConnect() {
           key={c.id}
           type="button"
           className="btn-wallet"
+          aria-label={`Conectar ${c.name}`}
+          title={`Conectar ${c.name}`}
           onClick={() => connect(c.id)}
         >
-          Conectar {c.name}
+          Wallet
         </button>
       ))}
     </div>

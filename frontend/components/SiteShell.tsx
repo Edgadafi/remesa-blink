@@ -2,17 +2,22 @@
 
 import { usePathname } from "next/navigation";
 import { Nav } from "@/components/Nav";
+import { DeferredCorridor } from "@/components/scene3d/DeferredCorridor";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isPiloto = pathname?.startsWith("/piloto");
+  const isDemo = pathname?.startsWith("/demo");
+  const isEmpezar = pathname?.startsWith("/empezar");
 
-  if (isPiloto) {
+  /* Escenas full-bleed sin chrome del hub */
+  if (isPiloto || isDemo || isEmpezar) {
     return <>{children}</>;
   }
 
   return (
     <div className="site-wrap">
+      <DeferredCorridor />
       <Nav />
       {children}
       <footer className="site-footer">

@@ -12,15 +12,33 @@ export function getBlinksBase(): string {
   return getApiBase();
 }
 
-/** Link wa.me para soporte piloto (solo dígitos, sin +).
- * Debe ser el **mismo número del bot** de remesas (no un segundo WhatsApp).
- */
-export function getWaSupportUrl(): string | null {
+/** Dígitos del bot WhatsApp (mismo número Baileys / soporte). */
+export function getWaBotDigits(): string | null {
   const raw = process.env.NEXT_PUBLIC_WA_SUPPORT?.trim();
   if (!raw) return null;
   const digits = raw.replace(/\D/g, "");
   if (digits.length < 10) return null;
-  return `https://wa.me/${digits}?text=${encodeURIComponent(
+  return digits;
+}
+
+/**
+ * Link wa.me para iniciar chat con TIA.
+ * Prefill por defecto: "hola" → menú del bot (NLU ayuda).
+ */
+export function getWaBotStartUrl(
+  prefill = "hola"
+): string | null {
+  const digits = getWaBotDigits();
+  if (!digits) return null;
+  const text = prefill.trim() || "hola";
+  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+}
+
+/** Link wa.me para soporte piloto (solo dígitos, sin +).
+ * Debe ser el **mismo número del bot** de remesas (no un segundo WhatsApp).
+ */
+export function getWaSupportUrl(): string | null {
+  return getWaBotStartUrl(
     "Hola — necesito soporte (piloto Remesa Blink)."
-  )}`;
+  );
 }
