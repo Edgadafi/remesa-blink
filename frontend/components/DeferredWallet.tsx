@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState, type ComponentType } from "react";
+import { useLocale } from "@/components/LocaleProvider";
 
 /**
  * Wallet adapters stay off the hub critical path. Copy paints first;
  * Phantom/Solflare hydrate after idle.
  */
 export function DeferredWallet() {
+  const { t } = useLocale();
   const [Slot, setSlot] = useState<ComponentType | null>(null);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export function DeferredWallet() {
   }, []);
 
   if (!Slot) {
-    return <p className="wallet-hint">Wallet opcional</p>;
+    return <p className="wallet-hint">{t.walletHint}</p>;
   }
   return <Slot />;
 }

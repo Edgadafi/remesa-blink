@@ -1,3 +1,7 @@
+"use client";
+
+import { useLocale } from "@/components/LocaleProvider";
+
 type Props = {
   waUrl: string;
   qrDataUrl: string;
@@ -13,9 +17,11 @@ type Props = {
 export function WhatsAppStartQr({
   waUrl,
   qrDataUrl,
-  caption = "Escanea con tu teléfono · se abre WhatsApp con TIA",
+  caption,
   variant = "hero",
 }: Props) {
+  const { t } = useLocale();
+
   return (
     <figure className={`wa-qr wa-qr--${variant}`}>
       <a
@@ -23,23 +29,23 @@ export function WhatsAppStartQr({
         target="_blank"
         rel="noopener noreferrer"
         className="wa-qr-frame"
-        aria-label="Abrir WhatsApp con TIA (o escanea el código)"
+        aria-label={t.qrAria}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={qrDataUrl}
           width={280}
           height={280}
-          alt="Código QR para iniciar chat con Remesa Blink + TIA en WhatsApp"
+          alt={t.qrAlt}
         />
       </a>
-      <figcaption className="wa-qr-caption">{caption}</figcaption>
+      <figcaption className="wa-qr-caption">{caption ?? t.qrCaption}</figcaption>
       <p className="wa-qr-steps">
-        <span>1. Escanea</span>
+        <span>{t.qrStep1}</span>
         <span aria-hidden>→</span>
-        <span>2. Envía <em>hola</em></span>
+        <span>{t.qrStep2}</span>
         <span aria-hidden>→</span>
-        <span>3. Escribe <em>enviar</em></span>
+        <span>{t.qrStep3}</span>
       </p>
       <a
         href={waUrl}
@@ -47,7 +53,7 @@ export function WhatsAppStartQr({
         target="_blank"
         rel="noopener noreferrer"
       >
-        ¿En el mismo teléfono? Toca aquí
+        {t.qrFallback}
       </a>
     </figure>
   );

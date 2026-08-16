@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
 import { EB_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import { SiteShell } from "@/components/SiteShell";
 
 const body = EB_Garamond({
@@ -45,7 +46,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${body.variable} ${ui.variable} ${mono.variable}`} style={displayFontStyle}>
-        <SiteShell>{children}</SiteShell>
+        <LocaleProvider>
+          <SiteShell>{children}</SiteShell>
+        </LocaleProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useBalance, useWalletConnection } from "@solana/react-hooks";
+import { useLocale } from "@/components/LocaleProvider";
 
 function shortAddress(address: string): string {
   if (address.length <= 12) return address;
@@ -16,6 +17,7 @@ function lamportsToSol(lamports: bigint | null | undefined): string {
 export function WalletConnect() {
   const { connectors, connect, disconnect, wallet, status, currentConnector } =
     useWalletConnection();
+  const { t } = useLocale();
   const address = wallet?.account.address?.toString();
   const balance = useBalance(address);
 
@@ -27,18 +29,14 @@ export function WalletConnect() {
           {lamportsToSol(balance.lamports)} SOL
         </span>
         <button type="button" className="btn-wallet" onClick={() => disconnect()}>
-          Desconectar
+          {t.walletDisconnect}
         </button>
       </div>
     );
   }
 
   if (connectors.length === 0) {
-    return (
-      <p className="wallet-hint">
-        Wallet opcional — Phantom / Solflare si la usas.
-      </p>
-    );
+    return <p className="wallet-hint">{t.walletHintLong}</p>;
   }
 
   return (
@@ -48,11 +46,11 @@ export function WalletConnect() {
           key={c.id}
           type="button"
           className="btn-wallet"
-          aria-label={`Iniciar con ${c.name}`}
-          title={`Iniciar con ${c.name}`}
+          aria-label={t.walletStartWith(c.name)}
+          title={t.walletStartWith(c.name)}
           onClick={() => connect(c.id)}
         >
-          Iniciar
+          {t.walletStart}
         </button>
       ))}
     </div>

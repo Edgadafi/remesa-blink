@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DeferredWallet } from "@/components/DeferredWallet";
-
-const links = [
-  { href: "/", label: "Inicio" },
-  { href: "/empezar", label: "Empezar", primary: true },
-  { href: "/nueva-remesa", label: "Enviar a mi familia" },
-  { href: "/mis-remesas", label: "Mis remesas" },
-  { href: "/cashback", label: "Cashback" },
-];
+import { LangSwitch } from "@/components/LangSwitch";
+import { useLocale } from "@/components/LocaleProvider";
+import { RemesaBlinkIsotype } from "@/components/RemesaBlinkIsotype";
 
 function isActivePath(href: string, pathname: string): boolean {
   if (href === "/") return pathname === "/";
@@ -19,13 +14,23 @@ function isActivePath(href: string, pathname: string): boolean {
 
 export function Nav() {
   const pathname = usePathname() || "/";
+  const { t } = useLocale();
+
+  const links = [
+    { href: "/", label: t.navHome },
+    { href: "/empezar", label: t.navStart, primary: true },
+    { href: "/nueva-remesa", label: t.navSend },
+    { href: "/mis-remesas", label: t.navTransfers },
+    { href: "/cashback", label: t.navCashback },
+  ];
 
   return (
     <header className="site-header">
       <Link href="/" className="site-logo">
-        Remesa Blink
+        <RemesaBlinkIsotype className="site-logo-mark" />
+        <span className="site-logo-word">Remesa Blink</span>
       </Link>
-      <nav className="site-nav" aria-label="Principal">
+      <nav className="site-nav" aria-label={t.navAria}>
         {links.map(({ href, label, primary }) => {
           const active = isActivePath(href, pathname);
           const classes = [
@@ -47,7 +52,10 @@ export function Nav() {
           );
         })}
       </nav>
-      <DeferredWallet />
+      <div className="site-header-actions">
+        <LangSwitch />
+        <DeferredWallet />
+      </div>
     </header>
   );
 }
