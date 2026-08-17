@@ -1,0 +1,374 @@
+/* /empezar — slogan scene. Loaded after demo.css so it overwrites proposal B PNG. */
+
+.empezar-root {
+  min-height: 100svh;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-papel);
+  background-image: none;
+}
+
+.empezar-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  background-color: var(--color-papel);
+  background-image: none;
+}
+
+/* Kill proposal B / any PNG corridor on this page only */
+.empezar-art::before,
+.empezar-art::after {
+  content: none !important;
+  background: none !important;
+  background-image: none !important;
+  display: none !important;
+}
+
+.empezar-art-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.empezar-slogan {
+  position: absolute;
+  top: clamp(0.65rem, 2.4vh, 1.5rem);
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.empezar-slogan-l1,
+.empezar-slogan-l2 {
+  display: block;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: clamp(2rem, 6.8vw, 4.35rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-tierra);
+}
+
+.empezar-slogan-l2 {
+  color: var(--color-verde-nopal);
+}
+
+.empezar-slogan-l3 {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-ui), "IBM Plex Sans", sans-serif;
+  font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-tierra);
+}
+
+.empezar-flow {
+  position: absolute;
+  top: clamp(8.75rem, 27vh, 13rem);
+  left: 0;
+  right: 0;
+  height: 8rem;
+  z-index: 1;
+}
+
+.empezar-bill,
+.empezar-peso,
+.empezar-usd,
+.empezar-mxn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.empezar-bill {
+  width: 3.6rem;
+  height: 2rem;
+  background: var(--color-verde-cenote);
+  color: #fffdf8;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.35rem;
+  border: 2px solid var(--color-verde-nopal);
+  box-shadow: 2px 3px 0 rgba(45, 80, 22, 0.35);
+}
+
+.empezar-bill--1 {
+  left: 5%;
+  top: 8%;
+  animation: empezar-usd-drift 2.6s ease-in-out infinite alternate;
+}
+
+.empezar-bill--2 {
+  left: 13%;
+  top: 42%;
+  animation: empezar-usd-drift 3.1s ease-in-out infinite alternate-reverse;
+}
+
+.empezar-bill--3 {
+  left: 3%;
+  top: 68%;
+  animation: empezar-usd-drift 2.4s 0.15s ease-in-out infinite alternate;
+}
+
+.empezar-usd {
+  left: 20%;
+  top: 18%;
+  font-family: var(--font-ui), "IBM Plex Sans", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--color-verde-nopal);
+  animation: empezar-usd-drift 2.8s 0.2s ease-in-out infinite alternate;
+}
+
+.empezar-channel {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.empezar-channel-pulse {
+  transform-origin: center;
+  animation: empezar-wa-pulse 1.7s ease-in-out infinite;
+}
+
+.empezar-channel-svg {
+  display: block;
+  filter: drop-shadow(0 8px 16px rgba(44, 36, 22, 0.22));
+}
+
+.empezar-peso {
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: 50%;
+  background: var(--color-dorado-tia);
+  color: var(--color-tierra);
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.25rem;
+  border: 2px solid #fffdf8;
+  box-shadow: 0 3px 0 rgba(44, 36, 22, 0.2);
+}
+
+.empezar-peso--1 {
+  right: 7%;
+  top: 6%;
+  animation: empezar-mxn-arrive 2.5s ease-in-out infinite alternate;
+}
+
+.empezar-peso--2 {
+  right: 15%;
+  top: 40%;
+  animation: empezar-mxn-arrive 3s 0.1s ease-in-out infinite alternate-reverse;
+}
+
+.empezar-peso--3 {
+  right: 4%;
+  top: 66%;
+  animation: empezar-mxn-arrive 2.3s 0.2s ease-in-out infinite alternate;
+}
+
+.empezar-mxn {
+  right: 22%;
+  top: 16%;
+  font-family: var(--font-ui), "IBM Plex Sans", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--color-tierra);
+  animation: empezar-mxn-arrive 2.7s 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes empezar-usd-drift {
+  from {
+    transform: translate3d(0, 10px, 0) rotate(-10deg);
+  }
+  to {
+    transform: translate3d(132px, -18px, 0) rotate(8deg);
+  }
+}
+
+@keyframes empezar-mxn-arrive {
+  from {
+    transform: translate3d(-96px, 12px, 0) scale(0.82);
+  }
+  to {
+    transform: translate3d(28px, -20px, 0) scale(1.08);
+  }
+}
+
+@keyframes empezar-wa-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.empezar-main {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16.75rem, 44vh, 22.5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.empezar-card {
+  width: min(28rem, 100%);
+  background: #fffdf8;
+  color: var(--color-tierra);
+  border: 2px solid var(--color-dorado-tia);
+  border-radius: 2px;
+  padding: clamp(1.25rem, 4vw, 1.75rem) clamp(1.15rem, 3.5vw, 1.6rem) 1.5rem;
+  box-shadow: 0 8px 24px rgba(44, 36, 22, 0.12);
+  text-align: center;
+}
+
+.empezar-kicker {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-verde-nopal);
+  margin-bottom: 0.4rem;
+}
+
+.empezar-title {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: clamp(1.55rem, 4.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-tierra);
+  margin-bottom: 0.45rem;
+}
+
+.empezar-lede {
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.empezar-lede strong {
+  color: var(--color-verde-nopal);
+}
+
+.empezar-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.7rem 1.25rem;
+  margin-top: 0.75rem;
+  background: var(--color-verde-nopal);
+  color: var(--color-papel) !important;
+  font-family: var(--font-ui), "IBM Plex Sans", sans-serif;
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.empezar-cta:hover {
+  background: var(--color-verde-cenote);
+}
+
+.empezar-cta:focus-visible,
+.empezar-nav a:focus-visible {
+  outline: 3px solid var(--color-dorado-tia);
+  outline-offset: 3px;
+}
+
+.empezar-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.1rem;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.empezar-nav a {
+  font-family: var(--font-ui), "IBM Plex Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-verde-cenote);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.empezar-nav a:hover {
+  color: var(--color-verde-nopal);
+}
+
+@media (max-width: 767px) {
+  .empezar-slogan-l1,
+  .empezar-slogan-l2 {
+    font-size: clamp(1.7rem, 8.4vw, 2.45rem);
+  }
+
+  .empezar-flow {
+    top: clamp(7.5rem, 24vh, 10rem);
+    height: 6.25rem;
+  }
+
+  .empezar-channel-svg {
+    width: 64px;
+    height: 90px;
+  }
+
+  .empezar-bill,
+  .empezar-peso {
+    transform: scale(0.88);
+  }
+
+  .empezar-main {
+    padding-top: clamp(14rem, 40vh, 17.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .empezar-card {
+    padding: 1.15rem 1rem 1.25rem;
+  }
+
+  .empezar-usd,
+  .empezar-mxn {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .empezar-bill,
+  .empezar-peso,
+  .empezar-usd,
+  .empezar-mxn,
+  .empezar-channel-pulse {
+    animation: none;
+  }
+
+  .empezar-bill,
+  .empezar-peso,
+  .empezar-usd,
+  .empezar-mxn,
+  .empezar-channel-pulse {
+    transform: none;
+  }
+}

@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { LangSwitch } from "@/components/LangSwitch";
 import { useLocale } from "@/components/LocaleProvider";
+import { EmpezarArt } from "@/components/empezar/EmpezarArt";
 import { WhatsAppStartQr } from "@/components/WhatsAppStartQr";
 import { MVP_ACTION_PATH, MVP_CLUSTER, MVP_PROGRAM_ID } from "@/lib/mvp-demo";
+import "@/app/empezar/empezar.css";
 
 type Props = {
   actionUrl: string;
@@ -32,7 +34,7 @@ export function DemoView({
   return (
     <div className="demo-root">
       <section className="demo-hero" aria-labelledby="demo-brand">
-        <div className="demo-hero-bg" aria-hidden />
+        <EmpezarArt />
         <div className="demo-hero-inner demo-hero-inner--qr">
           <div className="demo-lang-bar">
             <LangSwitch />

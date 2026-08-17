@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { LangSwitch } from "@/components/LangSwitch";
 import { useLocale } from "@/components/LocaleProvider";
+import { EmpezarArt } from "@/components/empezar/EmpezarArt";
 import { WhatsAppStartQr } from "@/components/WhatsAppStartQr";
+import "@/app/empezar/empezar.css";
 
 type Props =
   | { missing: true }
@@ -14,14 +16,17 @@ export function EmpezarView(props: Props) {
 
   if (props.missing) {
     return (
-      <main className="demo-root" style={{ padding: "3rem 1.5rem" }}>
+      <div className="demo-root" style={{ position: "relative" }}>
+        <EmpezarArt />
+        <main style={{ position: "relative", zIndex: 1, padding: "3rem 1.5rem" }}>
         <div className="demo-lang-bar">
           <LangSwitch />
         </div>
         <h1 className="demo-stage-title">{t.empezarMissingTitle}</h1>
         <p className="demo-stage-copy">{t.empezarMissingBody}</p>
         <Link href="/nueva-remesa">{t.empezarFormLink}</Link>
-      </main>
+        </main>
+      </div>
     );
   }
 
@@ -32,7 +37,7 @@ export function EmpezarView(props: Props) {
         style={{ minHeight: "100svh", alignItems: "center", justifyContent: "center" }}
         aria-labelledby="empezar-title"
       >
-        <div className="demo-hero-bg" aria-hidden />
+        <EmpezarArt />
         <div className="demo-hero-inner demo-hero-inner--qr" style={{ textAlign: "center" }}>
           <div className="demo-lang-bar">
             <LangSwitch />
