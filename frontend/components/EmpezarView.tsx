@@ -5,11 +5,19 @@ import { LangSwitch } from "@/components/LangSwitch";
 import { useLocale } from "@/components/LocaleProvider";
 import { EmpezarArt } from "@/components/empezar/EmpezarArt";
 import { WhatsAppStartQr } from "@/components/WhatsAppStartQr";
+import { BlinkPreview } from "@/components/BlinkPreview";
 import "@/app/empezar/empezar.css";
 
 type Props =
   | { missing: true }
-  | { missing?: false; waUrl: string; qrDataUrl: string };
+  | {
+      missing?: false;
+      waUrl: string;
+      qrDataUrl: string;
+      actionUrl: string;
+      localUrl: string;
+      inspectorUrl: string;
+    };
 
 export function EmpezarView(props: Props) {
   const { t } = useLocale();
@@ -56,6 +64,12 @@ export function EmpezarView(props: Props) {
               variant="hero"
             />
           </div>
+          <BlinkPreview
+            actionUrl={props.actionUrl}
+            localUrl={props.localUrl}
+            inspectorUrl={props.inspectorUrl}
+            variant="compact"
+          />
           <p className="demo-cta-hint" style={{ marginTop: "1.5rem" }}>
             <Link href="/demo" style={{ color: "inherit" }}>
               {t.empezarDemoLink}

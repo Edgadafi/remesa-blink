@@ -70,6 +70,12 @@ export type HubMessages = {
   demoBlinkOpen: string;
   demoBlinkHere: string;
   demoHint: string;
+  blinkPreviewKicker: string;
+  blinkPreviewTitle: string;
+  blinkPreviewBody: string;
+  blinkPreviewOpen: string;
+  blinkPreviewInspector: string;
+  blinkPreviewPhantom: string;
   demoStageTitle: string;
   demoStageCopy: string;
   demoMetaAria: string;

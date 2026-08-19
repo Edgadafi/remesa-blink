@@ -372,3 +372,121 @@
     transform: none;
   }
 }
+
+/* Blink receipt card — projector / Dialect-style unfurl */
+.blink-preview {
+  width: min(28rem, 100%);
+  margin: 1.25rem auto 0;
+  padding: 1.1rem 1.15rem 1.2rem;
+  text-align: left;
+  background: #fffdf8;
+  color: var(--color-tierra);
+  border: 2px solid var(--color-dorado-tia);
+  border-radius: 2px;
+  box-shadow: 0 8px 24px rgba(44, 36, 22, 0.12);
+}
+
+.blink-preview-kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-verde-nopal);
+  margin: 0 0 0.65rem;
+}
+
+.blink-preview-row {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.blink-preview-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  background: #f5f0e8;
+}
+
+.blink-preview-icon--fallback {
+  display: block;
+  background: linear-gradient(135deg, #2d5016 0%, #c9a227 100%);
+}
+
+.blink-preview-title {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-tierra);
+  margin: 0 0 0.3rem;
+}
+
+.blink-preview-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.blink-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+
+.blink-preview-cta,
+.blink-preview-link {
+  cursor: pointer;
+}
+
+.blink-preview-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1.1rem;
+  background: var(--color-verde-nopal);
+  color: var(--color-papel) !important;
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.blink-preview-cta:hover,
+.blink-preview-cta:focus-visible {
+  background: #234012;
+  color: var(--color-papel) !important;
+  text-decoration: none;
+  outline: 2px solid var(--color-dorado-tia);
+  outline-offset: 2px;
+}
+
+.blink-preview-link {
+  color: var(--color-verde-nopal);
+  font-size: 0.92rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.blink-preview-link:hover,
+.blink-preview-link:focus-visible {
+  color: var(--color-tierra);
+}
+
+.blink-preview--compact {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+@media (max-width: 480px) {
+  .blink-preview-title {
+    font-size: 1.05rem;
+  }
+}
+

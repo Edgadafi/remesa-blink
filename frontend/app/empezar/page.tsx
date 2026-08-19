@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { EmpezarView } from "@/components/EmpezarView";
-import { getWaBotStartUrl } from "@/lib/config";
+import { getCanonicalActionUrl, getWaBotStartUrl } from "@/lib/config";
 import { toQrDataUrl } from "@/lib/qr";
+import {
+  MVP_ACTION_PATH,
+  blinksInspectorUrl,
+  localBlinkPageUrl,
+} from "@/lib/mvp-demo";
 import "../demo/demo.css";
 
 export const metadata: Metadata = {
@@ -20,6 +25,15 @@ export default async function EmpezarPage() {
   }
 
   const qrDataUrl = await toQrDataUrl(waUrl, 320);
+  const actionUrl = getCanonicalActionUrl(MVP_ACTION_PATH);
 
-  return <EmpezarView waUrl={waUrl} qrDataUrl={qrDataUrl} />;
+  return (
+    <EmpezarView
+      waUrl={waUrl}
+      qrDataUrl={qrDataUrl}
+      actionUrl={actionUrl}
+      localUrl={localBlinkPageUrl(actionUrl)}
+      inspectorUrl={blinksInspectorUrl(actionUrl)}
+    />
+  );
 }

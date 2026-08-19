@@ -49,8 +49,8 @@ function getBaseUrl(): string {
 function blinkIconUrl(): string {
   const front =
     process.env.FRONTEND_PUBLIC_URL?.replace(/\/$/, "") ||
-    "https://frontend-bay-phi-92.vercel.app";
-  return `${front}/piloto/hero-banner.png`;
+    "https://holatia.app";
+  return `${front}/blink-icon.svg`;
 }
 
 

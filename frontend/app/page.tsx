@@ -1,6 +1,6 @@
 import { HomeHub } from "@/components/HomeHub";
-import { getBlinksBase } from "@/lib/config";
+import { getApiBase, getBlinksBase } from "@/lib/config";
 
-export default function Home() {
-  return <HomeHub blinkBase={getBlinksBase()} />;
+export default function HomePage() {
+  return <HomeHub siteBase={getBlinksBase()} apiBase={getApiBase()} />;
 }

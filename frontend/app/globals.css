@@ -168,12 +168,21 @@ input[type="checkbox"], input[type="radio"], input[type="submit"] {
 
 .site-logo-word {
   font-family: var(--font-display), Palatino, "Palatino Linotype", Georgia, serif;
-  font-size: clamp(1.05rem, 3.4vw, 1.35rem);
+  font-size: clamp(1.15rem, 3.4vw, 1.45rem);
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1;
-  color: var(--color-verde-nopal);
+  color: var(--color-tierra);
   white-space: nowrap;
+}
+
+.site-logo-hola {
+  color: var(--color-tierra);
+}
+
+.site-logo-tia {
+  color: var(--color-verde-nopal);
+  box-shadow: inset 0 -2px 0 var(--color-dorado-tia);
 }
 
 .site-logo:hover {

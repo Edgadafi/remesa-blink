@@ -1,15 +1,49 @@
+const EPHEMERAL_HOST = /trycloudflare\.com|ngrok|loca\.lt/i;
+
+function stripSlash(u: string): string {
+  return u.replace(/\/$/, "");
+}
+
+function isEphemeralHost(u: string): boolean {
+  try {
+    return EPHEMERAL_HOST.test(new URL(u).hostname);
+  } catch {
+    return EPHEMERAL_HOST.test(u);
+  }
+}
+
+/** Sitio público canónico (Vercel / holatia.app). No es el túnel del API. */
+export function getPublicSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit && !isEphemeralHost(explicit)) return stripSlash(explicit);
+  if (process.env.VERCEL) return "https://holatia.app";
+  if (process.env.NODE_ENV !== "production") {
+    return "http://localhost:3003";
+  }
+  return "https://holatia.app";
+}
+
 /** Base URL del backend API (sin slash final) */
 export function getApiBase(): string {
   const u = process.env.NEXT_PUBLIC_API_URL?.trim();
-  if (u) return u.replace(/\/$/, "");
+  if (u) return stripSlash(u);
   return "http://localhost:3000";
 }
 
-/** URL pública donde están montados Blinks (GET actions, etc.) */
+/**
+ * Base pública de Solana Actions (GET / unfurl Dialect).
+ * Siempre holatia.app en prod — nunca trycloudflare.
+ */
 export function getBlinksBase(): string {
   const u = process.env.NEXT_PUBLIC_BLINKS_BASE_URL?.trim();
-  if (u) return u.replace(/\/$/, "");
-  return getApiBase();
+  if (u && !isEphemeralHost(u)) return stripSlash(u);
+  return getPublicSiteUrl();
+}
+
+/** Action HTTPS canónica del MVP (criterio 2). */
+export function getCanonicalActionUrl(path: string): string {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${getBlinksBase()}${p}`;
 }
 
 /** Dígitos del bot WhatsApp (mismo número Baileys / soporte). */

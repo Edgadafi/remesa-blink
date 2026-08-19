@@ -11,7 +11,7 @@ function getFrontendPublicUrl(): string {
   const raw =
     process.env.FRONTEND_PUBLIC_URL?.trim() ||
     process.env.CORS_ORIGIN?.split(",")[0]?.trim() ||
-    "https://frontend-bay-phi-92.vercel.app";
+    "https://holatia.app";
   return raw.replace(/\/$/, "");
 }
 

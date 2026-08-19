@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { DeferredWallet } from "@/components/DeferredWallet";
 import { LangSwitch } from "@/components/LangSwitch";
 import { useLocale } from "@/components/LocaleProvider";
-import { RemesaBlinkIsotype } from "@/components/RemesaBlinkIsotype";
+import { HolatiaMark } from "@/components/HolatiaMark";
 
 function isActivePath(href: string, pathname: string): boolean {
   if (href === "/") return pathname === "/";
@@ -26,9 +26,12 @@ export function Nav() {
 
   return (
     <header className="site-header">
-      <Link href="/" className="site-logo">
-        <RemesaBlinkIsotype className="site-logo-mark" />
-        <span className="site-logo-word">Remesa Blink</span>
+      <Link href="/" className="site-logo" aria-label={t.logoAlt}>
+        <HolatiaMark className="site-logo-mark" />
+        <span className="site-logo-word">
+          <span className="site-logo-hola">hola</span>
+          <span className="site-logo-tia">tia</span>
+        </span>
       </Link>
       <nav className="site-nav" aria-label={t.navAria}>
         {links.map(({ href, label, primary }) => {

@@ -33,7 +33,7 @@ const displayFontStyle = {
 } as CSSProperties;
 
 export const metadata: Metadata = {
-  title: "Remesa Blink — Envía a tu familia",
+  title: "holatia — Send dollars, recibe pesos",
   description:
     "Programa remesas a México. Tu familia recibe el aviso por WhatsApp. Send dollars, recibe pesos más cerca de tu familia.",
 };

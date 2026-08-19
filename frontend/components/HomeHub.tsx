@@ -4,27 +4,28 @@ import Link from "next/link";
 import { useLocale } from "@/components/LocaleProvider";
 
 type Props = {
-  blinkBase: string;
+  siteBase: string;
+  apiBase: string;
 };
 
-export function HomeHub({ blinkBase }: Props) {
+export function HomeHub({ siteBase, apiBase }: Props) {
   const { t } = useLocale();
   const wrap = (u: string) => `/blink?url=${encodeURIComponent(u)}`;
 
   const blinkLinks = [
-    { href: wrap(`${blinkBase}/api/actions/remesa`), label: t.blinkSolLabel, desc: t.blinkSolDesc },
+    { href: wrap(`${apiBase}/api/actions/remesa`), label: t.blinkSolLabel, desc: t.blinkSolDesc },
     {
-      href: wrap(`${blinkBase}/api/actions/enviar-remesa-usdc`),
+      href: wrap(`${siteBase}/api/actions/enviar-remesa-usdc`),
       label: t.blinkUsdcLabel,
       desc: t.blinkUsdcDesc,
     },
     {
-      href: wrap(`${blinkBase}/api/actions/convertir-mxn`),
+      href: wrap(`${apiBase}/api/actions/convertir-mxn`),
       label: t.blinkMxnLabel,
       desc: t.blinkMxnDesc,
     },
     {
-      href: wrap(`${blinkBase}/api/actions/onboarding-mxn`),
+      href: wrap(`${apiBase}/api/actions/onboarding-mxn`),
       label: t.blinkOnboardLabel,
       desc: t.blinkOnboardDesc,
     },

@@ -5,6 +5,7 @@ import { LangSwitch } from "@/components/LangSwitch";
 import { useLocale } from "@/components/LocaleProvider";
 import { EmpezarArt } from "@/components/empezar/EmpezarArt";
 import { WhatsAppStartQr } from "@/components/WhatsAppStartQr";
+import { BlinkPreview } from "@/components/BlinkPreview";
 import { MVP_ACTION_PATH, MVP_CLUSTER, MVP_PROGRAM_ID } from "@/lib/mvp-demo";
 import "@/app/empezar/empezar.css";
 
@@ -51,19 +52,12 @@ export function DemoView({
             <p className="demo-cta-hint">{t.demoQrMissing}</p>
           )}
 
-          <div className="demo-cta-row demo-cta-row--secondary">
-            <a
-              className="demo-cta-secondary"
-              href={dialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.demoBlinkOpen}
-            </a>
-            <a className="demo-cta-secondary" href={localUrl}>
-              {t.demoBlinkHere}
-            </a>
-          </div>
+          <BlinkPreview
+            actionUrl={actionUrl}
+            localUrl={localUrl}
+            inspectorUrl={inspectorUrl}
+            variant="hero"
+          />
           <p className="demo-cta-hint">{t.demoHint}</p>
         </div>
       </section>
@@ -94,6 +88,10 @@ export function DemoView({
         <div className="demo-links">
           <a href={inspectorUrl} target="_blank" rel="noopener noreferrer">
             {t.demoInspector}
+          </a>
+          <a href={localUrl}>{t.demoBlinkHere}</a>
+          <a href={dialUrl} target="_blank" rel="noopener noreferrer">
+            {t.demoBlinkOpen}
           </a>
           <a href={txUrl} target="_blank" rel="noopener noreferrer">
             {t.demoExplorer}

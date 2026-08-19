@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DemoView } from "@/components/DemoView";
-import { getBlinksBase, getWaBotStartUrl } from "@/lib/config";
+import { getCanonicalActionUrl, getWaBotStartUrl } from "@/lib/config";
 import { toQrDataUrl } from "@/lib/qr";
 import {
   MVP_ACTION_PATH,
@@ -24,8 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DemoMvpPage() {
-  const blinkBase = getBlinksBase();
-  const actionUrl = `${blinkBase}${MVP_ACTION_PATH.startsWith("/") ? "" : "/"}${MVP_ACTION_PATH}`;
+  const actionUrl = getCanonicalActionUrl(MVP_ACTION_PATH);
   const dialUrl = dialToBlinkUrl(actionUrl);
   const inspectorUrl = blinksInspectorUrl(actionUrl);
   const localUrl = localBlinkPageUrl(actionUrl);
