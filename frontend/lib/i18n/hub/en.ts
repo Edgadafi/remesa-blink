@@ -98,6 +98,6 @@ export const en: HubMessages = {
   qrCaption: "Scan with your phone · WhatsApp opens with TIA",
   qrStep1: "1. Scan",
   qrStep2: "2. Send hola",
-  qrStep3: "3. Type enviar",
+  qrStep3: "3. Type enviar ahora or programar",
   qrFallback: "On this phone? Tap here",
 };

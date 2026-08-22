@@ -24,10 +24,11 @@ URL típica: `https://api.remesablink.com` → configurar en Vercel `NEXT_PUBLIC
    NEXT_PUBLIC_API_URL=https://<tu-backend>.railway.app
    NEXT_PUBLIC_WA_SUPPORT=5215665269591   # mismo número del bot Baileys (me.id)
    ```
-3. **Backend CORS:** en el API, `CORS_ORIGIN=https://<tu-app>.vercel.app,http://localhost:3003`
+3. **Backend CORS:** en el API, `CORS_ORIGIN=https://holatia.app,https://<tu-app>.vercel.app,http://localhost:3003`
 4. Deploy: `cd frontend && npx vercel --prod`
 
-**Producción actual:** https://frontend-bay-phi-92.vercel.app/piloto
+**Sitio canónico:** https://holatia.app/piloto  
+(Proyecto Vercel `frontend`; alias histórico `frontend-bay-phi-92.vercel.app`.)
 
 ---
 

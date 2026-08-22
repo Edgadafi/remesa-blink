@@ -11,9 +11,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const isPiloto = pathname?.startsWith("/piloto");
   const isDemo = pathname?.startsWith("/demo");
   const isEmpezar = pathname?.startsWith("/empezar");
+  const isIntro = pathname?.startsWith("/intro");
 
   /* Escenas full-bleed sin chrome del hub */
-  if (isPiloto || isDemo || isEmpezar) {
+  if (isPiloto || isDemo || isEmpezar || isIntro) {
     return <>{children}</>;
   }
 

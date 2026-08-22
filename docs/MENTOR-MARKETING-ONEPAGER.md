@@ -34,8 +34,9 @@ Cada mes: cola en OXXO / Western Union, comisión 4–7%, INE, y una mamá rural
 3. Blink → Recibir pesos (sandbox)  
 Detalle: [PITCH-TRUST-LAYER.md](./PITCH-TRUST-LAYER.md) · [DEMO.md](../DEMO.md)
 
-- Landing: [frontend-bay-phi-92.vercel.app/piloto](https://frontend-bay-phi-92.vercel.app/piloto)
-- Backup web: `/nueva-remesa`
+- Landing: [holatia.app/piloto](https://holatia.app/piloto)
+- Backup web: [holatia.app/nueva-remesa](https://holatia.app/nueva-remesa)
+- Distribución (L1–L2 primero): [DISTRIBUTION-STACK.md](./DISTRIBUTION-STACK.md)
 
 ## Checklist inversionista (honesto)
 

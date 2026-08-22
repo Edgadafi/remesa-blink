@@ -272,6 +272,38 @@ async function etherfuseFetch<T>(
 }
 
 /**
+ * Estimado MXN al retirar (Etherfuse sandbox/prod). Null si API no disponible.
+ */
+export async function estimateOfframpMxn(
+  usdcAmount: number
+): Promise<{ destinationMxn: number; exchangeRate: number } | null> {
+  if (!API_KEY || !Number.isFinite(usdcAmount) || usdcAmount <= 0) {
+    return null;
+  }
+  try {
+    const quote = await createQuote(
+      ETHERFUSE_DEMO_CUSTOMER_ID,
+      usdcAmount.toFixed(2)
+    );
+    const destinationMxn = parseFloat(quote.destinationAmount);
+    const exchangeRate = parseFloat(quote.exchangeRate);
+    if (!Number.isFinite(destinationMxn) || destinationMxn <= 0) {
+      return null;
+    }
+    return {
+      destinationMxn,
+      exchangeRate: Number.isFinite(exchangeRate) ? exchangeRate : 0,
+    };
+  } catch (err) {
+    console.warn(
+      "[etherfuse] quote estimate:",
+      err instanceof Error ? err.message : err
+    );
+    return null;
+  }
+}
+
+/**
  * Crear quote para off-ramp USDC → MXN
  */
 export async function createQuote(

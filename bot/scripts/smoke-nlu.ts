@@ -1,18 +1,26 @@
 /**
- * Smoke NLU / copy P0.5 — one-shot enviar + orden confirmada.
+ * Smoke NLU / copy P0.5–P0.6 — one-shot enviar + fluidez coloquial.
  * Uso: npx tsx scripts/smoke-nlu.ts
  */
 import assert from "node:assert/strict";
 import {
+  buildAyuda,
+  buildFrecuenciaQuincena,
   buildRecurrentePending,
   buildSuscripcionConfirmada,
   buildMontoNoCambiable,
   buildWalletProgramaRechazada,
+  formatMxnEstimateLine,
 } from "../src/copy.js";
 import {
+  detectIntent,
   isBlockedSolanaAddress,
+  isMainMenuDigit,
+  looksLikeMontoOnly,
   looksLikeSolanaAddress,
+  mentionsQuincena,
   parseEnviarOneshoot,
+  parseModoEnvio,
 } from "../src/nlu.js";
 import { nextEnviarStep } from "../src/session.js";
 
@@ -136,6 +144,121 @@ check("rechaza program id como wallet", () => {
   assert.equal(isBlockedSolanaAddress(pid), true);
   assert.equal(looksLikeSolanaAddress(pid), false);
   assert.match(buildWalletProgramaRechazada(), /sistema/i);
+});
+
+console.log("\n=== P0.6 fluidez NLU ===");
+
+check("detectIntent: mandarle / giro / que onda", () => {
+  assert.equal(detectIntent("mandarle 300"), "enviar");
+  assert.equal(detectIntent("quiero hacer un giro"), "enviar");
+  assert.equal(detectIntent("que onda"), "ayuda");
+  assert.equal(detectIntent("envair 200"), "enviar");
+});
+
+check("detectIntent: mis mandados / ya salio", () => {
+  assert.equal(detectIntent("mis mandados"), "mis_envios");
+  assert.equal(detectIntent("ya salio mi remesa?"), "mis_envios");
+});
+
+check("detectIntent: soporte sin falso positivo problema", () => {
+  assert.equal(detectIntent("tengo un problema con mi banco"), "unknown");
+  assert.equal(detectIntent("soporte"), "soporte");
+  assert.equal(detectIntent("no me llego el aviso"), "soporte");
+});
+
+check("looksLikeMontoOnly: 300 y $200", () => {
+  assert.equal(looksLikeMontoOnly("300"), true);
+  assert.equal(looksLikeMontoOnly("$200"), true);
+  assert.equal(looksLikeMontoOnly("hola 300"), false);
+});
+
+check("mentionsQuincena", () => {
+  assert.equal(mentionsQuincena("cada quincena"), true);
+  assert.equal(mentionsQuincena("cada mes"), false);
+  assert.match(buildFrecuenciaQuincena(), /piloto/i);
+});
+
+check("parse: pa mi vieja / para la jefa", () => {
+  const p1 = parseEnviarOneshoot("manda 500 pa mi vieja");
+  assert.equal(p1.monto, 500);
+  assert.match(p1.nombre_contacto ?? "", /mi vieja/i);
+  const p2 = parseEnviarOneshoot("enviar 100 para la jefa cada mes");
+  assert.equal(p2.monto, 100);
+  assert.match(p2.nombre_contacto ?? "", /la jefa/i);
+  assert.equal(p2.frecuencia, "mensual");
+});
+
+check("buildAyuda menciona TIA y enviar ahora", () => {
+  assert.match(buildAyuda(), /TIA/);
+  assert.match(buildAyuda(), /enviar ahora/i);
+  assert.match(buildAyuda(), /programar/i);
+  assert.doesNotMatch(buildAyuda(), /Remesa Blink/);
+});
+
+console.log("\n=== P0.7 enviar ahora vs programar ===");
+
+check("detectIntent: enviar ahora / programar / menu numeros", () => {
+  assert.equal(detectIntent("enviar ahora"), "enviar_inmediato");
+  assert.equal(detectIntent("programar"), "programar");
+  assert.equal(detectIntent("1"), "enviar_inmediato");
+  assert.equal(detectIntent("2"), "programar");
+  assert.equal(detectIntent("3"), "mis_envios");
+  assert.equal(detectIntent("mandarle 300"), "enviar");
+});
+
+check("menu digit 1 no es monto $1", () => {
+  assert.equal(isMainMenuDigit("1"), true);
+  assert.equal(isMainMenuDigit("50"), false);
+  assert.equal(looksLikeMontoOnly("1"), false);
+  assert.equal(parseEnviarOneshoot("1").monto, undefined);
+  assert.equal(
+    nextEnviarStep({
+      tipo_activo: "USDC",
+      modo_envio: "inmediato",
+    }),
+    "enviar_monto"
+  );
+});
+
+check("parseModoEnvio", () => {
+  assert.equal(parseModoEnvio("1"), "inmediato");
+  assert.equal(parseModoEnvio("programar"), "programar");
+  assert.equal(parseModoEnvio("inmediato"), "inmediato");
+});
+
+check("nextEnviarStep salta frecuencia en inmediato", () => {
+  assert.equal(
+    nextEnviarStep({
+      tipo_activo: "USDC",
+      modo_envio: "inmediato",
+      monto: 300,
+    }),
+    "enviar_nombre"
+  );
+});
+
+console.log("\n=== P0.8 FX estimado MXN ===");
+
+check("formatMxnEstimateLine + confirmación USDC", () => {
+  const line = formatMxnEstimateLine(850);
+  assert.match(line ?? "", /MXN estimados/i);
+  assert.match(line ?? "", /puede variar/i);
+  const pending = buildRecurrentePending({
+    monto: 50,
+    tipo_activo: "USDC",
+    frecuencia: "mensual",
+    mxn_estimated: 900,
+    envio_inmediato: true,
+  });
+  assert.match(pending, /900/);
+  const ok = buildSuscripcionConfirmada({
+    monto: 50,
+    tipo_activo: "USDC",
+    frecuencia: "mensual",
+    destinatario_wa: "5215559607277",
+    mxn_estimated: 900,
+  });
+  assert.match(ok, /estimados al retirar/i);
 });
 
 console.log("=== all smoke passed ===");

@@ -32,7 +32,7 @@ export function NavEnviarMenu() {
   const rootRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
 
-  const inmediatoHref = getWaBotStartUrl("enviar") ?? "/empezar";
+  const inmediatoHref = getWaBotStartUrl("enviar ahora") ?? "/empezar";
   const inmediatoExternal = inmediatoHref.startsWith("http");
   const programarHref = "/nueva-remesa";
   const programarCurrent = pathname === programarHref;

@@ -9,6 +9,7 @@ import {
   getCustomerBankAccounts,
   parseOrgFrom409Error,
   mapEtherfuseError,
+  estimateOfframpMxn,
 } from "../services/etherfuse.js";
 import { z } from "zod";
 
@@ -178,6 +179,31 @@ router.post("/onboarding-url", async (req, res) => {
       error: mapEtherfuseError(err),
     });
   }
+});
+
+/**
+ * GET /api/etherfuse/quote-estimate?amount=50
+ * Estimado USDC → MXN (Demo Day / bot confirmación). No es tipo de cambio garantizado.
+ */
+router.get("/quote-estimate", async (req, res) => {
+  const amount = parseFloat(String(req.query.amount ?? ""));
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return res.status(400).json({ error: "amount positivo requerido (USDC)" });
+  }
+  const est = await estimateOfframpMxn(amount);
+  if (!est) {
+    return res.status(503).json({
+      error: "Estimado no disponible (Etherfuse / API key)",
+      estimate: null,
+    });
+  }
+  res.json({
+    usdc: amount,
+    mxn_estimated: est.destinationMxn,
+    exchange_rate: est.exchangeRate,
+    disclaimer:
+      "Estimado al retirar en app de dinero; puede variar al confirmar.",
+  });
 });
 
 export default router;

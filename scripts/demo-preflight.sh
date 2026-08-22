@@ -56,7 +56,16 @@ else
 fi
 echo
 
-echo "[4] URLs demo (recordatorio)"
+echo "[4] FX quote-estimate (USDC → MXN, opcional)"
+if BODY="$(curl -sf -m 10 "$API/api/etherfuse/quote-estimate?amount=50" 2>/dev/null)"; then
+  ok "quote-estimate"
+  echo "     $BODY"
+else
+  warn "quote-estimate no disponible — revisa ETHERFUSE_API_KEY en backend/.env"
+fi
+echo
+
+echo "[5] URLs demo (recordatorio)"
 echo "     Piloto:  https://frontend-bay-phi-92.vercel.app/piloto"
 echo "     Hub:     https://frontend-bay-phi-92.vercel.app/"
 echo "     Local:   http://localhost:3003"

@@ -10,8 +10,11 @@
 
 1. Abre el chat de WhatsApp del bot Remesa Blink (número del piloto).
 2. Escribe **ayuda** (o saluda) para ver el menú.
-3. Comandos útiles: **enviar** · **mis envíos** · **recompensas** (Club TIA) · **canjear** · **soporte** · **cancelar**  
-   Niveles: ver [PROGRAMA-LEALTAD-CLUB-TIA.md](./PROGRAMA-LEALTAD-CLUB-TIA.md).
+3. Menú TIA (escribe **ayuda** o un número):
+   - **1** · **enviar ahora** — un envío hoy (primer pago al confirmar)
+   - **2** · **programar** — remesa recurrente (semana / mes / quincena)
+   - **3** · **mis envíos** · **4** · **recompensas** (Club TIA) · **5** · **soporte**
+   - En cualquier momento: **cancelar** para salir del flujo
 
 Soporte: escribe *soporte* en el **mismo chat** del bot (menú de motivos). Email: `remesatia@gmail.com`.
 
@@ -21,7 +24,18 @@ Soporte: escribe *soporte* en el **mismo chat** del bot (menú de motivos). Emai
 
 Ensayo remitente → destinatario en México.
 
-### Opción A — one-shot (recomendado)
+### Opción A — enviar ahora (Demo Day)
+
+| Paso | Usuario escribe | Bot responde (resumen) |
+|------|-----------------|-------------------------|
+| 1 | `1` o `enviar ahora` | Pide monto |
+| 2 | `2000` o `Enviar 2000 a mi mujer` | Confirma monto; **salta frecuencia** → pide WhatsApp |
+| 3 | `5215559607277` | Pide wallet Solana |
+| 4 | Wallet | Primer pago **hoy** → **Orden confirmada** (aviso WA cuando keeper pague) |
+
+> Piloto: si solo quieres **un envío** sin repetir, confirma con soporte después — on-chain queda suscripción mensual placeholder.
+
+### Opción B — one-shot con frecuencia en la frase
 
 | Paso | Usuario escribe | Bot responde (resumen) |
 |------|-----------------|-------------------------|
@@ -30,11 +44,11 @@ Ensayo remitente → destinatario en México.
 | 3 | `5215559607277` | Pide código app de dinero |
 | 4 | Wallet Solana | “Programando… → *mi mujer*” → **Orden confirmada** |
 
-### Opción B — paso a paso
+### Opción C — programar paso a paso
 
 | Paso | Usuario escribe | Bot responde (resumen) |
 |------|-----------------|-------------------------|
-| 1 | `Enviar` | Pide monto (ej. *300* o frase completa) |
+| 1 | `2` o `programar` | Pide monto (ej. *300* o frase completa) |
 | 2 | `1000` | Confirma monto; pide frecuencia |
 | 3 | `Cada mes` | Pide **a quién** (nombre / apodo) |
 | 4 | `mi amor` | Pide WhatsApp (con lada) |

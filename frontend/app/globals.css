@@ -915,3 +915,5 @@ code {
 .site-footer a {
   color: var(--gold);
 }
+
+@tailwind utilities;

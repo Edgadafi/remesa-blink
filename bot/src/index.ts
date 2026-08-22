@@ -23,6 +23,7 @@ import {
   buildAyuda,
   buildAyudaEnFlujo,
   buildCancelado,
+  buildEnviarModoPicker,
   buildEnviarAskFamilia,
   buildEnviarAskFrecuencia,
   buildEnviarAskMonto,
@@ -30,6 +31,7 @@ import {
   buildEnviarAskWallet,
   buildEnviarUnderstood,
   buildFrecuenciaInvalida,
+  buildFrecuenciaQuincena,
   buildHistorialPagosLista,
   buildHistorialPagosVacio,
   buildMisRemesasLista,
@@ -59,8 +61,12 @@ import {
 } from "./copy.js";
 import {
   detectIntent,
+  isMainMenuDigit,
   isBlockedSolanaAddress,
+  looksLikeMontoOnly,
   looksLikeSolanaAddress,
+  mentionsQuincena,
+  parseModoEnvio,
   parseEnviarOneshoot,
   parseFrecuencia,
   parseMonto,
@@ -77,6 +83,7 @@ import {
   setStep,
   startEnviar,
   type EnviarDraft,
+  type ModoEnvio,
 } from "./session.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -233,6 +240,24 @@ function formatApiError(err: unknown): string {
     return "Algo falló al programar. Escribe *enviar* de nuevo o *soporte*.";
   }
   return raw;
+}
+
+/** Estimado MXN vía Etherfuse (solo USDC). Null si API no responde. */
+async function fetchMxnEstimate(
+  monto: number,
+  tipo_activo: "SOL" | "USDC"
+): Promise<number | null> {
+  if (tipo_activo !== "USDC" || monto <= 0) return null;
+  try {
+    const res = await axios.get(`${API_BASE}/api/etherfuse/quote-estimate`, {
+      params: { amount: monto },
+      timeout: 6000,
+    });
+    const mxn = Number(res.data?.mxn_estimated);
+    return Number.isFinite(mxn) && mxn > 0 ? mxn : null;
+  } catch {
+    return null;
+  }
 }
 
 function formatMontoSuscripcion(s: {
@@ -438,6 +463,7 @@ async function crearSuscripcion(
     destinatario_wa: string;
     wallet: string;
     nombre_contacto?: string;
+    envio_inmediato?: boolean;
   }
 ) {
   // Prefetch: same wallet already active with a different monto → honest UPFRONT
@@ -481,12 +507,16 @@ async function crearSuscripcion(
     // If list fails, continue — API response still drives confirmation copy.
   }
 
+  const mxnEstimated = await fetchMxnEstimate(params.monto, params.tipo_activo);
+
   await send(
     buildRecurrentePending({
       monto: params.monto,
       tipo_activo: params.tipo_activo,
       frecuencia: params.frecuencia,
       nombre_contacto: params.nombre_contacto,
+      envio_inmediato: params.envio_inmediato,
+      mxn_estimated: mxnEstimated,
     })
   );
   try {
@@ -497,6 +527,7 @@ async function crearSuscripcion(
       tipo_activo: params.tipo_activo,
       monto: params.monto,
       frecuencia: params.frecuencia,
+      ...(params.envio_inmediato ? { primer_pago_inmediato: true } : {}),
       ...(params.nombre_contacto
         ? { nombre_contacto: params.nombre_contacto }
         : {}),
@@ -551,6 +582,8 @@ async function crearSuscripcion(
         txSignature: txSig,
         explorerUrl,
         reused,
+        envio_inmediato: params.envio_inmediato,
+        mxn_estimated: mxnEstimated,
       })
     );
   } catch (err: unknown) {
@@ -654,8 +687,11 @@ function promptForEnviarStep(
       frecuencia: draft.frecuencia ?? parsed?.frecuencia,
     }) ?? "";
 
+  if (step === "enviar_modo") {
+    return buildEnviarModoPicker();
+  }
   if (step === "enviar_monto") {
-    return buildEnviarAskMonto();
+    return buildEnviarAskMonto(draft.modo_envio);
   }
   if (step === "enviar_frecuencia") {
     const monto = draft.monto!;
@@ -667,7 +703,7 @@ function promptForEnviarStep(
   }
   if (step === "enviar_nombre") {
     // Si ya confirmamos monto/freq arriba, no repetir solo el ask nombre
-    if (draft.monto != null && draft.frecuencia) {
+    if (draft.monto != null && (draft.frecuencia || draft.modo_envio === "inmediato")) {
       return (
         (understood ? `${understood}\n\n` : "") +
         buildEnviarAskNombre().replace(/^Va:.*\n\n/, "")
@@ -687,6 +723,48 @@ function promptForEnviarStep(
     return buildEnviarAskWallet(draft.nombre_contacto);
   }
   return buildEnviarAskMonto();
+}
+
+/** Inicia flujo enviar; si falta modo y frecuencia → paso enviar_modo. */
+function beginEnviarFlow(
+  wa: string,
+  parsed: EnviarParsed,
+  modo?: ModoEnvio
+) {
+  if (modo) {
+    return startEnviar(wa, {
+      tipo_activo: parsed.tipo_activo,
+      modo_envio: modo,
+      ...(parsed.monto != null ? { monto: parsed.monto } : {}),
+      ...(parsed.frecuencia ? { frecuencia: parsed.frecuencia } : {}),
+      ...(parsed.nombre_contacto
+        ? { nombre_contacto: parsed.nombre_contacto }
+        : {}),
+    });
+  }
+  if (parsed.frecuencia) {
+    return startEnviar(wa, {
+      tipo_activo: parsed.tipo_activo,
+      modo_envio: "programar",
+      ...(parsed.monto != null ? { monto: parsed.monto } : {}),
+      frecuencia: parsed.frecuencia,
+      ...(parsed.nombre_contacto
+        ? { nombre_contacto: parsed.nombre_contacto }
+        : {}),
+    });
+  }
+  return setStep(wa, "enviar_modo", {
+    tipo_activo: parsed.tipo_activo,
+    ...(parsed.monto != null ? { monto: parsed.monto } : {}),
+    ...(parsed.nombre_contacto
+      ? { nombre_contacto: parsed.nombre_contacto }
+      : {}),
+  });
+}
+
+function frecuenciaParaApi(draft: EnviarDraft): "diario" | "semanal" | "mensual" {
+  if (draft.modo_envio === "inmediato") return "mensual";
+  return draft.frecuencia ?? "mensual";
 }
 
 async function handleEnviarFlow(
@@ -724,6 +802,20 @@ async function handleEnviarFlow(
     return true;
   }
 
+  if (session.step === "enviar_modo") {
+    const modo = parseModoEnvio(text);
+    if (!modo) {
+      await send(buildEnviarModoPicker());
+      return true;
+    }
+    const patch: Partial<EnviarDraft> = { modo_envio: modo };
+    const draft = { ...session.draft, ...patch };
+    const next = nextEnviarStep(draft);
+    setStep(wa, next, patch);
+    await send(promptForEnviarStep(next, draft));
+    return true;
+  }
+
   if (session.step === "enviar_monto") {
     // Permite “2000 a mi mujer cada mes” también en el paso de monto
     const oneshot = parseEnviarOneshoot(text);
@@ -736,7 +828,9 @@ async function handleEnviarFlow(
     const patch: Partial<EnviarDraft> = {
       monto,
       tipo_activo: tipo,
-      ...(oneshot.frecuencia ? { frecuencia: oneshot.frecuencia } : {}),
+      ...(oneshot.frecuencia
+        ? { frecuencia: oneshot.frecuencia, modo_envio: "programar" as const }
+        : {}),
       ...(oneshot.nombre_contacto
         ? { nombre_contacto: oneshot.nombre_contacto }
         : {}),
@@ -749,6 +843,10 @@ async function handleEnviarFlow(
   }
 
   if (session.step === "enviar_frecuencia") {
+    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
+      await send(buildFrecuenciaQuincena());
+      return true;
+    }
     const freq = parseFrecuencia(text);
     if (!freq) {
       await send(buildFrecuenciaInvalida());
@@ -810,17 +908,23 @@ async function handleEnviarFlow(
     }
     const draft = getSession(wa).draft;
     clearSession(wa);
-    if (!draft.monto || !draft.frecuencia || !draft.destinatario_wa) {
-      await send(buildSuscripcionError("Faltaron datos. Escribe *enviar* para empezar de nuevo."));
+    if (!draft.monto || !draft.destinatario_wa) {
+      await send(buildSuscripcionError("Faltaron datos. Escribe *enviar ahora* o *programar* para empezar de nuevo."));
       return true;
     }
+    if (draft.modo_envio !== "inmediato" && !draft.frecuencia) {
+      await send(buildSuscripcionError("Faltó la frecuencia. Escribe *programar* para empezar de nuevo."));
+      return true;
+    }
+    const envioInmediato = draft.modo_envio === "inmediato";
     await crearSuscripcion(send, wa, {
       monto: draft.monto,
       tipo_activo: draft.tipo_activo,
-      frecuencia: draft.frecuencia,
+      frecuencia: frecuenciaParaApi(draft),
       destinatario_wa: draft.destinatario_wa,
       wallet: text.trim(),
       nombre_contacto: draft.nombre_contacto,
+      envio_inmediato: envioInmediato,
     });
     return true;
   }
@@ -879,6 +983,8 @@ async function handleSoporteFlow(
   }
 
   if (
+    intent === "enviar_inmediato" ||
+    intent === "programar" ||
     intent === "enviar" ||
     intent === "mis_envios" ||
     intent === "recompensas" ||
@@ -923,16 +1029,31 @@ async function handleCommand(
     return;
   }
 
-  if (intent === "enviar") {
+  if (intent === "enviar_inmediato") {
     const parsed = parseEnviarOneshoot(text);
-    const session = startEnviar(wa, {
-      tipo_activo: parsed.tipo_activo,
-      ...(parsed.monto != null ? { monto: parsed.monto } : {}),
-      ...(parsed.frecuencia ? { frecuencia: parsed.frecuencia } : {}),
-      ...(parsed.nombre_contacto
-        ? { nombre_contacto: parsed.nombre_contacto }
-        : {}),
-    });
+    const session = beginEnviarFlow(wa, parsed, "inmediato");
+    await send(promptForEnviarStep(session.step, session.draft, parsed));
+    return;
+  }
+
+  if (intent === "programar") {
+    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
+      await send(buildFrecuenciaQuincena());
+      return;
+    }
+    const parsed = parseEnviarOneshoot(text);
+    const session = beginEnviarFlow(wa, parsed, "programar");
+    await send(promptForEnviarStep(session.step, session.draft, parsed));
+    return;
+  }
+
+  if (intent === "enviar") {
+    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
+      await send(buildFrecuenciaQuincena());
+      return;
+    }
+    const parsed = parseEnviarOneshoot(text);
+    const session = beginEnviarFlow(wa, parsed);
     await send(promptForEnviarStep(session.step, session.draft, parsed));
     return;
   }
@@ -1062,6 +1183,18 @@ async function handleCommand(
   }
 
   if (text.trim().length > 0 && !fromMe) {
+    if (getSession(wa).step === "idle" && looksLikeMontoOnly(text)) {
+      const monto = parseMonto(text)!;
+      const session = setStep(wa, "enviar_modo", {
+        tipo_activo: parseTipoActivo(text),
+        monto,
+      });
+      await send(
+        `Va: *$${Number.isInteger(monto) ? monto : monto.toFixed(2)}*.\n\n` +
+          buildEnviarModoPicker()
+      );
+      return;
+    }
     await send(buildNoEntendi());
   }
 }

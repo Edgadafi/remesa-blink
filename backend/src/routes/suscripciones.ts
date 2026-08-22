@@ -43,6 +43,7 @@ const crearSchema = z.object({
   tipo_activo: z.enum(["SOL", "USDC"]).optional().default("SOL"),
   nombre_contacto: z.string().trim().min(1).max(40).optional().nullable(),
   usuario_remitente_solana: z.string().min(32).max(44).optional(),
+  primer_pago_inmediato: z.boolean().optional(),
 });
 
 router.post("/", async (req, res) => {
@@ -59,6 +60,11 @@ router.post("/", async (req, res) => {
       });
     }
     const suscripcion = await crearSuscripcion(parsed.data);
+    if (parsed.data.primer_pago_inmediato) {
+      import("../keeper/cron.js")
+        .then(({ ejecutarPagos }) => ejecutarPagos())
+        .catch((err) => console.error("keeper post-inmediato:", err));
+    }
     res.status(201).json(suscripcion);
   } catch (err) {
     console.error("Error crear suscripcion:", err);

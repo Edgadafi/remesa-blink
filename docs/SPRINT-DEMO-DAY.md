@@ -30,6 +30,7 @@ Fuera de scope explícito hasta Demo Day: mainnet, paymasters/yield/crédito en 
 |------------|-----|--------|
 | **Phone path `convertir-mxn`** — wallet demo `g33Qc6g…` (no `5Hop…`) + T&Cs + BXTou3 | Day 1 | [OFFRAMP § Ensayo](./OFFRAMP-DEMO-DAY.md#ensayo-phone--checklist-hoy-2026-07-30) |
 | Checklist E2E: `npm run demo:preflight` + opcional `keeper:run-once` | Cada demo | Preferir local sobre `trycloudflare` |
+| **Menú enviar ahora / programar (P0.7)** | Esta semana | Bot + web alineados; `npm run smoke:nlu` en `bot/` |
 | Registrar **≥1 familia** en `usuarios_piloto` | Esta semana | [PERSONA-MX-US.md](./PERSONA-MX-US.md) |
 | Guion &lt;60 s ensayado + backup web | Continuo | [DEMO.md](../DEMO.md) |
 
@@ -38,7 +39,7 @@ Fuera de scope explícito hasta Demo Day: mainnet, paymasters/yield/crédito en 
 | Entregable | Due | Notas |
 |------------|-----|--------|
 | Host API estable (vs quick tunnel) | Pre Demo Day | `remesablink.com` pendiente |
-| Guion 3 min NLU `enviar … a mi amor` | Continuo | [DEMO.md](../DEMO.md) |
+| Guion 3 min NLU `enviar … a mi amor` + **enviar ahora / programar** | Continuo | [DEMO.md](../DEMO.md) · [UX-BOT-MEJORAS.md](./UX-BOT-MEJORAS.md) |
 | Keeper saldo + smoke | Continuo | `keeper:smoke` |
 
 ## P2 — evidencia y polish
@@ -55,7 +56,7 @@ Fuera de scope explícito hasta Demo Day: mainnet, paymasters/yield/crédito en 
 
 - [ ] ≥1 familia piloto real registrada
 - [ ] E2E SOL estable (suscripción → keeper → Receipt / Blink)
-- [ ] WA `enviar` **o** web `/nueva-remesa` ensayados &lt; 24 h antes
+- [ ] WA **enviar ahora** / **programar** **o** web `/nueva-remesa` ensayados &lt; 24 h antes
 - [ ] API alcanzable sin túnel **o** plan B documentado
 - [ ] Guion &lt; 60 s (ideal) / 3 min &lt; 3:15
 - [ ] Off-ramp: T&Cs wallet demo + runbook BXTou3 (o plan B status page)

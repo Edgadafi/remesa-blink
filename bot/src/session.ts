@@ -4,6 +4,7 @@
 
 export type FlowStep =
   | "idle"
+  | "enviar_modo"
   | "enviar_monto"
   | "enviar_frecuencia"
   | "enviar_nombre"
@@ -11,9 +12,13 @@ export type FlowStep =
   | "enviar_wallet"
   | "soporte_motivo";
 
+export type ModoEnvio = "inmediato" | "programar";
+
 export type EnviarDraft = {
   monto?: number;
   tipo_activo: "SOL" | "USDC";
+  /** inmediato = envío hoy (salta frecuencia); programar = recurrente. */
+  modo_envio?: ModoEnvio;
   frecuencia?: "diario" | "semanal" | "mensual";
   nombre_contacto?: string;
   destinatario_wa?: string;
@@ -61,7 +66,9 @@ export function getSession(wa: string): Session {
 /** Primer paso faltante según borrador (one-shot puede saltar pasos). */
 export function nextEnviarStep(draft: EnviarDraft): FlowStep {
   if (draft.monto == null) return "enviar_monto";
-  if (!draft.frecuencia) return "enviar_frecuencia";
+  if (draft.modo_envio !== "inmediato" && !draft.frecuencia) {
+    return "enviar_frecuencia";
+  }
   if (!draft.nombre_contacto?.trim()) return "enviar_nombre";
   if (!draft.destinatario_wa) return "enviar_familia";
   if (!draft.wallet) return "enviar_wallet";

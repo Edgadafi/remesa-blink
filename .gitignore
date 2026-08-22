@@ -1,7 +1,8 @@
 # Environment - nunca subir claves
 .env
 .env.local
-.env.*.local
+.devnet-test-usdc-mint.json
+backend/.demo-wallets/
 
 # Dependencies
 node_modules

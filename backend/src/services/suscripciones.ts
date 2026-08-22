@@ -35,6 +35,8 @@ export interface NuevaSuscripcion {
   nombre_contacto?: string | null;
   /** Wallet del remitente real (composabilidad). Si omitido, usa keeper. */
   usuario_remitente_solana?: string;
+  /** Primer ciclo vencido ya — keeper puede pagar en seguida (envío hoy). */
+  primer_pago_inmediato?: boolean;
 }
 
 async function upsertSuscripcionDb(params: {
@@ -171,7 +173,9 @@ async function upsertSuscripcionDb(params: {
 export async function crearSuscripcion(data: NuevaSuscripcion) {
   const now = new Date();
   const intervalo = FRECUENCIA_MAP[data.frecuencia] || 86400;
-  const proximo_pago = addSeconds(now, intervalo);
+  const proximo_pago = data.primer_pago_inmediato
+    ? new Date(now.getTime() - 60_000)
+    : addSeconds(now, intervalo);
   const tipo_activo = data.tipo_activo || "SOL";
 
   const destinatario = new PublicKey(data.destinatario_solana);

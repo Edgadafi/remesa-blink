@@ -2,6 +2,8 @@
  * Copy WhatsApp — lenguaje natural para remitente migrante (UX-TRUST / PERSONA MX-US).
  */
 
+import type { ModoEnvio } from "./session.js";
+
 const SUPPORT_EMAIL = "remesatia@gmail.com";
 
 export function formatMontoDisplay(monto: number, tipoActivo: "SOL" | "USDC"): string {
@@ -11,6 +13,20 @@ export function formatMontoDisplay(monto: number, tipoActivo: "SOL" | "USDC"): s
   }
   const n = monto.toFixed(9).replace(/\.?0+$/, "");
   return `${n} SOL`;
+}
+
+/** Línea opcional de estimado MXN (off-ramp Etherfuse). No promete TC fijo. */
+export function formatMxnEstimateLine(mxnEstimated?: number | null): string | null {
+  if (mxnEstimated == null || !Number.isFinite(mxnEstimated) || mxnEstimated <= 0) {
+    return null;
+  }
+  const rounded = Math.round(mxnEstimated);
+  const formatted = new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    maximumFractionDigits: 0,
+  }).format(rounded);
+  return `~${formatted} MXN estimados al retirar (tipo de cambio puede variar).`;
 }
 
 export function labelFrecuencia(frecuencia: string): string {
@@ -45,21 +61,37 @@ export function formatDestinatarioLabel(
 
 export function buildAyuda(): string {
   return (
-    "*Remesa Blink — envía a tu familia*\n\n" +
-    "Habla como en el chat. Puedes escribir:\n\n" +
-    "1️⃣ *enviar* — programar remesa a México\n" +
-    "2️⃣ *mis envíos* — ver lo que ya tienes\n" +
-    "3️⃣ *recompensas* — saldo y referidos\n" +
-    "4️⃣ *soporte* — ayuda en este mismo chat\n\n" +
-    "Ejemplo: *enviar 2000 a mi mujer* — o solo *enviar* y te guío paso a paso.\n" +
-    "Sin filas en la tiendita: tu familia recibe aviso por WhatsApp."
+    "*Hola — soy TIA*\n" +
+    "Mandas a México por aquí; tu familia recibe aviso en WhatsApp.\n\n" +
+    "Escribe:\n\n" +
+    "1️⃣ *enviar ahora* — un envío hoy\n" +
+    "2️⃣ *programar* — cada mes, semana o día\n" +
+    "3️⃣ *mis envíos* — ver lo programado\n" +
+    "4️⃣ *recompensas* — Club TIA\n" +
+    "5️⃣ *soporte* — ayuda en este chat\n\n" +
+    "Ejemplo: *enviar 300 a mi amor* · o solo *300* y te guío.\n" +
+    "Sin filas: ella recibe aviso cuando sale el envío."
   );
 }
 
-export function buildEnviarAskMonto(): string {
+export function buildEnviarModoPicker(): string {
   return (
-    "*Vamos a programar tu remesa*\n\n" +
-    "¿Cuánto quieres mandar?\n" +
+    "¿Qué quieres hacer?\n\n" +
+    "1️⃣ *enviar ahora* — mandar hoy\n" +
+    "2️⃣ *programar* — repetir cada mes, semana o día\n\n" +
+    "*cancelar* · *soporte*"
+  );
+}
+
+export function buildEnviarAskMonto(modo?: ModoEnvio): string {
+  const head =
+    modo === "inmediato"
+      ? "*Envío de hoy*\n\n¿Cuánto mandamos?"
+      : modo === "programar"
+        ? "*Programar remesa*\n\n¿Cuánto quieres mandar?"
+        : "*Vamos con tu remesa*\n\n¿Cuánto quieres mandar?";
+  return (
+    `${head}\n` +
     "Ejemplo: *300* — o de un jalón: *enviar 300 a mi amor*\n\n" +
     "_(Por defecto en dólares.)_\n\n" +
     "*cancelar* · *soporte*"
@@ -140,15 +172,22 @@ export function buildRecurrentePending(params: {
   tipo_activo: "SOL" | "USDC";
   frecuencia: string;
   nombre_contacto?: string | null;
+  envio_inmediato?: boolean;
+  mxn_estimated?: number | null;
 }): string {
   const montoStr = formatMontoDisplay(params.monto, params.tipo_activo);
   const quien = params.nombre_contacto?.trim()
     ? `*${params.nombre_contacto.trim()}*`
     : "tu familia en México";
+  const cuando = params.envio_inmediato
+    ? "hoy"
+    : labelFrecuencia(params.frecuencia);
+  const fxLine = formatMxnEstimateLine(params.mxn_estimated);
   return (
-    "⏳ *Programando tu remesa…*\n\n" +
-    `*${montoStr}* · ${labelFrecuencia(params.frecuencia)} → ${quien}\n\n` +
-    "Un momento, por favor."
+    (params.envio_inmediato ? "⏳ *Preparando tu envío de hoy…*\n\n" : "⏳ *Programando tu remesa…*\n\n") +
+    `*${montoStr}* · ${cuando} → ${quien}` +
+    (fxLine ? `\n${fxLine}` : "") +
+    "\n\nUn momento, por favor."
   );
 }
 
@@ -163,9 +202,13 @@ export function buildSuscripcionConfirmada(params: {
   txSignature?: string | null;
   explorerUrl?: string | null;
   reused?: boolean;
+  envio_inmediato?: boolean;
+  mxn_estimated?: number | null;
 }): string {
   const montoStr = formatMontoDisplay(params.monto, params.tipo_activo);
-  const freq = labelFrecuencia(params.frecuencia);
+  const freq = params.envio_inmediato
+    ? "hoy"
+    : labelFrecuencia(params.frecuencia);
   const dest = formatDestinatarioLabel(params.nombre_contacto, params.destinatario_wa);
   const montoPedido = params.montoPedido;
   const montoDifiere =
@@ -192,11 +235,23 @@ export function buildSuscripcionConfirmada(params: {
   }
 
   const lines = [
-    "✅ *Orden confirmada*",
+    params.envio_inmediato ? "✅ *Envío de hoy confirmado*" : "✅ *Orden confirmada*",
     "",
     `A ${dest}`,
     `*${montoStr}* · ${freq}`,
   ];
+
+  const fxLine = formatMxnEstimateLine(params.mxn_estimated);
+  if (fxLine) {
+    lines.push(fxLine);
+  }
+
+  if (params.envio_inmediato) {
+    lines.push(
+      "",
+      "Te avisamos cuando salga. Si solo querías mandar *una vez*, escribe *soporte*."
+    );
+  }
 
   if (params.reused && !params.explorerUrl && !params.txSignature) {
     lines.push("Esta remesa ya estaba activa; no hubo envío nuevo.");
@@ -253,6 +308,14 @@ export function buildMontoInvalido(): string {
 
 export function buildFrecuenciaInvalida(): string {
   return "Dime *cada mes*, *cada semana* o *cada día* — como te acomode.";
+}
+
+export function buildFrecuenciaQuincena(): string {
+  return (
+    "En el piloto programamos *cada mes*, *cada semana* o *cada día*.\n\n" +
+    "Si le mandas cada quincena, por ahora elige *cada semana* y lo afinamos contigo.\n" +
+    "O escribe *soporte* si necesitas otro calendario."
+  );
 }
 
 export function buildNombreInvalido(): string {
@@ -353,12 +416,13 @@ export function buildAyudaEnFlujo(pasoLabel: string): string {
     "*Sigue tu remesa*\n\n" +
     `Estás en: *${pasoLabel}*\n` +
     "Responde lo que te pedí, o escribe *cancelar* / *soporte*.\n\n" +
-    "Menú completo (cuando termines o canceles): *enviar*, *mis envíos*, *recompensas*."
+    "Menú completo (cuando termines o canceles): *enviar ahora*, *programar*, *mis envíos*, *recompensas*."
   );
 }
 
 export function labelPasoEnviar(step: string): string {
   const map: Record<string, string> = {
+    enviar_modo: "elegir enviar ahora o programar",
     enviar_monto: "monto a enviar",
     enviar_frecuencia: "cada cuánto",
     enviar_nombre: "nombre del familiar",
@@ -429,7 +493,7 @@ export function buildCancelado(): string {
 export function buildNoEntendi(): string {
   return (
     "No te entendí del todo.\n\n" +
-    "Prueba con: *enviar*, *mis envíos*, *recompensas* o *ayuda*."
+    "Prueba: *enviar ahora*, *programar*, *enviar 300 a mi amor* o *ayuda*."
   );
 }
 

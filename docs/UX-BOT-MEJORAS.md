@@ -71,7 +71,9 @@ No (B) completo ni (C) como único path hasta que E2E wallet→pago esté establ
 | P0-4 | **Léxico anti-crypto** | ✅ Hecho — ask wallet / labels / errores sin “dirección” |
 | P0.5-1 | **One-shot parse** (monto+nombre[+freq]) | ✅ Hecho — `parseEnviarOneshoot`, skip pasos |
 | P0.5-2 | **Pending + orden con nombre** | ✅ Hecho — `buildRecurrentePending` + `Orden confirmada` |
-| P0.5-3 | **Tono migrante** | ✅ Hecho — menos “solo el número”; prompts conversacionales |
+| P0.6-1 | **NLU coloquial** (mandarle, quincena, monto solo) | ✅ |
+| P0.7-1 | **Menú enviar ahora vs programar** (Félix-style) | ✅ Hecho — `enviar_modo`, `primer_pago_inmediato` API |
+| P0.8-1 | **Estimado MXN en confirmación** (Etherfuse quote) | ✅ Hecho — `GET /api/etherfuse/quote-estimate` + copy bot |
 
 ### P1 — pre Demo Day (si P0 estable)
 
