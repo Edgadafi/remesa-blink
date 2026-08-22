@@ -12,6 +12,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const isDemo = pathname?.startsWith("/demo");
   const isEmpezar = pathname?.startsWith("/empezar");
   const isIntro = pathname?.startsWith("/intro");
+  const isBlink = pathname?.startsWith("/blink");
 
   /* Escenas full-bleed sin chrome del hub */
   if (isPiloto || isDemo || isEmpezar || isIntro) {
@@ -19,8 +20,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="site-wrap">
-      <DeferredCorridor />
+    <div className={isBlink ? "site-wrap site-wrap--blink" : "site-wrap"}>
+      {!isBlink && <DeferredCorridor />}
       <Nav />
       {children}
       <footer className="site-footer">

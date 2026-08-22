@@ -45,6 +45,111 @@ export function enviarRemesaUsdcGetResponse(site = getPublicSiteUrl()) {
   };
 }
 
+function remesaSolGetResponse(site: string, hrefPath: string) {
+  const href = `${site}${hrefPath}`;
+  return {
+    type: "action" as const,
+    title: "Remesa Blink",
+    icon: blinkIconUrl(site),
+    description: "Transferir SOL a una wallet de destino",
+    label: "Enviar Remesa SOL",
+    links: {
+      actions: [
+        {
+          label: "Enviar",
+          href,
+          parameters: [
+            { name: "account", label: "Tu wallet", required: true, type: "text" },
+            { name: "amount", label: "Monto (SOL)", required: true, type: "number" },
+            { name: "destination", label: "Wallet destino", required: true, type: "text" },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+export function onboardingMxnGetResponse(site = getPublicSiteUrl()) {
+  const href = `${site}/api/actions/onboarding-mxn`;
+  return {
+    type: "action" as const,
+    title: "Registrar cuenta para pesos",
+    icon: blinkIconUrl(site),
+    description:
+      "Completa tu registro (INE + CLABE) una sola vez para recibir pesos en tu banco",
+    label: "Obtener enlace de registro",
+    links: {
+      actions: [
+        {
+          label: "Obtener enlace",
+          href,
+          parameters: [
+            { name: "account", label: "Tu cuenta (wallet)", required: true, type: "text" },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+export function convertirMxnGetResponse(
+  site = getPublicSiteUrl(),
+  amount?: string | null
+) {
+  const amountQ = amount?.trim() || "";
+  const href = amountQ
+    ? `${site}/api/actions/convertir-mxn?amount=${encodeURIComponent(amountQ)}`
+    : `${site}/api/actions/convertir-mxn`;
+  return {
+    type: "action" as const,
+    title: "Recibir pesos en tu cuenta",
+    icon: blinkIconUrl(site),
+    description: "Pasa tu remesa a pesos mexicanos. Llegan a tu banco en unos minutos.",
+    label: "Recibir pesos",
+    links: {
+      actions: [
+        {
+          label: amountQ ? `Recibir pesos ($${amountQ})` : "Recibir pesos",
+          href,
+          parameters: [
+            {
+              name: "account",
+              label: "Tu cuenta (con el dinero de la remesa)",
+              required: true,
+              type: "text",
+            },
+            ...(amountQ
+              ? []
+              : [{ name: "amount", label: "Monto", required: true, type: "number" as const }]),
+          ],
+        },
+      ],
+    },
+  };
+}
+
+/** GET metadata servido en holatia.app (unfurl). POST va al upstream (keeper/Etherfuse). */
+export function getActionGetResponse(
+  action: string,
+  site = getPublicSiteUrl(),
+  opts?: { amount?: string | null }
+): Record<string, unknown> | null {
+  switch (action) {
+    case "enviar-remesa-usdc":
+      return enviarRemesaUsdcGetResponse(site);
+    case "onboarding-mxn":
+      return onboardingMxnGetResponse(site);
+    case "convertir-mxn":
+      return convertirMxnGetResponse(site, opts?.amount);
+    case "enviar-remesa":
+      return remesaSolGetResponse(site, "/api/actions/enviar-remesa");
+    case "remesa":
+      return remesaSolGetResponse(site, "/api/actions/remesa");
+    default:
+      return null;
+  }
+}
+
 export function actionsJson(site = getPublicSiteUrl()) {
   return {
     rules: [
@@ -58,6 +163,21 @@ export function actionsJson(site = getPublicSiteUrl()) {
         url: `${site}/api/actions/enviar-remesa-usdc`,
         label: "Enviar dólares, recibir pesos",
         description: "Send dollars, recibe pesos sin salir de WhatsApp.",
+      },
+      {
+        url: `${site}/api/actions/convertir-mxn`,
+        label: "Recibir pesos en tu cuenta",
+        description: "Pasar remesa a pesos mexicanos (SPEI / Etherfuse sandbox).",
+      },
+      {
+        url: `${site}/api/actions/onboarding-mxn`,
+        label: "Registrar cuenta para pesos",
+        description: "INE + CLABE una sola vez para recibir pesos en tu banco.",
+      },
+      {
+        url: `${site}/api/actions/enviar-remesa`,
+        label: "Enviar Remesa SOL",
+        description: "Transferir SOL a una wallet de destino.",
       },
     ],
   };

@@ -209,7 +209,7 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
 
   if (loadErr && !meta) {
     return (
-      <div className="stack-form">
+      <div className="stack-form blink-interstitial-card">
         <p className="msg-error" role="alert">
           {loadErr}
         </p>
@@ -224,11 +224,15 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
   }
 
   if (!meta) {
-    return <p className="muted">Cargando…</p>;
+    return (
+      <div className="blink-interstitial-card">
+        <p className="muted">Cargando…</p>
+      </div>
+    );
   }
 
   return (
-    <div className="stack-form blink-card">
+    <div className="stack-form blink-card blink-interstitial-card">
       {meta.icon && showIcon && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

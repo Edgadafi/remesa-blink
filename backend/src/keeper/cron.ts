@@ -92,7 +92,10 @@ export async function ejecutarPagos() {
         );
       }
 
-      const baseUrl = process.env.BLINKS_BASE_URL || process.env.BASE_URL;
+      const baseUrl =
+        process.env.BLINKS_BASE_URL?.replace(/\/$/, "") ||
+        process.env.FRONTEND_PUBLIC_URL?.replace(/\/$/, "") ||
+        process.env.BASE_URL?.replace(/\/$/, "");
       let blinkUrl: string | null = null;
       let blinkOnboarding: string | null = null;
       if (baseUrl) {

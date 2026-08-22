@@ -24,10 +24,10 @@ export default function BlinkPage({ searchParams }: Props) {
   const actionUrl = raw ? unwrapActionParam(raw) : "";
 
   return (
-    <main className="page-narrow">
+    <main className="page-narrow site-main blink-page">
       <p className="eyebrow">Remesa Blink + TIA</p>
       {!actionUrl ? (
-        <div className="stack-form">
+        <div className="stack-form blink-interstitial-card">
           <h1 className="h2">Falta el enlace de la acción</h1>
           <p className="muted">
             Abre el link que te llegó por WhatsApp, o pide uno nuevo escribiendo{" "}

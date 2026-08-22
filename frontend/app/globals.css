@@ -627,8 +627,49 @@ p.lede {
   gap: 1rem;
 }
 
+/* /blink — legible sin corredor 3D detrás */
+.site-wrap--blink {
+  background: var(--color-papel);
+}
+
+.blink-page {
+  flex: 1;
+  width: 100%;
+}
+
+.blink-interstitial-card {
+  padding: 1.35rem 1.25rem 1.5rem;
+  background: #fffdf8;
+  color: var(--color-tierra);
+  border: 2px solid var(--color-dorado-tia);
+  border-radius: 4px;
+  box-shadow: 0 8px 28px rgba(44, 36, 22, 0.14);
+}
+
+.blink-interstitial-card .h2 {
+  color: var(--color-tierra);
+}
+
+.blink-interstitial-card > p:not(.muted):not(.msg-ok):not(.msg-error) {
+  color: var(--color-tierra);
+  line-height: 1.55;
+}
+
+.blink-interstitial-card .field span {
+  color: var(--color-verde-cenote);
+}
+
+.blink-interstitial-card .field input,
+.blink-interstitial-card .field select {
+  background: #fff;
+  color: var(--color-tierra);
+  border-color: rgba(44, 36, 22, 0.22);
+}
+
 .blink-icon {
   border-radius: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  background: #f5f0e8;
 }
 
 .msg-ok {

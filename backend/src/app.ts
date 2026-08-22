@@ -47,6 +47,16 @@ app.use((req, res, next) => {
 app.use(actionCorsMiddleware({ actionVersion: 1 }));
 app.options("*", (_req, res) => res.sendStatus(204));
 
+/** /blink vive en el frontend (Next :3003 / holatia.app), no en Express. */
+app.get("/blink", (req, res) => {
+  const front =
+    process.env.FRONTEND_PUBLIC_URL?.replace(/\/$/, "") ||
+    process.env.CORS_ORIGIN?.split(",")[0]?.trim()?.replace(/\/$/, "") ||
+    "http://localhost:3003";
+  const qs = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+  res.redirect(302, `${front}/blink${qs}`);
+});
+
 /** Raíz: el túnel/API no es un sitio web; evita "Cannot GET /" al abrir la URL en el navegador. */
 app.get("/", (_req, res) => {
   res.status(200).json({
