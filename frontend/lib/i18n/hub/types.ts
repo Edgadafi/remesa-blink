@@ -63,6 +63,7 @@ export type HubMessages = {
   homePricingBullets: readonly [string, string, string, string];
   homePricingNote: string;
   homeHeroImageAlt: string;
+  homeFamilyImageAlt: string;
   homeWaOnline: string;
   homeWaGreeting: string;
   homeWaUserSend: string;

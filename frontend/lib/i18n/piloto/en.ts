@@ -69,7 +69,9 @@ export const en: PilotoMessages = {
   formSectionSub:
     "10 families on the US–MX corridor. Verifiable trust + humans in the loop. Tell us who you are.",
   heroImageAlt:
-    "Families receiving remittances — nopal, eagle and Solana with Mexican warmth",
+    "3D wireframe scene: interlocking toroids, isometric bridge cubes and Solana node",
+  familyImageAlt:
+    "3D wireframe scene: stacked toroids, isometric cube column and centered Solana",
   waOnline: "TIA assistant · online",
   waGreeting: "Hi! Want to send money to Mexico?",
   waUserSend: "Yes, send $300 USD every two weeks",

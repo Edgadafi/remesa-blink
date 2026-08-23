@@ -59,6 +59,7 @@ export type LandingSectionsCopy = LandingWaCopy &
     formSectionTitle: string;
     formSectionSub: string;
     heroImageAlt: string;
+    familyImageAlt: string;
   };
 
 export function hubToLandingCopy(t: {
@@ -106,6 +107,7 @@ export function hubToLandingCopy(t: {
   homePricingBullets: readonly string[];
   homePricingNote: string;
   homeHeroImageAlt: string;
+  homeFamilyImageAlt: string;
   homeWaOnline: string;
   homeWaGreeting: string;
   homeWaUserSend: string;
@@ -160,6 +162,7 @@ export function hubToLandingCopy(t: {
     formSectionTitle: "",
     formSectionSub: "",
     heroImageAlt: t.homeHeroImageAlt,
+    familyImageAlt: t.homeFamilyImageAlt,
     waOnline: t.homeWaOnline,
     waGreeting: t.homeWaGreeting,
     waUserSend: t.homeWaUserSend,

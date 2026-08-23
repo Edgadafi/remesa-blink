@@ -1160,29 +1160,399 @@ main.site-main.landing-main {
   margin: 0 auto;
 }
 
-.landing-hero-art {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(45, 80, 22, 0.18);
-  box-shadow:
-    0 24px 48px rgba(44, 36, 22, 0.14),
-    0 0 0 1px rgba(255, 253, 248, 0.4) inset;
+/* —— Uniform brand image frame (hero + family) —— */
+.landing-brand-frame {
+  margin: 0;
+  width: 100%;
 }
 
-.landing-hero-art-img {
+.landing-brand-frame__mat {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  padding: 0.45rem;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fffdf8 0%, #f5f0e8 48%, rgba(201, 162, 39, 0.22) 100%);
+  border: 1px solid rgba(45, 80, 22, 0.2);
+  box-shadow:
+    0 20px 48px rgba(44, 36, 22, 0.12),
+    0 0 0 1px rgba(255, 253, 248, 0.65) inset;
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.landing-brand-frame--hero .landing-brand-frame__mat {
+  aspect-ratio: 16 / 10;
+}
+
+.landing-brand-frame--panel .landing-brand-frame__mat {
+  aspect-ratio: 4 / 5;
+  max-height: 520px;
+}
+
+.landing-brand-frame:hover .landing-brand-frame__mat {
+  transform: translateY(-3px);
+  box-shadow:
+    0 28px 56px rgba(45, 80, 22, 0.16),
+    0 0 0 1px rgba(201, 162, 39, 0.35) inset;
+}
+
+.landing-brand-frame__surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--color-verde-nopal);
+}
+
+.landing-brand-frame__grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0.45rem;
+  border-radius: 14px;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.landing-brand-frame__accent {
+  pointer-events: none;
+  position: absolute;
+  inset: 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  opacity: 0.85;
+}
+
+.landing-brand-frame__mark {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(44, 36, 22, 0.2);
+  opacity: 0.92;
+}
+
+.landing-corridor-art {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
-.landing-hero-art-glow {
+.landing-family-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landing-family-photo {
+  object-fit: cover;
+  object-position: center 28%;
+  filter: saturate(1.05) contrast(1.02);
+}
+
+/* —— MatrixPay wireframe scene (hero + family) —— */
+.landing-brand-frame--wire .landing-brand-frame__mat {
+  background: #fffdf8;
+  border: 1px solid rgba(44, 36, 22, 0.1);
+  box-shadow:
+    0 16px 40px rgba(44, 36, 22, 0.08),
+    0 0 0 1px rgba(255, 253, 248, 0.9) inset;
+}
+
+.landing-brand-frame--wire:hover .landing-brand-frame__mat {
+  transform: translateY(-2px);
+  box-shadow:
+    0 22px 48px rgba(45, 80, 22, 0.1),
+    0 0 0 1px rgba(201, 162, 39, 0.2) inset;
+}
+
+.landing-brand-frame--wire .landing-brand-frame__surface {
+  background: #fffdf8;
+  overflow: visible;
+}
+
+.landing-brand-frame--wire .landing-brand-frame__mark {
+  display: none;
+}
+
+.landing-brand-frame--wire .landing-brand-frame__accent {
+  display: none;
+}
+
+.landing-wire-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  background: #fffdf8;
+}
+
+.landing-wire-scene--tall {
+  min-height: 100%;
+}
+
+.landing-dot-grid {
   position: absolute;
-  inset: auto 0 0;
-  height: 40%;
-  background: linear-gradient(to top, rgba(45, 80, 22, 0.35), transparent);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  z-index: 0;
+}
+
+.landing-wire-art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.landing-micro-chip {
+  position: absolute;
+  z-index: 3;
+  padding: 0.3rem 0.55rem;
+  font-family: var(--font-ui), "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-tierra);
+  background: rgba(255, 253, 248, 0.98);
+  border: 1px solid rgba(44, 36, 22, 0.1);
+  border-radius: 3px;
+  box-shadow: 0 4px 14px rgba(44, 36, 22, 0.06);
+  white-space: nowrap;
+  animation: landing-micro-float 6s ease-in-out infinite;
+}
+
+.landing-micro-chip--accent {
+  color: var(--color-verde-nopal);
+  border-color: rgba(201, 162, 39, 0.55);
+  box-shadow:
+    0 6px 18px rgba(44, 36, 22, 0.1),
+    0 0 0 1px rgba(201, 162, 39, 0.25) inset;
+}
+
+.landing-micro-chip::before {
+  content: "";
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.35rem;
+  border-radius: 1px;
+  background: var(--color-verde-cenote);
+  vertical-align: middle;
+}
+
+.landing-micro-chip--accent::before {
+  background: linear-gradient(135deg, #9945ff 0%, #14f195 100%);
+}
+
+.landing-micro--tl {
+  top: 10%;
+  left: 6%;
+  animation-delay: 0s;
+}
+
+.landing-micro--tr {
+  top: 14%;
+  right: 5%;
+  animation-delay: 0.8s;
+}
+
+.landing-micro--bl {
+  bottom: 12%;
+  left: 8%;
+  animation-delay: 1.4s;
+}
+
+.landing-micro--family-tr {
+  top: 12%;
+  right: 6%;
+  animation-delay: 0.5s;
+}
+
+.landing-micro--family-bl {
+  bottom: 10%;
+  left: 7%;
+  animation-delay: 1.2s;
+}
+
+.landing-wire-scene--parallax {
+  perspective: 900px;
+  perspective-origin: 50% 45%;
+}
+
+.landing-wire-parallax-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+  transition: transform 0.35s ease-out;
+}
+
+.landing-wire-scene--parallax .landing-wire-art {
+  z-index: 1;
+}
+
+.landing-wire-depth-mid {
+  opacity: 0.82;
+}
+
+.landing-wire-depth-mid--soft {
+  opacity: 0.38;
+}
+
+.landing-wire-depth-front {
+  opacity: 1;
+}
+
+/* MatrixPay torus.webm — rotación continua lineal (loop suave) */
+.landing-wire-torus-wrap {
+  transform-box: view-box;
+  transform-origin: center;
+}
+
+.landing-wire-torus-wrap--matrix {
+  animation: landing-matrix-torus-spin 26s linear infinite;
+}
+
+.landing-wire-torus-wrap--matrix-slow {
+  animation: landing-matrix-torus-spin 32s linear infinite;
+}
+
+.landing-wire-torus-wrap--matrix-rev {
+  animation: landing-matrix-torus-spin-rev 28s linear infinite;
+}
+
+@keyframes landing-matrix-torus-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes landing-matrix-torus-spin-rev {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.landing-wire-3d-cubes path {
+  animation: none;
+}
+
+.landing-wire-flow {
+  animation: none;
+}
+
+.landing-sol-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.landing-sol-overlay .landing-wire-sol-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+}
+
+.landing-wire-sol-node {
+  pointer-events: none;
+  animation: landing-sol-glow 5s ease-in-out infinite;
+}
+
+.landing-wire-sol-mark {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: landing-sol-expand 4.2s ease-in-out infinite;
+}
+
+@keyframes landing-sol-expand {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
+  }
+  55% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes landing-sol-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(153, 69, 255, 0.18));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(20, 241, 149, 0.32));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-wire-parallax-bg {
+    transition: none;
+  }
+
+  .landing-wire-torus-wrap,
+  .landing-wire-torus-wrap--matrix,
+  .landing-wire-torus-wrap--matrix-slow,
+  .landing-wire-torus-wrap--matrix-rev,
+  .landing-wire-3d-torus path,
+  .landing-wire-cube,
+  .landing-wire-flow,
+  .landing-wire-3d-cubes path,
+  .landing-wire-sol-node,
+  .landing-wire-sol-mark {
+    animation: none;
+  }
+}
+
+.landing-families-section {
+  margin-bottom: 3.5rem;
+  padding: 0.5rem 0;
+}
+
+.landing-families-grid {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .landing-families-grid {
+    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
+    gap: 2.5rem;
+  }
+}
+
+.landing-families-copy .landing-section-lede {
+  margin-bottom: 1.25rem;
+}
+
+.landing-families-copy .landing-quotes {
+  border-color: rgba(45, 80, 22, 0.18);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(245, 240, 232, 0.92));
 }
 
 .landing-hero-wa-float {
@@ -1814,6 +2184,10 @@ main.site-main.landing-main {
 
   .landing-wa-bubble {
     animation: none;
+  }
+
+  .landing-brand-frame:hover .landing-brand-frame__mat {
+    transform: none;
   }
 
   .landing-stat-card:hover,

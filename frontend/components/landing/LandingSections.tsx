@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import type { ReactNode } from "react";
+import { LandingFamilyVisual } from "@/components/landing/LandingFamilyVisual";
 import { LandingHeroVisual } from "@/components/landing/LandingHeroVisual";
 import { LandingQuotes } from "@/components/landing/LandingQuotes";
 import { LandingTechMarquee } from "@/components/landing/LandingTechMarquee";
@@ -88,25 +88,19 @@ export function LandingSections({
         </div>
       </section>
 
-      <section className="landing-warm-band" aria-labelledby="families-title">
-        <div className="landing-warm-media" aria-hidden="true">
-          <Image
-            src="/brand/landing/family-nopal.jpg"
-            alt=""
-            fill
-            className="landing-warm-img"
-            sizes="100vw"
-            priority={false}
-          />
-          <div className="landing-warm-overlay" />
+      <section className="landing-families-section" aria-labelledby="families-title">
+        <div className="landing-families-grid">
+          <Reveal delay={80}>
+            <LandingFamilyVisual alt={copy.familyImageAlt} labelledBy="families-title" />
+          </Reveal>
+          <Reveal className="landing-families-copy">
+            <h2 id="families-title" className="landing-section-title">
+              {copy.familiesTitle}
+            </h2>
+            <p className="landing-section-lede">{copy.familiesBody}</p>
+            <LandingQuotes copy={copy} />
+          </Reveal>
         </div>
-        <Reveal className="landing-warm-inner">
-          <h2 id="families-title" className="landing-section-title landing-section-title--light">
-            {copy.familiesTitle}
-          </h2>
-          <p className="landing-section-lede landing-section-lede--light">{copy.familiesBody}</p>
-          <LandingQuotes copy={copy} />
-        </Reveal>
       </section>
 
       <section

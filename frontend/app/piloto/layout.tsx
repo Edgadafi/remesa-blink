@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     locale: "es_MX",
     alternateLocale: "en_US",
     type: "website",
-    images: [{ url: "/piloto/hero-banner.png", width: 1200, height: 630, alt: "holatia remesas WhatsApp" }],
+    images: [{ url: "/brand/landing/family-nopal.jpg", width: 1200, height: 1500, alt: "holatia remesas familias" }],
   },
 };
 

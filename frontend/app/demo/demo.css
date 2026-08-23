@@ -28,7 +28,7 @@
       rgba(245, 240, 232, 0.92) 78%
     ),
     radial-gradient(ellipse 80% 60% at 70% 20%, rgba(201, 162, 39, 0.35), transparent 55%),
-    url("/piloto/hero-banner.png") center / cover no-repeat;
+    radial-gradient(ellipse 55% 45% at 30% 75%, rgba(74, 124, 89, 0.28), transparent 60%);
   transform: scale(1.02);
   animation: demo-bg-drift 18s ease-in-out infinite alternate;
 }

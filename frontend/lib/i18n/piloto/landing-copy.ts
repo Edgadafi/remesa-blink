@@ -49,6 +49,7 @@ export function pilotoToLandingCopy(t: PilotoMessages): LandingSectionsCopy {
     formSectionTitle: t.formSectionTitle,
     formSectionSub: t.formSectionSub,
     heroImageAlt: t.heroImageAlt,
+    familyImageAlt: t.familyImageAlt,
     waOnline: t.waOnline,
     waGreeting: t.waGreeting,
     waUserSend: t.waUserSend,

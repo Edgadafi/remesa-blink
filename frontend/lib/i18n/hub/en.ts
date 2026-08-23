@@ -84,7 +84,9 @@ export const en: HubMessages = {
   homePricingNote:
     "SPEI in sandbox for Demo Day; mainnet when ready. We do not promise bank timing in production until live integration.",
   homeHeroImageAlt:
-    "Remittances from the U.S. to Mexico — eagle with USDC, nopal cactus, and WhatsApp corridor",
+    "3D wireframe scene: interlocking toroids, isometric bridge cubes and Solana node",
+  homeFamilyImageAlt:
+    "3D wireframe scene: stacked toroids, isometric cube column and centered Solana",
   homeWaOnline: "TIA assistant · online",
   homeWaGreeting: "Hi! Want to send money to Mexico?",
   homeWaUserSend: "Yes, send $300 USD every two weeks",

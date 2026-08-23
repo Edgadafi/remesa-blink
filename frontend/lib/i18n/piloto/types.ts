@@ -47,6 +47,7 @@ export type PilotoMessages = {
   formSectionTitle: string;
   formSectionSub: string;
   heroImageAlt: string;
+  familyImageAlt: string;
   waOnline: string;
   waGreeting: string;
   waUserSend: string;

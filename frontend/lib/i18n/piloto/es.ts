@@ -68,7 +68,9 @@ export const es: PilotoMessages = {
   formSectionSub:
     "10 familias en corredor US–MX. Confianza verificable + humanos en el loop. Cuéntanos quién eres.",
   heroImageAlt:
-    "Familias recibiendo remesas — nopal, águila y Solana con calidez mexicana",
+    "Escena 3D wireframe: toroides entrelazados, cubos isométricos en puente y nodo Solana",
+  familyImageAlt:
+    "Escena 3D wireframe: toroides apilados, columna de cubos isométricos y Solana central",
   waOnline: "Asistente TIA · en línea",
   waGreeting: "¡Hola! ¿Deseas enviar dinero a México?",
   waUserSend: "Sí, enviar $300 USD cada quince días",
