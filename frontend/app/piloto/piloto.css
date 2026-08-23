@@ -26,22 +26,20 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem;
-  max-width: 40rem;
+  padding: 1rem 1.25rem;
+  max-width: 72rem;
   margin: 0 auto;
   border-bottom: 2px solid var(--color-dorado-tia);
   box-shadow: 0 1px 0 rgba(45, 80, 22, 0.12);
 }
 .piloto-wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-ui, "IBM Plex Sans", system-ui, sans-serif);
   font-weight: 700;
-  font-size: clamp(0.78rem, 2.9vw, 0.95rem);
+  font-size: 1.1rem;
   letter-spacing: 0.02em;
-  line-height: 1.35;
   color: var(--color-verde-nopal);
-  max-width: 20rem;
 }
 .piloto-header-actions {
   display: flex;
@@ -87,85 +85,38 @@
   background: rgba(255, 255, 255, 0.35);
 }
 .piloto-main {
-  max-width: 40rem;
+  max-width: 72rem;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;
-}
-.piloto-hero-img {
-  display: block;
   width: 100%;
-  height: auto;
+}
+
+.piloto-main.landing-main {
+  padding-top: 1.25rem;
+}
+
+.piloto-proof-inline {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  color: var(--color-verde-cenote);
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(45, 80, 22, 0.12);
+  line-height: 1.5;
+}
+
+.piloto-btn-primary--full {
+  width: 100%;
+}
+
+.piloto-form-card {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 1.25rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 2px solid rgba(201, 162, 39, 0.55);
-  box-shadow: 0 6px 28px rgba(44, 36, 22, 0.14);
-}
-.piloto-escudo-divider {
-  display: flex;
-  justify-content: center;
-  margin: 0.5rem 0 1rem;
-}
-.piloto-escudo-divider svg {
-  width: 5.5rem;
-  height: auto;
-}
-.piloto-rieles {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1.25rem 0 1.75rem;
-  opacity: 0.95;
-}
-.piloto-rieles-track {
-  flex: 1;
-  height: 3px;
-  border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-dorado-tia) 12%,
-    var(--color-dorado-tia) 88%,
-    transparent
-  );
-  box-shadow: 0 1px 0 rgba(196, 92, 62, 0.25);
-}
-.piloto-rieles-eagle {
-  width: 2rem;
-  height: auto;
-  flex-shrink: 0;
-}
-.piloto-tagline {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  color: var(--color-dorado-tia);
-  margin-bottom: 0.65rem;
-  text-transform: uppercase;
-}
-.piloto-story {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-style: italic;
-  color: var(--color-verde-cenote);
-  margin-bottom: 1rem;
-  border-left: 3px solid var(--color-dorado-tia);
-  padding-left: 0.75rem;
-}
-.piloto-headline {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.85rem, 7.5vw, 2.65rem);
-  text-transform: uppercase;
-  color: var(--color-terracotta);
-  margin-bottom: 0.75rem;
-  line-height: 1.12;
-  text-shadow: 0 1px 0 rgba(201, 162, 39, 0.25);
-}
-.piloto-subhead {
-  font-style: italic;
-  color: var(--color-verde-cenote);
-  font-size: 1.12rem;
-  margin-bottom: 1.5rem;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: 0 4px 20px rgba(44, 36, 22, 0.06);
 }
 .piloto-btn-primary {
   cursor: pointer;
@@ -184,60 +135,6 @@
 }
 .piloto-btn-primary:disabled {
   opacity: 0.55;
-}
-.piloto-section {
-  margin-bottom: 2.5rem;
-}
-.piloto-section h2 {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--color-verde-nopal);
-  margin-bottom: 0.75rem;
-}
-.piloto-section h2::after {
-  content: "";
-  display: block;
-  width: 3rem;
-  height: 2px;
-  margin-top: 0.35rem;
-  background: var(--color-dorado-tia);
-}
-.piloto-steps {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(201, 162, 39, 0.35);
-  background: rgba(255, 255, 255, 0.28);
-}
-.piloto-steps strong {
-  display: block;
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: 0.88rem;
-  color: var(--color-terracotta);
-}
-.piloto-steps em {
-  color: var(--color-verde-cenote);
-  font-style: italic;
-}
-.piloto-proof {
-  padding: 1rem 1rem 1rem 1.1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(45, 80, 22, 0.25);
-  border-left: 4px solid var(--color-dorado-tia);
-  background: linear-gradient(135deg, rgba(74, 124, 89, 0.1) 0%, rgba(255, 255, 255, 0.38) 100%);
-  font-family: var(--font-display);
-}
-.piloto-form-card {
-  padding: 1.25rem;
-  border-radius: 8px;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  background: rgba(255, 255, 255, 0.48);
-  box-shadow: 0 4px 20px rgba(44, 36, 22, 0.06);
 }
 .piloto-form {
   display: flex;
@@ -322,7 +219,7 @@
   font-weight: 600;
 }
 .piloto-footer {
-  max-width: 40rem;
+  max-width: 72rem;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 2rem;
   border-top: 2px solid var(--color-dorado-tia);

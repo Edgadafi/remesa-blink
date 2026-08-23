@@ -13,16 +13,25 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const isEmpezar = pathname?.startsWith("/empezar");
   const isIntro = pathname?.startsWith("/intro");
   const isBlink = pathname?.startsWith("/blink");
+  const isLanding = pathname === "/";
 
   /* Escenas full-bleed sin chrome del hub */
   if (isPiloto || isDemo || isEmpezar || isIntro) {
     return <>{children}</>;
   }
 
+  const wrapClass = [
+    "site-wrap",
+    isBlink ? "site-wrap--blink" : "",
+    isLanding ? "site-wrap--landing" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={isBlink ? "site-wrap site-wrap--blink" : "site-wrap"}>
-      {!isBlink && <DeferredCorridor />}
-      <Nav />
+    <div className={wrapClass}>
+      {!isBlink && !isLanding && <DeferredCorridor />}
+      <Nav landing={isLanding} />
       {children}
       <footer className="site-footer">
         {t.footerTagline}{" "}

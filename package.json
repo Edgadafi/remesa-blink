@@ -34,6 +34,7 @@
     "docs:pdf:m3": "node scripts/export-architecture-m3-pdf.mjs",
     "docs:pdf:trust": "node scripts/export-trust-model-pdf.mjs",
     "docs:pdf:piloto": "node scripts/export-piloto-guides-pdf.mjs",
+    "docs:png:competidores": "node scripts/export-competidores-png.mjs",
     "demo:preflight": "bash scripts/demo-preflight.sh",
     "dev:stack": "bash scripts/dev-stack.sh",
     "render:logo-intro": "node scripts/render-logo-intro.mjs",

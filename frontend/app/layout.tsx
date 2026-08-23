@@ -33,9 +33,9 @@ const displayFontStyle = {
 } as CSSProperties;
 
 export const metadata: Metadata = {
-  title: "holatia — Send dollars, recibe pesos",
+  title: "holatia — Tu esfuerzo, directo a casa",
   description:
-    "Programa remesas a México. Tu familia recibe el aviso por WhatsApp. Send dollars, recibe pesos más cerca de tu familia.",
+    "Envía dinero a México desde WhatsApp. Piloto $0 · objetivo 1.5% mainnet. Programa una vez; tu familia recibe aviso con comprobante verificable.",
 };
 
 export default function RootLayout({

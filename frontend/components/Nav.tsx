@@ -12,7 +12,7 @@ function isActivePath(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Nav() {
+export function Nav({ landing = false }: { landing?: boolean }) {
   const pathname = usePathname() || "/";
   const { t } = useLocale();
 
@@ -25,7 +25,7 @@ export function Nav() {
   ];
 
   return (
-    <header className="site-header">
+    <header className={landing ? "site-header site-header--landing" : "site-header"}>
       <Link href="/" className="site-logo" aria-label={t.logoAlt}>
         <HolatiaMark className="site-logo-mark" />
         <span className="site-logo-word">

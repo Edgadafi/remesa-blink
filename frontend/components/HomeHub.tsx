@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { hubToLandingCopy } from "@/components/landing/copy";
+import { LandingSections } from "@/components/landing/LandingSections";
 import { useLocale } from "@/components/LocaleProvider";
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
 export function HomeHub({ siteBase, apiBase }: Props) {
   const { t } = useLocale();
   const wrap = (u: string) => `/blink?url=${encodeURIComponent(u)}`;
+  const copy = hubToLandingCopy(t);
 
   const blinkLinks = [
     { href: wrap(`${apiBase}/api/actions/remesa`), label: t.blinkSolLabel, desc: t.blinkSolDesc },
@@ -32,53 +35,8 @@ export function HomeHub({ siteBase, apiBase }: Props) {
   ];
 
   return (
-    <main className="site-main wide">
-      <section className="hub-hero" aria-labelledby="hub-title">
-        <p className="hub-kicker">{t.homeKicker}</p>
-        <h1 id="hub-title" className="page-title">
-          {t.homeH1}
-        </h1>
-        <p className="hub-story">{t.homeStory}</p>
-        <div className="hub-cta-row">
-          <Link href="/empezar" className="btn-primary">
-            {t.homeCtaQr}
-          </Link>
-          <Link href="/demo" className="btn-secondary">
-            {t.homeCtaDemo}
-          </Link>
-        </div>
-        <p className="hub-reassure">{t.homeReassure}</p>
-      </section>
-
-      <ol className="hub-steps" aria-label={t.homeStepsAria}>
-        <li>
-          <span className="hub-step-num" aria-hidden>
-            01
-          </span>
-          <div>
-            <strong>{t.homeStep1Title}</strong>
-            <span>{t.homeStep1Body}</span>
-          </div>
-        </li>
-        <li>
-          <span className="hub-step-num" aria-hidden>
-            02
-          </span>
-          <div>
-            <strong>{t.homeStep2Title}</strong>
-            <span>{t.homeStep2Body}</span>
-          </div>
-        </li>
-        <li>
-          <span className="hub-step-num" aria-hidden>
-            03
-          </span>
-          <div>
-            <strong>{t.homeStep3Title}</strong>
-            <span>{t.homeStep3Body}</span>
-          </div>
-        </li>
-      </ol>
+    <main className="site-main landing-main">
+      <LandingSections copy={copy} primaryHref="/empezar" showDemoLink />
 
       <nav className="hub-secondary" aria-label={t.homeSecondaryAria}>
         <Link href="/mis-remesas" className="hub-secondary-card">

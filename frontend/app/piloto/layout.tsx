@@ -17,16 +17,16 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Remesa + Solana Blink + WhatsApp + IA — Programa piloto",
-  description: `${PILOTO_META_GOAL} familias piloto · CAN-EU-MX corridor. Remesas por WhatsApp. | ${PILOTO_META_GOAL} pilot families · Recurring remittances via WhatsApp.`,
+  title: "holatia — Programa piloto · Tu esfuerzo, directo a casa",
+  description: `${PILOTO_META_GOAL} familias piloto corredor EE.UU. → México. Piloto $0 · objetivo 1.5% mainnet. Remesas recurrentes por WhatsApp con comprobante verificable.`,
   openGraph: {
-    title: "Remesa + Solana Blink + WhatsApp + IA",
-    description: `${PILOTO_META_GOAL} familias piloto · CAN-EU-MX. | ${PILOTO_META_GOAL} pilot families.`,
-    url: "https://frontend-bay-phi-92.vercel.app/piloto",
+    title: "holatia — Programa piloto",
+    description: `${PILOTO_META_GOAL} familias piloto · corredor US–MX · WhatsApp + Solana`,
+    url: "https://holatia.app/piloto",
     locale: "es_MX",
     alternateLocale: "en_US",
     type: "website",
-    images: [{ url: "/piloto/hero-banner.png", width: 1200, height: 630, alt: "Remesa Solana Blink WhatsApp IA" }],
+    images: [{ url: "/piloto/hero-banner.png", width: 1200, height: 630, alt: "holatia remesas WhatsApp" }],
   },
 };
 

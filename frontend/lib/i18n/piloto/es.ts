@@ -1,22 +1,81 @@
 import type { PilotoMessages } from "./types";
 
 export const es: PilotoMessages = {
-  heroAlt:
-    "Águila dorada sobre nopal — remesa del norte a México con Solana, WhatsApp e IA",
-  story: "Envía dólares y retira pesos mexicanos lo más cerca de ti",
-  headline: "Tu familia más cerca, cada mes",
+  prideBadge: "Hecho con orgullo para nuestra gente",
+  kicker: "holatia · Programa piloto WayLearn",
+  headline: "Tu esfuerzo, directo a casa.",
   subhead:
-    "Programa una vez desde el norte. El agente ejecuta; Solana deja comprobante; tu familia recibe el aviso por WhatsApp.",
+    "Únete a 10 familias en corredor EE.UU. → México. Programa remesas en WhatsApp con comprobante verificable — piloto sin cobro.",
   ctaPrimary: "Quiero ser piloto",
-  problemTitle: "Mes tras mes, la misma fila en la tiendita",
-  problemBody:
-    "INE a mano, comisiones que duelen, y tu mamá esperando el aviso cada quincena — sin saber si el envío llegó a tiempo.",
-  step1Title: "Tú programas en WhatsApp",
-  step1Sub: "Agente + IA — configuras una vez.",
-  step2Title: "Solana audita cada pago",
-  step2Sub: "Recibo verificable on-chain, no promesas.",
-  step3Title: "Tu familia vigila y cobra",
-  step3Sub: "Aviso directo, link seguro, aliado local si hace falta.",
+  ctaHow: "Ver cómo funciona",
+  ctaDemo: "Demo MVP Devnet",
+  reassure:
+    "Piloto sin cobro · devnet y SPEI sandbox · meta 10 familias · te contactamos en 48 h.",
+  statPilotoValue: "$0",
+  statPilotoLabel: "comisión en piloto",
+  statFeeValue: "1.5%",
+  statFeeLabel: "objetivo mainnet (menos que WU 5–7%)",
+  statProofValue: "✓",
+  statProofLabel: "comprobante verificable en Solana",
+  familiesTitle: "Familias reales, cerca sin importar la distancia.",
+  familiesBody:
+    "Detrás de cada transferencia hay un abrazo pendiente, una llamada de domingo, una quincena que se convierte en tranquilidad para los que amas.",
+  quotes: [
+    "Lo veo todos los domingos, aunque esté lejos.",
+    "Cada envío es una excusa para celebrar juntos.",
+    "Les damos lo mejor, aunque estemos a kilómetros.",
+    "Cada quincena, mi manera de decir te quiero.",
+  ] as const,
+  stepsSectionTitle: "Simple para ti. Claro para ellos.",
+  stepsSectionSub:
+    "Tres pasos, sin fricción, con la calidez de hablar con alguien de confianza.",
+  stepsAria: "Cómo funciona",
+  step1Title: "Escribe en WhatsApp",
+  step1Body:
+    "Di hola a TIA o usa los botones rápidos. Sin apps nuevas, sin formularios largos.",
+  step2Title: "Programa una vez",
+  step2Body:
+    "Monto y frecuencia quincenal o mensual. Solana deja comprobante; nosotros avisamos en español simple.",
+  step3Title: "Tu familia recibe aviso",
+  step3Body:
+    "Link seguro para pesos (sandbox hoy). Tiendita aliada si algo no abre.",
+  trustTitle: "Tu familia primero, tu dinero protegido.",
+  trustBody:
+    "Cada envío queda registrado en Solana. Diseñado para el corredor MX ↔ EE.UU., con humanos en el loop.",
+  trust1Title: "Comprobante verificable",
+  trust1Body: "Recibo on-chain que cualquiera puede revisar — no solo una promesa.",
+  trust2Title: "Aviso en WhatsApp",
+  trust2Body: "Español simple para mamá; soporte y tiendita si hace falta.",
+  testimonialQuote:
+    "Cuando llega el mensaje de que el dinero de mi hijo ya quedó registrado, siento que lo tengo un poquito más cerca. Antes esperaba días sin certeza; ahora al menos sé que sí llegó.",
+  testimonialName: "María G.",
+  testimonialPlace: "Michoacán, México",
+  testimonialNote: "Arquetipo ICP compuesto — no testimonio clínico.",
+  pricingTitle: "Precios claros, sin letras chiquitas.",
+  pricingSub: "Pagas lo justo. Nada más.",
+  pricingPlan: "Piloto hoy",
+  pricingRate: "$0 por envío",
+  pricingCompare: "Objetivo mainnet: 1.5% (~$4.50 en envío de $300) — por debajo de Western Union (5–7%)",
+  pricingBullets: [
+    "$0 comisión mientras validamos el piloto",
+    "Tipo de cambio transparente — sin sorpresas ocultas",
+    "Recurrencia programada desde WhatsApp",
+    "Soporte en español · tiendita de confianza",
+  ] as const,
+  pricingNote:
+    "SPEI en sandbox Demo Day; mainnet cuando esté listo. Solo usamos tu WhatsApp para contactarte.",
+  formSectionTitle: "Únete al piloto",
+  formSectionSub:
+    "10 familias en corredor US–MX. Confianza verificable + humanos en el loop. Cuéntanos quién eres.",
+  heroImageAlt:
+    "Familias recibiendo remesas — nopal, águila y Solana con calidez mexicana",
+  waOnline: "Asistente TIA · en línea",
+  waGreeting: "¡Hola! ¿Deseas enviar dinero a México?",
+  waUserSend: "Sí, enviar $300 USD cada quince días",
+  waBotReply:
+    "Listo. Programo la recurrencia; tu familia recibe aviso y comprobante en Solana. ¿Confirmas?",
+  waConfirm: "¡Confirmar!",
+  waInputPlaceholder: "Mensaje",
   proof:
     "Confianza verificable + humanos en el loop. Buscamos 10 familias piloto en corredor US–MX.",
   successTitle: "Gracias — te contactamos en 48 h por WhatsApp.",

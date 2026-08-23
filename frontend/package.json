@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo -H 127.0.0.1 -p 3003",
+    "dev": "next dev -H 127.0.0.1 -p 3003",
+    "dev:fresh": "rm -rf .next && next dev -H 127.0.0.1 -p 3003",
+    "dev:turbo": "echo '⚠️  Turbo rompe PostCSS en este proyecto — usa npm run dev' && exit 1",
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint"
@@ -33,7 +35,7 @@
     "autoprefixer": "^10.5.4",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
-    "postcss": "^8.5.26",
+    "postcss": "8.4.49",
     "tailwindcss": "3.4.17",
     "typescript": "^5"
   }

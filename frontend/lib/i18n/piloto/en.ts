@@ -1,22 +1,82 @@
 import type { PilotoMessages } from "./types";
 
 export const en: PilotoMessages = {
-  heroAlt:
-    "Golden eagle over nopal — remittance from the north to Mexico with Solana, WhatsApp and AI",
-  story: "Send dollars and withdraw Mexican pesos as close to you as possible",
-  headline: "Your family closer, every month",
+  prideBadge: "Built with pride for our community",
+  kicker: "holatia · WayLearn pilot program",
+  headline: "Your effort, straight home.",
   subhead:
-    "Set it up once from abroad. The agent runs it; Solana records proof; your family gets the WhatsApp alert.",
+    "Join 10 families on the U.S. → Mexico corridor. Schedule remittances on WhatsApp with verifiable proof — no fee in pilot.",
   ctaPrimary: "Join the pilot",
-  problemTitle: "Month after month, the same line at the store",
-  problemBody:
-    "ID in hand, fees that hurt, and your mom waiting every payday — without knowing if the transfer arrived on time.",
-  step1Title: "You schedule on WhatsApp",
-  step1Sub: "AI agent — set it once.",
-  step2Title: "Solana audits every payment",
-  step2Sub: "Verifiable on-chain receipt, not promises.",
-  step3Title: "Your family watches and receives",
-  step3Sub: "Direct alert, secure link, local ally if needed.",
+  ctaHow: "See how it works",
+  ctaDemo: "MVP Devnet demo",
+  reassure:
+    "No pilot fee · devnet and SPEI sandbox · goal 10 families · we contact you within 48 h.",
+  statPilotoValue: "$0",
+  statPilotoLabel: "pilot transfer fee",
+  statFeeValue: "1.5%",
+  statFeeLabel: "mainnet target (below WU 5–7%)",
+  statProofValue: "✓",
+  statProofLabel: "verifiable receipt on Solana",
+  familiesTitle: "Real families, close no matter the distance.",
+  familiesBody:
+    "Behind every transfer is a hug waiting to happen, a Sunday call, a paycheck turned into peace of mind for the people you love.",
+  quotes: [
+    "I feel them every Sunday, even from far away.",
+    "Every send is a reason to celebrate together.",
+    "We give our best, even across miles.",
+    "Every two weeks, my way of saying I love you.",
+  ] as const,
+  stepsSectionTitle: "Simple for you. Clear for them.",
+  stepsSectionSub:
+    "Three steps, no friction, with the warmth of someone you trust.",
+  stepsAria: "How it works",
+  step1Title: "Write on WhatsApp",
+  step1Body:
+    "Say hi to TIA or use quick buttons. No new apps, no long forms.",
+  step2Title: "Schedule once",
+  step2Body:
+    "Amount and biweekly or monthly cadence. Solana records proof; we notify in plain Spanish.",
+  step3Title: "Your family gets notice",
+  step3Body:
+    "Safe link toward pesos (sandbox today). Trusted tiendita if something does not open.",
+  trustTitle: "Family first, your money protected.",
+  trustBody:
+    "Every send is recorded on Solana. Built for the MX ↔ U.S. corridor, with humans in the loop.",
+  trust1Title: "Verifiable receipt",
+  trust1Body: "On-chain proof anyone can check — not just a promise.",
+  trust2Title: "WhatsApp notice",
+  trust2Body: "Plain language for mom; support and tiendita when needed.",
+  testimonialQuote:
+    "When the message says my son’s money is registered, I feel him a little closer. Before I waited days without certainty; now at least I know it landed.",
+  testimonialName: "María G.",
+  testimonialPlace: "Michoacán, Mexico",
+  testimonialNote: "Composite ICP archetype — not a clinical testimonial.",
+  pricingTitle: "Clear pricing, no fine print.",
+  pricingSub: "You pay what’s fair. Nothing else.",
+  pricingPlan: "Pilot today",
+  pricingRate: "$0 per transfer",
+  pricingCompare:
+    "Mainnet target: 1.5% (~$4.50 on a $300 send) — below Western Union (5–7%)",
+  pricingBullets: [
+    "$0 fee while we validate the pilot",
+    "Transparent FX — no hidden surprises",
+    "Scheduled remittance from WhatsApp",
+    "Spanish support · trusted tiendita",
+  ] as const,
+  pricingNote:
+    "SPEI in sandbox for Demo Day; mainnet when ready. We only use your WhatsApp to reach you.",
+  formSectionTitle: "Join the pilot",
+  formSectionSub:
+    "10 families on the US–MX corridor. Verifiable trust + humans in the loop. Tell us who you are.",
+  heroImageAlt:
+    "Families receiving remittances — nopal, eagle and Solana with Mexican warmth",
+  waOnline: "TIA assistant · online",
+  waGreeting: "Hi! Want to send money to Mexico?",
+  waUserSend: "Yes, send $300 USD every two weeks",
+  waBotReply:
+    "Got it. I’ll schedule recurrence; your family gets notice and a Solana receipt. Confirm?",
+  waConfirm: "Confirm!",
+  waInputPlaceholder: "Message",
   proof:
     "Verifiable trust + humans in the loop. We are looking for 10 pilot families on the US–MX corridor.",
   successTitle: "Thank you — we will contact you within 48 h on WhatsApp.",
