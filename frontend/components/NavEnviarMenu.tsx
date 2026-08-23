@@ -115,7 +115,7 @@ export function NavEnviarMenu() {
               onClick={() => setOpen(false)}
             >
               <span className="site-nav-menu-item-label">Programar el envío de dinero</span>
-              <span className="site-nav-menu-item-desc">Cada mes, semana o día</span>
+              <span className="site-nav-menu-item-desc">Cada quincena, mes o semana</span>
             </Link>
           </li>
         </ul>

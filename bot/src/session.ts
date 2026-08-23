@@ -19,7 +19,7 @@ export type EnviarDraft = {
   tipo_activo: "SOL" | "USDC";
   /** inmediato = envío hoy (salta frecuencia); programar = recurrente. */
   modo_envio?: ModoEnvio;
-  frecuencia?: "diario" | "semanal" | "mensual";
+  frecuencia?: "diario" | "semanal" | "quincenal" | "mensual";
   nombre_contacto?: string;
   destinatario_wa?: string;
   wallet?: string;

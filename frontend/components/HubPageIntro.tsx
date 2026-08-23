@@ -17,10 +17,10 @@ export function HubPageIntro({ kicker, title, lede }: Props) {
   const { t } = useLocale();
 
   return (
-    <>
-      <p className="hub-kicker">{t[kicker]}</p>
-      <h1 className="page-title">{t[title]}</h1>
-      <p className="lede">{t[lede]}</p>
-    </>
+    <header className="hub-product-intro">
+      <p className="landing-pride">{t[kicker]}</p>
+      <h1 className="page-title landing-h1 hub-product-title">{t[title]}</h1>
+      <p className="landing-section-lede">{t[lede]}</p>
+    </header>
   );
 }

@@ -39,7 +39,7 @@ const crearSchema = z.object({
   destinatario_wa: z.string().min(1),
   destinatario_solana: z.string().min(32).max(44),
   monto: z.number().positive(),
-  frecuencia: z.enum(["diario", "semanal", "mensual"]),
+  frecuencia: z.enum(["diario", "semanal", "quincenal", "mensual"]),
   tipo_activo: z.enum(["SOL", "USDC"]).optional().default("SOL"),
   nombre_contacto: z.string().trim().min(1).max(40).optional().nullable(),
   usuario_remitente_solana: z.string().min(32).max(44).optional(),

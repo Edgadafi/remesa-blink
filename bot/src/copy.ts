@@ -34,6 +34,7 @@ export function labelFrecuencia(frecuencia: string): string {
   const map: Record<string, string> = {
     diario: "cada día",
     semanal: "cada semana",
+    quincenal: "cada quincena",
     mensual: "cada mes",
   };
   return map[f] ?? `cada ${f}`;
@@ -65,7 +66,7 @@ export function buildAyuda(): string {
     "Mandas a México por aquí; tu familia recibe aviso en WhatsApp.\n\n" +
     "Escribe:\n\n" +
     "1️⃣ *enviar ahora* — un envío hoy\n" +
-    "2️⃣ *programar* — cada mes, semana o día\n" +
+    "2️⃣ *programar* — cada quincena, mes o semana\n" +
     "3️⃣ *mis envíos* — ver lo programado\n" +
     "4️⃣ *recompensas* — Club TIA\n" +
     "5️⃣ *soporte* — ayuda en este chat\n\n" +
@@ -78,7 +79,7 @@ export function buildEnviarModoPicker(): string {
   return (
     "¿Qué quieres hacer?\n\n" +
     "1️⃣ *enviar ahora* — mandar hoy\n" +
-    "2️⃣ *programar* — repetir cada mes, semana o día\n\n" +
+    "2️⃣ *programar* — repetir cada quincena, mes o semana\n\n" +
     "*cancelar* · *soporte*"
   );
 }
@@ -110,6 +111,7 @@ export function buildEnviarAskFrecuencia(
   return (
     `${head}\n\n` +
     "¿Cada cuánto lo mandamos?\n" +
+    "• *cada quincena* _(la más común)_\n" +
     "• *cada mes*\n" +
     "• *cada semana*\n" +
     "• *cada día*\n\n" +
@@ -307,15 +309,7 @@ export function buildMontoInvalido(): string {
 }
 
 export function buildFrecuenciaInvalida(): string {
-  return "Dime *cada mes*, *cada semana* o *cada día* — como te acomode.";
-}
-
-export function buildFrecuenciaQuincena(): string {
-  return (
-    "En el piloto programamos *cada mes*, *cada semana* o *cada día*.\n\n" +
-    "Si le mandas cada quincena, por ahora elige *cada semana* y lo afinamos contigo.\n" +
-    "O escribe *soporte* si necesitas otro calendario."
-  );
+  return "Dime *cada quincena*, *cada mes*, *cada semana* o *cada día* — como te acomode.";
 }
 
 export function buildNombreInvalido(): string {

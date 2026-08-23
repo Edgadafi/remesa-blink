@@ -17,7 +17,10 @@ export type HubMessages = {
   walletHintLong: string;
   walletStartWith: (name: string) => string;
   footerTagline: string;
-  footerNote: string;
+  footerContactAria: string;
+  footerMailAria: string;
+  footerLinkedinAria: string;
+  footerXAria: string;
   homePrideBadge: string;
   homeKicker: string;
   homeH1: string;

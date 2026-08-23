@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { LandingSections } from "@/components/landing/LandingSections";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ApiError } from "@/lib/api";
 import { getWaSupportUrl } from "@/lib/config";
 import {
@@ -265,12 +266,7 @@ export function PilotoLanding({ refParam, referidoId, initialLang }: Props) {
           }
         />
       </main>
-      <footer className="piloto-footer">
-        <p>{t.footer}</p>
-        <p>
-          <a href="mailto:remesatia@gmail.com">remesatia@gmail.com</a>
-        </p>
-      </footer>
+      <SiteFooter className="piloto-footer" tagline={t.footer} />
     </div>
   );
 }

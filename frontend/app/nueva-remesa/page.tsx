@@ -6,16 +6,18 @@ import Link from "next/link";
 
 export default function NuevaRemesaPage() {
   return (
-    <main className="site-main">
-      <HubPageIntro kicker="sendKicker" title="sendTitle" lede="sendLede" />
-      <Providers>
-        <FormNuevaRemesa />
-      </Providers>
-      <p className="muted" style={{ marginTop: "1.5rem" }}>
-        <Link href="/">
-          <HubText k="sendBack" />
-        </Link>
-      </p>
+    <main className="site-main landing-main hub-product">
+      <section className="landing-hero-shell hub-product-shell">
+        <HubPageIntro kicker="sendKicker" title="sendTitle" lede="sendLede" />
+        <Providers>
+          <FormNuevaRemesa />
+        </Providers>
+        <p className="muted" style={{ marginTop: "1.5rem" }}>
+          <Link href="/">
+            <HubText k="sendBack" />
+          </Link>
+        </p>
+      </section>
     </main>
   );
 }

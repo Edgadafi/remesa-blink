@@ -949,13 +949,55 @@ code {
   padding: 1.25rem 1.5rem;
   border-top: 2px solid var(--gold);
   background: var(--color-verde-nopal);
-  color: rgba(245, 240, 232, 0.9);
+  color: rgba(245, 240, 232, 0.95);
   font-size: 1rem;
   text-align: center;
 }
 
-.site-footer a {
-  color: var(--gold);
+.site-footer-copy {
+  margin: 0 auto;
+  max-width: 36rem;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.site-footer-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+}
+
+.site-footer-icon {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hit-min);
+  height: var(--hit-min);
+  color: var(--color-papel);
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.site-footer-icon:hover {
+  color: var(--color-dorado-tia);
+  text-decoration: none;
+}
+
+.site-footer-icon:focus-visible {
+  outline: 2px solid var(--color-dorado-tia);
+  outline-offset: 2px;
+  color: var(--color-dorado-tia);
+  text-decoration: none;
+}
+
+.site-footer-icon svg {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: currentColor;
 }
 
 /* holatia landing — híbrido Morrison (calidez) + MatrixPay (tech micro-interactions) */
@@ -1468,6 +1510,44 @@ main.site-main.landing-main {
   pointer-events: none;
 }
 
+/* Export MP4 — frame 2 familias (1080×1350) */
+html.wire-export-mode body {
+  margin: 0;
+  min-height: 100vh;
+  background: #fffdf8;
+  overflow: hidden;
+}
+
+.wire-frame-2-export {
+  width: 1080px;
+  height: 1350px;
+  margin: 0;
+  background: #fffdf8;
+}
+
+.wire-frame-2-export .landing-brand-frame {
+  width: 1080px;
+  height: 1350px;
+  margin: 0;
+}
+
+.wire-frame-2-export .landing-brand-frame__mat {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  padding: 0.55rem;
+  border-radius: 24px;
+}
+
+.wire-frame-2-export .landing-brand-frame__surface {
+  border-radius: 16px;
+}
+
+.wire-frame-2-export .landing-brand-frame:hover .landing-brand-frame__mat {
+  transform: none;
+}
+
 .landing-sol-overlay .landing-wire-sol-mark {
   display: flex;
   align-items: center;
@@ -1912,6 +1992,254 @@ main.site-main.landing-main {
   max-width: 40rem;
   margin-bottom: 1.5rem;
   line-height: 1.55;
+}
+
+/* Product routes (/empezar, /nueva-remesa, /mis-remesas, /cashback) — same chrome as landing */
+.hub-product-title {
+  max-width: 18ch;
+}
+
+.hub-product-intro {
+  margin-bottom: 0.25rem;
+}
+
+.hub-product-shell {
+  max-width: 40rem;
+}
+
+.hub-product--wide .hub-product-shell {
+  max-width: 48rem;
+}
+
+.site-wrap--landing .hub-product .page-title {
+  text-shadow: none;
+}
+
+.site-wrap--landing .hub-product .form-card,
+.site-wrap--landing .hub-product .card {
+  background: #fffdf8;
+  border: 1px solid rgba(45, 80, 22, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(44, 36, 22, 0.08);
+}
+
+.site-wrap--landing .hub-product .form-section-title {
+  color: var(--color-verde-nopal);
+}
+
+.site-wrap--landing .hub-product .form-progress-step {
+  border-radius: 999px;
+  font-family: var(--font-ui), "IBM Plex Sans", system-ui, sans-serif;
+}
+
+.site-wrap--landing .hub-product .field input,
+.site-wrap--landing .hub-product .field select,
+.site-wrap--landing .hub-product .input-inline {
+  border-radius: 10px;
+  background: #fffdf8;
+  border-color: rgba(45, 80, 22, 0.16);
+}
+
+.site-wrap--landing .hub-product .field input:focus,
+.site-wrap--landing .hub-product .field select:focus,
+.site-wrap--landing .hub-product .input-inline:focus {
+  border-color: var(--color-verde-nopal);
+}
+
+.site-wrap--landing .hub-product .btn-primary,
+.site-wrap--landing .hub-product .btn-secondary {
+  border-radius: 10px;
+}
+
+.hub-qr-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1rem 0.85rem;
+}
+
+.hub-product .landing-hero-visual .landing-brand-frame--hero .landing-brand-frame__mat {
+  aspect-ratio: 4 / 5;
+}
+
+.hub-qr-stack {
+  position: relative;
+  z-index: 2;
+  width: min(16.5rem, 100%);
+}
+
+.hub-product .wa-qr {
+  margin: 0;
+  max-width: none;
+}
+
+.hub-product .wa-qr-frame {
+  display: block;
+  padding: 0.55rem;
+  background: #fff;
+  border: 1px solid rgba(45, 80, 22, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(44, 36, 22, 0.08);
+  cursor: pointer;
+}
+
+.hub-product .wa-qr-frame:hover,
+.hub-product .wa-qr-frame:focus-visible {
+  text-decoration: none;
+  outline: 2px solid var(--color-verde-nopal);
+  outline-offset: 3px;
+}
+
+.hub-product .wa-qr-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hub-product .wa-qr-caption {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.hub-product .wa-qr-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.45rem;
+  margin: 0.45rem 0 0.55rem;
+  font-family: var(--font-ui), "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-verde-nopal);
+}
+
+.hub-product .wa-qr-fallback {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-verde-nopal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  min-height: var(--hit-min);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.hub-product .wa-qr-fallback:hover,
+.hub-product .wa-qr-fallback:focus-visible {
+  color: var(--color-tierra);
+}
+
+.hub-product .blink-preview {
+  width: min(36rem, 100%);
+  margin: 2rem 0 0;
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  background: #fffdf8;
+  color: var(--color-tierra);
+  border: 1px solid rgba(45, 80, 22, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(44, 36, 22, 0.08);
+}
+
+.hub-product .blink-preview-kicker {
+  font-family: var(--font-ui), "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-dorado-tia);
+  margin: 0 0 0.65rem;
+}
+
+.hub-product .blink-preview-row {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.hub-product .blink-preview-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  background: #f5f0e8;
+}
+
+.hub-product .blink-preview-icon--fallback {
+  display: block;
+  background: linear-gradient(135deg, #2d5016 0%, #c9a227 100%);
+}
+
+.hub-product .blink-preview-title {
+  font-family: var(--font-display), Palatino, Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-tierra);
+  margin: 0 0 0.3rem;
+}
+
+.hub-product .blink-preview-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.hub-product .blink-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+
+.hub-product .blink-preview-cta,
+.hub-product .blink-preview-link {
+  cursor: pointer;
+}
+
+.hub-product .blink-preview-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--hit-min);
+  padding: 0.55rem 1.1rem;
+  background: var(--color-verde-nopal);
+  color: var(--color-papel) !important;
+  font-family: var(--font-ui), "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.hub-product .blink-preview-cta:hover,
+.hub-product .blink-preview-cta:focus-visible {
+  background: #234012;
+  color: var(--color-papel) !important;
+  text-decoration: none;
+  outline: 2px solid var(--color-dorado-tia);
+  outline-offset: 2px;
+}
+
+.hub-product .blink-preview-link {
+  color: var(--color-verde-nopal);
+  font-size: 0.92rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.hub-product .blink-preview-link:hover,
+.hub-product .blink-preview-link:focus-visible {
+  color: var(--color-tierra);
 }
 
 .landing-quotes {

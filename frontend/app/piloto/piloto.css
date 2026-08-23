@@ -223,8 +223,19 @@
   margin: 0 auto;
   padding: 1.5rem 1.25rem 2rem;
   border-top: 2px solid var(--color-dorado-tia);
-  font-size: 0.82rem;
-  color: var(--color-verde-cenote);
+  font-size: 0.95rem;
+  color: var(--color-tierra);
+  text-align: center;
+}
+
+.piloto-footer .site-footer-icon {
+  color: var(--color-verde-nopal);
+}
+
+.piloto-footer .site-footer-icon:hover,
+.piloto-footer .site-footer-icon:focus-visible {
+  color: var(--color-tierra);
+  outline-color: var(--color-verde-nopal);
 }
 
 @media (prefers-reduced-motion: reduce) {

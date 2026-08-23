@@ -17,6 +17,7 @@ import {
 const FRECUENCIA_MAP: Record<string, number> = {
   diario: 86400,
   semanal: 604800,
+  quincenal: 1_209_600,
   mensual: 2592000,
 };
 
@@ -29,7 +30,7 @@ export interface NuevaSuscripcion {
   destinatario_wa: string;
   destinatario_solana: string;
   monto: number;
-  frecuencia: "diario" | "semanal" | "mensual";
+  frecuencia: "diario" | "semanal" | "quincenal" | "mensual";
   tipo_activo?: "SOL" | "USDC";
   /** Alias familiar (ej. Mamá) — UX WA, no on-chain. */
   nombre_contacto?: string | null;

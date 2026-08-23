@@ -43,6 +43,7 @@ export const FrecuenciaAnchor = {
   Diario: { diario: {} },
   Semanal: { semanal: {} },
   Mensual: { mensual: {} },
+  Quincenal: { quincenal: {} },
 } as const;
 
 export interface PagoOnChainResult {
@@ -232,7 +233,7 @@ export async function registrarSuscripcionOnChain(
   remitente: PublicKey,
   destinatario: PublicKey,
   monto: bigint,
-  frecuencia: "diario" | "semanal" | "mensual",
+  frecuencia: "diario" | "semanal" | "quincenal" | "mensual",
   usuarioRemitente?: PublicKey
 ): Promise<string> {
   const program = getProgram();
@@ -240,6 +241,7 @@ export async function registrarSuscripcionOnChain(
   const freqMap = {
     diario: FrecuenciaAnchor.Diario,
     semanal: FrecuenciaAnchor.Semanal,
+    quincenal: FrecuenciaAnchor.Quincenal,
     mensual: FrecuenciaAnchor.Mensual,
   };
 
@@ -296,7 +298,7 @@ export async function registrarSuscripcionUsdcOnChain(
   remitente: PublicKey,
   destinatario: PublicKey,
   montoRaw: bigint,
-  frecuencia: "diario" | "semanal" | "mensual",
+  frecuencia: "diario" | "semanal" | "quincenal" | "mensual",
   mint: PublicKey = USDC_MINT,
   usuarioRemitente?: PublicKey
 ): Promise<string> {
@@ -305,6 +307,7 @@ export async function registrarSuscripcionUsdcOnChain(
   const freqMap = {
     diario: FrecuenciaAnchor.Diario,
     semanal: FrecuenciaAnchor.Semanal,
+    quincenal: FrecuenciaAnchor.Quincenal,
     mensual: FrecuenciaAnchor.Mensual,
   };
 

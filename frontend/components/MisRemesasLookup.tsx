@@ -5,6 +5,13 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { getApiBase } from "@/lib/config";
 import { normalizeWa } from "@/lib/wa";
 
+const freqLabel: Record<string, string> = {
+  diario: "cada día",
+  semanal: "cada semana",
+  quincenal: "cada quincena",
+  mensual: "cada mes",
+};
+
 type Row = {
   monto: string | number;
   frecuencia: string;
@@ -88,7 +95,7 @@ export function MisRemesasLookup() {
   }
 
   return (
-    <div className="stack-form">
+    <div className="stack-form form-card">
       <form onSubmit={onSubmit} className="row-inline">
         <label className="field grow">
           <span>Tu WhatsApp</span>
@@ -125,7 +132,7 @@ export function MisRemesasLookup() {
             {rows.map((r, i) => (
               <li key={i} className="card">
                 <strong>
-                  {formatMonto(r)} · {r.frecuencia}
+                  {formatMonto(r)} · {freqLabel[r.frecuencia] ?? r.frecuencia}
                 </strong>
                 <div className="muted">
                   Destino WA: {r.destinatario_wa}

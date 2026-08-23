@@ -122,7 +122,6 @@ export const en: PilotoMessages = {
   errorSave: "We could not save your registration. Email us at remesatia@gmail.com.",
   counterWithTotal: (total, goal) => `${total}/${goal} pilot families`,
   counterGoalOnly: (goal) => `Goal: ${goal} pilot families`,
-  footer:
-    "Made with MX pride · Pilot on devnet — small amounts only. We only use your WhatsApp to reach you.",
+  footer: "Remittances from the U.S. to Mexico, as easy as a WhatsApp message.",
   langSwitchLabel: "Language",
 };

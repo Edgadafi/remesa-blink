@@ -5,7 +5,6 @@
 import assert from "node:assert/strict";
 import {
   buildAyuda,
-  buildFrecuenciaQuincena,
   buildRecurrentePending,
   buildSuscripcionConfirmada,
   buildMontoNoCambiable,
@@ -20,6 +19,7 @@ import {
   looksLikeSolanaAddress,
   mentionsQuincena,
   parseEnviarOneshoot,
+  parseFrecuencia,
   parseModoEnvio,
 } from "../src/nlu.js";
 import { nextEnviarStep } from "../src/session.js";
@@ -172,10 +172,11 @@ check("looksLikeMontoOnly: 300 y $200", () => {
   assert.equal(looksLikeMontoOnly("hola 300"), false);
 });
 
-check("mentionsQuincena", () => {
+check("mentionsQuincena y parse quincenal", () => {
   assert.equal(mentionsQuincena("cada quincena"), true);
   assert.equal(mentionsQuincena("cada mes"), false);
-  assert.match(buildFrecuenciaQuincena(), /piloto/i);
+  assert.equal(parseFrecuencia("cada quincena"), "quincenal");
+  assert.equal(parseFrecuencia("cada 15"), "quincenal");
 });
 
 check("parse: pa mi vieja / para la jefa", () => {

@@ -121,7 +121,6 @@ export const es: PilotoMessages = {
   errorSave: "No pudimos guardar tu registro. Escríbenos a remesatia@gmail.com.",
   counterWithTotal: (total, goal) => `${total}/${goal} familias piloto`,
   counterGoalOnly: (goal) => `Meta ${goal} familias piloto`,
-  footer:
-    "Hecho con orgullo MX · Piloto en devnet — montos pequeños. Solo usamos tu WhatsApp para contactarte.",
+  footer: "Remesas de EE.UU. a México, tan fáciles como un mensaje de WhatsApp.",
   langSwitchLabel: "Idioma",
 };

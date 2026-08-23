@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS suscripciones (
     destinatario_solana VARCHAR(44),
     nombre_contacto VARCHAR(40),
     monto BIGINT NOT NULL CHECK (monto > 0),
-    frecuencia VARCHAR(20) NOT NULL CHECK (frecuencia IN ('diario', 'semanal', 'mensual')),
+    frecuencia VARCHAR(20) NOT NULL CHECK (frecuencia IN ('diario', 'semanal', 'quincenal', 'mensual')),
     tipo_activo VARCHAR(10) NOT NULL DEFAULT 'SOL' CHECK (tipo_activo IN ('SOL', 'USDC')),
     proximo_pago TIMESTAMPTZ NOT NULL,
     ultimo_pago TIMESTAMPTZ,

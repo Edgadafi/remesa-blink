@@ -89,7 +89,7 @@ Tabla `suscripciones` (`db/schema.sql`):
 | `destinatario_wa` | WA del destinatario (paso 5) |
 | `destinatario_solana` | Wallet pegada (paso 6) |
 | `monto` | Monto en unidades on-chain (USDC ×1e6 / SOL ×1e9) |
-| `frecuencia` | `diario` / `semanal` / `mensual` |
+| `frecuencia` | `diario` / `semanal` / `quincenal` (default) / `mensual` |
 | `tipo_activo` | `USDC` (default del bot) o `SOL` |
 | `pda_address` | Cuenta Anchor; **una por keeper + destinatario** |
 

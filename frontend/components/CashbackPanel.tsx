@@ -165,7 +165,7 @@ export function CashbackPanel() {
 
   return (
     <div className="stack-form">
-      <form onSubmit={onCargar} className="row-inline">
+      <form onSubmit={onCargar} className="row-inline form-card">
         <label className="field grow">
           <span>Tu WhatsApp</span>
           <input value={wa} onChange={(e) => setWa(e.target.value)} placeholder="5215512345678" />

@@ -69,7 +69,7 @@ export function detectIntent(raw: string): Intent {
 
   if (
     /^(2|2️⃣)$/.test(t) ||
-    /\b(programar remesa|programar envio|programar envío|remesa recurrente|cada mes|cada semana|cada dia|cada día)\b/.test(t) ||
+    /\b(programar remesa|programar envio|programar envío|remesa recurrente|cada mes|cada semana|cada quincena|cada dia|cada día)\b/.test(t) ||
     t === "programar"
   ) {
     return "programar";
@@ -134,14 +134,19 @@ export function looksLikeMontoOnly(raw: string): boolean {
   return m != null && m > 0;
 }
 
-/** Usuario menciona quincena (no soportada on-chain aún). */
+/** Usuario menciona quincena (hábito payday US→MX). */
 export function mentionsQuincena(raw: string): boolean {
   const t = normalizeText(raw);
   return /\b(quincena|quincenal|cada quince|cada 15|cada quincena)\b/.test(t);
 }
 
-export function parseFrecuencia(raw: string): "diario" | "semanal" | "mensual" | null {
+export function parseFrecuencia(
+  raw: string
+): "diario" | "semanal" | "quincenal" | "mensual" | null {
   const t = normalizeText(raw);
+  if (/\b(quincena|quincenal|cada quincena|cada quince|cada 15|quincenalmente)\b/.test(t)) {
+    return "quincenal";
+  }
   if (/\b(dia|diario|cada dia|todos los dias|diario)\b/.test(t)) return "diario";
   if (/\b(semana|semanal|cada semana|semanalmente)\b/.test(t)) return "semanal";
   if (/\b(mes|mensual|cada mes|al mes|mensualmente)\b/.test(t)) return "mensual";
@@ -170,7 +175,7 @@ export function parseTipoActivo(raw: string): "SOL" | "USDC" {
 export type EnviarParsed = {
   monto?: number;
   tipo_activo: "SOL" | "USDC";
-  frecuencia?: "diario" | "semanal" | "mensual";
+  frecuencia?: "diario" | "semanal" | "quincenal" | "mensual";
   nombre_contacto?: string;
 };
 
@@ -236,7 +241,7 @@ export function parseNombreEnviarPhrase(raw: string): string | null {
       ""
     )
     .trim();
-  if (!candidate || /^(cada|diario|semanal|mensual)$/i.test(candidate)) return null;
+  if (!candidate || /^(cada|diario|semanal|quincenal|mensual)$/i.test(candidate)) return null;
 
   // Recuperar casing del texto original (búsqueda case-insensitive)
   const orig = recoverOriginalCasing(raw, candidate) ?? candidate;
@@ -319,7 +324,7 @@ export function parseModoEnvio(raw: string): "inmediato" | "programar" | null {
   }
   if (
     /^(2|2️⃣|programar|recurrente|programado)$/.test(t) ||
-    /\b(programar|cada mes|cada semana|cada dia|cada día)\b/.test(t)
+    /\b(programar|cada mes|cada semana|cada quincena|cada dia|cada día)\b/.test(t)
   ) {
     return "programar";
   }

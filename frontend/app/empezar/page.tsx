@@ -7,8 +7,6 @@ import {
   blinksInspectorUrl,
   localBlinkPageUrl,
 } from "@/lib/mvp-demo";
-import "../demo/demo.css";
-
 export const metadata: Metadata = {
   title: "Empezar con TIA — Remesa Blink",
   description:

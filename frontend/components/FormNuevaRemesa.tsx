@@ -6,9 +6,12 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { normalizeWa } from "@/lib/wa";
 import { useConnectedAddress } from "@/components/WalletConnect";
 
-const freqLabel: Record<"diario" | "semanal" | "mensual", string> = {
+type Frecuencia = "diario" | "semanal" | "quincenal" | "mensual";
+
+const freqLabel: Record<Frecuencia, string> = {
   diario: "cada día",
   semanal: "cada semana",
+  quincenal: "cada quincena",
   mensual: "cada mes",
 };
 
@@ -18,7 +21,7 @@ export function FormNuevaRemesa() {
   const [walletSolana, setWalletSolana] = useState("");
   const [monto, setMonto] = useState("");
   const [tipoActivo, setTipoActivo] = useState<"SOL" | "USDC">("USDC");
-  const [frecuencia, setFrecuencia] = useState<"diario" | "semanal" | "mensual">("mensual");
+  const [frecuencia, setFrecuencia] = useState<Frecuencia>("quincenal");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     human: string;
@@ -166,8 +169,9 @@ export function FormNuevaRemesa() {
         <span>Frecuencia</span>
         <select
           value={frecuencia}
-          onChange={(e) => setFrecuencia(e.target.value as "diario" | "semanal" | "mensual")}
+          onChange={(e) => setFrecuencia(e.target.value as Frecuencia)}
         >
+          <option value="quincenal">Cada quincena</option>
           <option value="mensual">Cada mes</option>
           <option value="semanal">Cada semana</option>
           <option value="diario">Cada día</option>

@@ -541,7 +541,7 @@ export function LogoIntro({
             animate={{ opacity: 1 }}
             transition={{ delay: MS.wordmark / 1000 + 0.35, duration: 0.8 }}
           >
-            tu familia más cerca
+            Tu esfuerzo, directo a casa.
           </motion.p>
         </motion.div>
       </motion.div>

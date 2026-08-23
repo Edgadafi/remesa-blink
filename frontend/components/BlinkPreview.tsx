@@ -26,6 +26,7 @@ export function BlinkPreview({
   const { t } = useLocale();
   const [meta, setMeta] = useState<ActionMeta | null>(null);
   const [iconOk, setIconOk] = useState(true);
+  const [phantomUrl, setPhantomUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,14 +45,16 @@ export function BlinkPreview({
     };
   }, [actionUrl]);
 
+  useEffect(() => {
+    setPhantomUrl(
+      `https://phantom.app/ul/browse/${encodeURIComponent(
+        `${window.location.origin}${localUrl}`
+      )}?ref=${encodeURIComponent(window.location.origin)}`
+    );
+  }, [localUrl]);
+
   const title = meta?.title || t.blinkPreviewTitle;
   const description = meta?.description || t.blinkPreviewBody;
-  const phantomUrl =
-    typeof window === "undefined"
-      ? null
-      : `https://phantom.app/ul/browse/${encodeURIComponent(
-          `${window.location.origin}${localUrl}`
-        )}?ref=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <aside

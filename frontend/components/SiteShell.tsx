@@ -2,43 +2,43 @@
 
 import { usePathname } from "next/navigation";
 import { Nav } from "@/components/Nav";
+import { SiteFooter } from "@/components/SiteFooter";
 import { DeferredCorridor } from "@/components/scene3d/DeferredCorridor";
-import { useLocale } from "@/components/LocaleProvider";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { t } = useLocale();
   const isPiloto = pathname?.startsWith("/piloto");
   const isDemo = pathname?.startsWith("/demo");
-  const isEmpezar = pathname?.startsWith("/empezar");
   const isIntro = pathname?.startsWith("/intro");
   const isBlink = pathname?.startsWith("/blink");
   const isLanding = pathname === "/";
+  const isExport = pathname?.startsWith("/exports");
+  const isHubProduct =
+    pathname?.startsWith("/empezar") ||
+    pathname?.startsWith("/nueva-remesa") ||
+    pathname?.startsWith("/mis-remesas") ||
+    pathname?.startsWith("/cashback");
+  const usesLandingChrome = isLanding || isHubProduct;
 
   /* Escenas full-bleed sin chrome del hub */
-  if (isPiloto || isDemo || isEmpezar || isIntro) {
+  if (isPiloto || isDemo || isIntro || isExport) {
     return <>{children}</>;
   }
 
   const wrapClass = [
     "site-wrap",
     isBlink ? "site-wrap--blink" : "",
-    isLanding ? "site-wrap--landing" : "",
+    usesLandingChrome ? "site-wrap--landing" : "",
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
     <div className={wrapClass}>
-      {!isBlink && !isLanding && <DeferredCorridor />}
-      <Nav landing={isLanding} />
+      {!isBlink && !usesLandingChrome && <DeferredCorridor />}
+      <Nav landing={usesLandingChrome} />
       {children}
-      <footer className="site-footer">
-        {t.footerTagline}{" "}
-        <a href="mailto:remesatia@gmail.com">remesatia@gmail.com</a>
-        {" · "}
-        {t.footerNote}
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

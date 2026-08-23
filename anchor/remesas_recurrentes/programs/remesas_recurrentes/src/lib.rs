@@ -293,19 +293,24 @@ pub enum Frecuencia {
     Diario,
     Semanal,
     Mensual,
+    /// Payday habit US→MX (every 14 days). Appended — does not shift existing discriminants.
+    Quincenal,
 }
 
 fn calcular_proximo_pago(ultimo: i64, frecuencia: Frecuencia) -> i64 {
     const SEGUNDOS_DIA: i64 = 86400;
     const SEGUNDOS_SEMANA: i64 = 7 * SEGUNDOS_DIA;
+    const SEGUNDOS_QUINCENA: i64 = 14 * SEGUNDOS_DIA;
     const SEGUNDOS_MES: i64 = 30 * SEGUNDOS_DIA;
 
-    match frecuencia {
-        Frecuencia::Diario => ultimo + SEGUNDOS_DIA,
-        Frecuencia::Semanal => ultimo + SEGUNDOS_SEMANA,
-        Frecuencia::Mensual => ultimo + SEGUNDOS_MES,
-        _ => ultimo,
-    }
+    let delta = match frecuencia {
+        Frecuencia::Diario => SEGUNDOS_DIA,
+        Frecuencia::Semanal => SEGUNDOS_SEMANA,
+        Frecuencia::Quincenal => SEGUNDOS_QUINCENA,
+        Frecuencia::Mensual => SEGUNDOS_MES,
+        _ => 0,
+    };
+    ultimo.checked_add(delta).unwrap_or(ultimo)
 }
 
 #[account]

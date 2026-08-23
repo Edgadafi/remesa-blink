@@ -31,7 +31,6 @@ import {
   buildEnviarAskWallet,
   buildEnviarUnderstood,
   buildFrecuenciaInvalida,
-  buildFrecuenciaQuincena,
   buildHistorialPagosLista,
   buildHistorialPagosVacio,
   buildMisRemesasLista,
@@ -65,7 +64,6 @@ import {
   isBlockedSolanaAddress,
   looksLikeMontoOnly,
   looksLikeSolanaAddress,
-  mentionsQuincena,
   parseModoEnvio,
   parseEnviarOneshoot,
   parseFrecuencia,
@@ -762,9 +760,9 @@ function beginEnviarFlow(
   });
 }
 
-function frecuenciaParaApi(draft: EnviarDraft): "diario" | "semanal" | "mensual" {
+function frecuenciaParaApi(draft: EnviarDraft): "diario" | "semanal" | "quincenal" | "mensual" {
   if (draft.modo_envio === "inmediato") return "mensual";
-  return draft.frecuencia ?? "mensual";
+  return draft.frecuencia ?? "quincenal";
 }
 
 async function handleEnviarFlow(
@@ -843,10 +841,6 @@ async function handleEnviarFlow(
   }
 
   if (session.step === "enviar_frecuencia") {
-    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
-      await send(buildFrecuenciaQuincena());
-      return true;
-    }
     const freq = parseFrecuencia(text);
     if (!freq) {
       await send(buildFrecuenciaInvalida());
@@ -1037,10 +1031,6 @@ async function handleCommand(
   }
 
   if (intent === "programar") {
-    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
-      await send(buildFrecuenciaQuincena());
-      return;
-    }
     const parsed = parseEnviarOneshoot(text);
     const session = beginEnviarFlow(wa, parsed, "programar");
     await send(promptForEnviarStep(session.step, session.draft, parsed));
@@ -1048,10 +1038,6 @@ async function handleCommand(
   }
 
   if (intent === "enviar") {
-    if (mentionsQuincena(text) && !parseFrecuencia(text)) {
-      await send(buildFrecuenciaQuincena());
-      return;
-    }
     const parsed = parseEnviarOneshoot(text);
     const session = beginEnviarFlow(wa, parsed);
     await send(promptForEnviarStep(session.step, session.draft, parsed));
