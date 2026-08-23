@@ -16,7 +16,7 @@ type Props = {
 export function LandingFamilyArt({ parallax = { x: 0, y: 0 } }: Props) {
   const { ox, oy, sceneScale, offsetY } = MATRIX_FAMILY_SCENE;
   const sceneTransform = `translate(${ox} ${oy}) scale(${sceneScale}) translate(${-ox} ${-oy})`;
-  const { R, r, rotX, rotY, uSeg, vSeg, strokeScale } = MATRIX_TORUS;
+  const { R, r, rotX, uSeg, vSeg, strokeScale } = MATRIX_TORUS;
 
   const colSpacing = 16;
   const colCols = 3;
