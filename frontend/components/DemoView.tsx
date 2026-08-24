@@ -41,7 +41,7 @@ export function DemoView({
             <LangSwitch />
           </div>
           <p className="demo-brand" id="demo-brand">
-            Remesa Blink <span className="demo-brand-tia">+ TIA</span>
+            Solana Blink <span className="demo-brand-tia">+ TIA</span>
           </p>
           <h1 className="demo-headline">{t.demoHeadline}</h1>
           <p className="demo-lede">{t.demoLede}</p>

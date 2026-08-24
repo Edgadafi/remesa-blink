@@ -8,9 +8,9 @@ import {
   localBlinkPageUrl,
 } from "@/lib/mvp-demo";
 export const metadata: Metadata = {
-  title: "Empezar con TIA — Remesa Blink",
+  title: "Empezar con TIA — Solana Blink",
   description:
-    "Escanea el código QR para abrir WhatsApp con Remesa Blink + TIA e iniciar tu remesa.",
+    "Escanea el código QR para abrir WhatsApp con Solana Blink + TIA e iniciar tu remesa.",
 };
 
 /**

@@ -27,17 +27,17 @@ export function enviarRemesaUsdcGetResponse(site = getPublicSiteUrl()) {
     title: "Enviar dólares, recibir pesos",
     icon: blinkIconUrl(site),
     description:
-      "Send dollars, recibe pesos sin salir de WhatsApp. Comprobante en Solana devnet — confirma en Phantom.",
+      "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
     label: "Ver comprobante",
     links: {
       actions: [
         {
-          label: "Confirmar envío (devnet)",
+          label: "Confirmar envío",
           href,
           parameters: [
-            { name: "account", label: "Tu cuenta (wallet)", required: true, type: "text" },
-            { name: "amount", label: "Monto (USDC)", required: true, type: "number" },
-            { name: "destination", label: "Cuenta destino", required: true, type: "text" },
+            { name: "account", label: "Tu cuenta", required: true, type: "text" },
+            { name: "amount", label: "Monto (dólares)", required: true, type: "number" },
+            { name: "destination", label: "Cuenta de quien recibe", required: true, type: "text" },
           ],
         },
       ],
@@ -49,19 +49,20 @@ function remesaSolGetResponse(site: string, hrefPath: string) {
   const href = `${site}${hrefPath}`;
   return {
     type: "action" as const,
-    title: "Remesa Blink",
+    title: "Solana Blink + TIA",
     icon: blinkIconUrl(site),
-    description: "Transferir SOL a una wallet de destino",
-    label: "Enviar Remesa SOL",
+    description:
+      "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
+    label: "Confirmar envío",
     links: {
       actions: [
         {
           label: "Enviar",
           href,
           parameters: [
-            { name: "account", label: "Tu wallet", required: true, type: "text" },
-            { name: "amount", label: "Monto (SOL)", required: true, type: "number" },
-            { name: "destination", label: "Wallet destino", required: true, type: "text" },
+            { name: "account", label: "Tu cuenta", required: true, type: "text" },
+            { name: "amount", label: "Monto", required: true, type: "number" },
+            { name: "destination", label: "Cuenta de quien recibe", required: true, type: "text" },
           ],
         },
       ],
@@ -84,7 +85,7 @@ export function onboardingMxnGetResponse(site = getPublicSiteUrl()) {
           label: "Obtener enlace",
           href,
           parameters: [
-            { name: "account", label: "Tu cuenta (wallet)", required: true, type: "text" },
+            { name: "account", label: "Tu cuenta", required: true, type: "text" },
           ],
         },
       ],
@@ -162,7 +163,8 @@ export function actionsJson(site = getPublicSiteUrl()) {
       {
         url: `${site}/api/actions/enviar-remesa-usdc`,
         label: "Enviar dólares, recibir pesos",
-        description: "Send dollars, recibe pesos sin salir de WhatsApp.",
+        description:
+          "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
       },
       {
         url: `${site}/api/actions/convertir-mxn`,
@@ -177,7 +179,7 @@ export function actionsJson(site = getPublicSiteUrl()) {
       {
         url: `${site}/api/actions/enviar-remesa`,
         label: "Enviar Remesa SOL",
-        description: "Transferir SOL a una wallet de destino.",
+        description: "Envío avanzado. La mayoría de las familias usa el formulario o WhatsApp.",
       },
     ],
   };

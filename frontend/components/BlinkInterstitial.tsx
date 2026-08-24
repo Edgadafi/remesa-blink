@@ -138,7 +138,7 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
           setValues((v) => ({ ...v, account }));
         }
         if (!account) {
-          throw new Error("Conecta Phantom (devnet) o pega tu dirección.");
+          throw new Error("Pega el código de tu app de dinero o pulsa Iniciar.");
         }
 
         const body: Record<string, string> = { ...values, account };
@@ -182,7 +182,7 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
         const ph = getPhantom();
         if (!ph) {
           throw new Error(
-            "Abre esta página en un navegador con Phantom instalado (o en Phantom → Explore)."
+            "Abre esta página en el celular, en la misma app donde tienes tu dinero."
           );
         }
         if (!ph.publicKey) {
@@ -214,9 +214,9 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
           {loadErr}
         </p>
         <p className="muted">
-          Respaldo para mentores:{" "}
+          Otra forma de ver el comprobante:{" "}
           <a href={inspectorUrl} target="_blank" rel="noopener noreferrer">
-            Blinks Inspector
+            abrir enlace
           </a>
         </p>
       </div>
@@ -255,9 +255,9 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
         <p className="muted" style={{ fontSize: "0.9rem" }}>
           En el celular:{" "}
           <a href={phantomBrowseUrl} className="btn-wallet" style={{ display: "inline-block" }}>
-            Abrir esta página en Phantom
-          </a>{" "}
-          (devnet), o pega tu dirección abajo.
+            Abrir en tu app de dinero
+          </a>
+          , o pega tu código abajo.
         </p>
       )}
 
@@ -275,7 +275,7 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
               }
               placeholder={
                 p.name === "account"
-                  ? "Conecta Phantom o pega tu dirección"
+                  ? "Pega el código de tu app de dinero"
                   : undefined
               }
             />
@@ -293,9 +293,9 @@ export function BlinkInterstitial({ actionUrl }: { actionUrl: string }) {
       )}
 
       <p className="muted" style={{ fontSize: "0.85rem" }}>
-        Respaldo laptop:{" "}
+        Otra forma de ver el comprobante:{" "}
         <a href={inspectorUrl} target="_blank" rel="noopener noreferrer">
-          Blinks Inspector
+          abrir enlace
         </a>
       </p>
     </div>

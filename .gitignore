@@ -45,3 +45,6 @@ frontend/nul
 blinks-inspector/
 
 docs/M4-evidencias/usuarios_piloto-export-20*.csv
+
+# Render cache del loop Solana (MP4 va a Downloads)
+docs/brand/.solana-wireframe-frames/

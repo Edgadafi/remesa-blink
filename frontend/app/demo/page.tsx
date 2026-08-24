@@ -13,11 +13,11 @@ import {
 import "./demo.css";
 
 export const metadata: Metadata = {
-  title: "Demo MVP Devnet — Remesa Blink + TIA",
+  title: "Demo MVP Devnet — Solana Blink + TIA",
   description:
     "Escanea el QR, habla con TIA en WhatsApp, y prueba la Solana Action en devnet. Plan B sandbox.",
   openGraph: {
-    title: "Remesa Blink — MVP Devnet",
+    title: "Solana Blink + TIA — MVP Devnet",
     description:
       "Escanea el QR → WhatsApp con TIA · Solana prueba · familia cobra pesos cerca.",
   },

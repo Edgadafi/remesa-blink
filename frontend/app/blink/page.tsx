@@ -3,8 +3,9 @@ import { BlinkInterstitial } from "@/components/BlinkInterstitial";
 import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
-  title: "Confirmar remesa — Remesa Blink",
-  description: "Confirma el envío a tu familia. Abre con Phantom en devnet.",
+  title: "Confirmar remesa — Solana Blink",
+  description:
+    "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
 };
 
 type Props = {
@@ -25,7 +26,7 @@ export default function BlinkPage({ searchParams }: Props) {
 
   return (
     <main className="page-narrow site-main blink-page">
-      <p className="eyebrow">Remesa Blink + TIA</p>
+      <p className="eyebrow">Solana Blink + TIA</p>
       {!actionUrl ? (
         <div className="stack-form blink-interstitial-card">
           <h1 className="h2">Falta el enlace de la acción</h1>

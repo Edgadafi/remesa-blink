@@ -71,18 +71,19 @@ function remesaMetadata(hrefPath: string): ActionGetResponse {
   const base = getBaseUrl();
   return {
     type: "action",
-    title: "Remesa Blink",
+    title: "Solana Blink + TIA",
     icon: blinkIconUrl(),
-    description: "Transferir SOL a una wallet de destino",
-    label: "Enviar Remesa SOL",
+    description:
+      "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
+    label: "Confirmar envío",
     links: {
       actions: [{
         label: "Enviar",
         href: `${base}${hrefPath}`,
         parameters: [
-          { name: "account", label: "Tu wallet", required: true, type: "text" },
-          { name: "amount", label: "Monto (SOL)", required: true, type: "number" },
-          { name: "destination", label: "Wallet destino", required: true, type: "text" },
+          { name: "account", label: "Tu cuenta", required: true, type: "text" },
+          { name: "amount", label: "Monto", required: true, type: "number" },
+          { name: "destination", label: "Cuenta de quien recibe", required: true, type: "text" },
         ],
       }],
     },
@@ -100,18 +101,19 @@ router.get("/api/actions/enviar-remesa-usdc", (_req, res) => {
   const base = getBaseUrl();
   const payload: ActionGetResponse = {
     type: "action",
-    title: "Remesa Blink USDC",
+    title: "Enviar dólares, recibir pesos",
     icon: blinkIconUrl(),
-    description: "Transferir USDC a una wallet de destino",
-    label: "Enviar Remesa USDC",
+    description:
+      "Envía dinero a México desde EE.UU. tan fácil como mandar un mensaje — programa una vez y tu familia recibe aviso con comprobante verificable.",
+    label: "Confirmar envío",
     links: {
       actions: [{
-        label: "Enviar",
+        label: "Confirmar envío",
         href: `${base}/api/actions/enviar-remesa-usdc`,
         parameters: [
-          { name: "account", label: "Tu wallet", required: true, type: "text" },
-          { name: "amount", label: "Monto (USDC)", required: true, type: "number" },
-          { name: "destination", label: "Wallet destino", required: true, type: "text" },
+          { name: "account", label: "Tu cuenta", required: true, type: "text" },
+          { name: "amount", label: "Monto (dólares)", required: true, type: "number" },
+          { name: "destination", label: "Cuenta de quien recibe", required: true, type: "text" },
         ],
       }],
     },

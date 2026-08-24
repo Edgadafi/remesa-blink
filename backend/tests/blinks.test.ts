@@ -42,7 +42,7 @@ describe("Blinks - GET remesa / enviar-remesa", () => {
     const res = await request(app).get("/api/actions/remesa");
     expect(res.status).toBe(200);
     expect(res.body.type).toBe("action");
-    expect(res.body.title).toBe("Remesa Blink");
+    expect(res.body.title).toBe("Solana Blink + TIA");
     expect(res.body.links?.actions?.[0]?.href).toContain("/api/actions/remesa");
     expect(res.body.links?.actions?.[0]?.parameters).toEqual(
       expect.arrayContaining([
