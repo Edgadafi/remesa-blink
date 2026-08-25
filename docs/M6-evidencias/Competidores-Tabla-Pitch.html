@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>holatia.app — Análisis de competidores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-papel: #f5f0e8;
+      --color-verde-nopal: #2d5016;
+      --color-verde-cenote: #4a7c59;
+      --color-terracotta: #c45c3e;
+      --color-dorado-tia: #c9a227;
+      --color-tierra: #2c2416;
+      --color-card: #fffdf8;
+      --color-muted: #5c5348;
+      --color-error: #b33a2b;
+      --color-nopal-dark: #243f12;
+      --color-dorado-soft: #f3e6c4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      background: var(--color-papel);
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    /* Slide frame 1920×1080 for PNG export */
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      background: var(--color-papel);
+      padding: 72px 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .wrap { width: 100%; max-width: 1728px; margin: 0 auto; }
+
+    h1 {
+      color: var(--color-tierra);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .sub {
+      color: var(--color-muted);
+      font-size: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(44, 36, 22, 0.12);
+      border: 1px solid rgba(45, 80, 22, 0.12);
+    }
+
+    thead th {
+      background: var(--color-verde-nopal);
+      color: var(--color-papel);
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 1.1rem 0.85rem;
+      text-align: center;
+      border-right: 1px solid rgba(245, 240, 232, 0.12);
+    }
+
+    thead th:first-child {
+      text-align: left;
+      padding-left: 1.25rem;
+      min-width: 14rem;
+      background: var(--color-nopal-dark);
+    }
+
+    thead th.highlight {
+      background: var(--color-dorado-tia);
+      color: var(--color-tierra);
+      border-right-color: rgba(44, 36, 22, 0.08);
+    }
+
+    tbody td {
+      background: var(--color-card);
+      color: var(--color-tierra);
+      padding: 1rem 0.85rem;
+      text-align: center;
+      font-size: 1.05rem;
+      border-bottom: 1px solid rgba(45, 80, 22, 0.08);
+      vertical-align: middle;
+    }
+
+    tbody td:first-child {
+      text-align: left;
+      padding-left: 1.25rem;
+      font-weight: 600;
+      background: var(--color-papel);
+    }
+
+    tbody td.col-holatia {
+      background: var(--color-dorado-soft);
+      font-weight: 500;
+    }
+
+    tbody tr:last-child td {
+      font-size: 0.98rem;
+      line-height: 1.4;
+      padding-top: 1.1rem;
+      padding-bottom: 1.1rem;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .icon { display: inline-flex; align-items: center; justify-content: center; }
+
+    .yes {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-verde-cenote);
+      color: var(--color-papel);
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .no {
+      color: var(--color-terracotta);
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .partial {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .footnote {
+      margin-top: 1.25rem;
+      color: var(--color-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .brand-tag {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.35rem 0.75rem;
+      background: var(--color-verde-nopal);
+      color: var(--color-papel);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" id="slide">
+    <div class="wrap">
+      <h1>Análisis de competidores — corredor EE.UU. → México</h1>
+      <p class="sub">holatia.app · Demo Day · WayLearn 2026</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="highlight">holatia.app</th>
+            <th>Félix Pago</th>
+            <th>Remitly</th>
+            <th>Western Union / OXXO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>WhatsApp sin descargar app</td>
+            <td class="col-holatia"><span class="icon yes">✓</span></td>
+            <td><span class="icon yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Recurrencia programada</td>
+            <td class="col-holatia"><span class="icon yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="partial">Limitado</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Comprobante verificable</td>
+            <td class="col-holatia"><span class="icon yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Pesos en cuenta (SPEI)</td>
+            <td class="col-holatia"><span class="partial">Sandbox</span></td>
+            <td><span class="icon yes">✓</span></td>
+            <td><span class="icon yes">✓</span></td>
+            <td><span class="icon yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Cobro efectivo (rural)</td>
+            <td class="col-holatia"><span class="partial">Limitado</span></td>
+            <td><span class="icon yes">✓</span></td>
+            <td><span class="partial">Parcial</span></td>
+            <td><span class="icon yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Agente conversacional ES</td>
+            <td class="col-holatia"><span class="icon yes">✓</span></td>
+            <td><span class="partial">Parcial</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Costo (envío ~$300 USD)</td>
+            <td class="col-holatia">Piloto $0<br />target 1.5% (~$4.50)</td>
+            <td>$2.99 USD + tipo de cambio</td>
+            <td>1% – 3% + FX</td>
+            <td>5% – 7%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">
+        Félix: felixpago.com/mexico · Remitly/WU: BUSINESS-FOUNDATION-M2 · Corredor ref. 4.54% (World Bank, $200).
+        holatia.app: devnet MVP; SPEI sandbox Etherfuse; comprobante on-chain en Solana.
+      </p>
+      <span class="brand-tag">holatia.app</span>
+    </div>
+  </div>
+</body>
+</html>
